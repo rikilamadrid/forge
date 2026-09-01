@@ -32,6 +32,7 @@ export type ForgeErrorCategory =
   | "timeout"
   | "http"
   | "invalid_response"
+  | "empty_response"
   | "provider"
   | "internal";
 
@@ -39,6 +40,7 @@ export interface FailureEvidence {
   provider?: string;
   model?: string;
   clientLatencyMs?: number;
+  doneReason?: string;
 }
 
 interface ForgeErrorOptions {

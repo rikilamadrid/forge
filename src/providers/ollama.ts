@@ -62,7 +62,7 @@ export class OllamaProvider implements InferenceProvider {
             "http",
             `Ollama request failed with HTTP ${response.status}.`,
             startedAt,
-            response.status,
+            { statusCode: response.status },
           );
         }
         throw this.#error(
@@ -78,7 +78,7 @@ export class OllamaProvider implements InferenceProvider {
           "provider",
           `Ollama reported an error: ${providerMessage}`,
           startedAt,
-          response.ok ? undefined : response.status,
+          response.ok ? {} : { statusCode: response.status },
         );
       }
 
@@ -87,7 +87,7 @@ export class OllamaProvider implements InferenceProvider {
           "http",
           `Ollama request failed with HTTP ${response.status}.`,
           startedAt,
-          response.status,
+          { statusCode: response.status },
         );
       }
 
@@ -98,6 +98,18 @@ export class OllamaProvider implements InferenceProvider {
           startedAt,
         ),
       );
+
+      if (parsed.response.trim().length === 0) {
+        throw this.#error(
+          "empty_response",
+          emptyResponseMessage(parsed.doneReason),
+          startedAt,
+          parsed.doneReason === undefined
+            ? {}
+            : { doneReason: parsed.doneReason },
+        );
+      }
+
       const clientLatencyMs = elapsedMilliseconds(this.#now(), startedAt);
 
       return {
@@ -129,17 +141,28 @@ export class OllamaProvider implements InferenceProvider {
   }
 
   #error(
-    category: "network" | "timeout" | "http" | "invalid_response" | "provider",
+    category:
+      | "network"
+      | "timeout"
+      | "http"
+      | "invalid_response"
+      | "empty_response"
+      | "provider",
     message: string,
     startedAt: number,
-    statusCode?: number,
+    details: { statusCode?: number; doneReason?: string } = {},
   ): ForgeError {
     return new ForgeError(category, message, {
-      ...(statusCode === undefined ? {} : { statusCode }),
+      ...(details.statusCode === undefined
+        ? {}
+        : { statusCode: details.statusCode }),
       evidence: {
         provider: "ollama",
         model: this.#model,
         clientLatencyMs: elapsedMilliseconds(this.#now(), startedAt),
+        ...(details.doneReason === undefined
+          ? {}
+          : { doneReason: details.doneReason }),
       },
     });
   }
@@ -148,6 +171,7 @@ export class OllamaProvider implements InferenceProvider {
 interface OllamaResponse {
   model: string;
   response: string;
+  doneReason?: string;
   totalDurationNs?: number;
   loadDurationNs?: number;
   promptTokens?: number;
@@ -168,7 +192,6 @@ function parseOllamaResponse(
     value.model.trim().length === 0 ||
     !("response" in value) ||
     typeof value.response !== "string" ||
-    value.response.trim().length === 0 ||
     !("done" in value) ||
     value.done !== true
   ) {
@@ -178,6 +201,7 @@ function parseOllamaResponse(
   return {
     model: value.model,
     response: value.response,
+    ...optionalDoneReason(value),
     ...optionalNumber(value, "total_duration", "totalDurationNs", invalid),
     ...optionalNumber(value, "load_duration", "loadDurationNs", invalid),
     ...optionalNumber(value, "prompt_eval_count", "promptTokens", invalid),
@@ -195,6 +219,15 @@ function parseOllamaResponse(
       invalid,
     ),
   };
+}
+
+// `done_reason` is diagnostic only. A malformed one is dropped rather than
+// failing the turn, because nothing else in the mapping depends on it.
+function optionalDoneReason(value: object): { doneReason?: string } {
+  const reason: unknown = Reflect.get(value, "done_reason");
+  return typeof reason === "string" && reason.trim().length > 0
+    ? { doneReason: reason }
+    : {};
 }
 
 function readProviderError(value: unknown): string | undefined {
@@ -266,6 +299,16 @@ function durationMetric<Key extends string>(
   return nanoseconds === undefined
     ? {}
     : ({ [key]: nanoseconds / 1_000_000 } as Partial<Record<Key, number>>);
+}
+
+// A reasoning-capable model can finish a turn having produced only hidden
+// reasoning. The payload is well formed, so this is not an invalid response;
+// `done_reason` is what separates a truncated turn from one that simply
+// stopped without a visible answer.
+function emptyResponseMessage(doneReason: string | undefined): string {
+  const cause =
+    doneReason === undefined ? "" : ` (Ollama reported done_reason ${doneReason})`;
+  return `Ollama completed the turn without any response text${cause}. Reasoning-capable models can spend the turn on hidden reasoning, most often when generation is truncated before a visible answer.`;
 }
 
 function elapsedMilliseconds(now: number, startedAt: number): number {

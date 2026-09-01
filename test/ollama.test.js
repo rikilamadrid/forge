@@ -190,3 +190,126 @@ test("categorizes a configured request timeout", async () => {
     category: "timeout",
   });
 });
+
+// Payload shape observed live against qwen3.5:9b: `thinking` is a sibling of
+// `response`, and a turn truncated before it produced a visible answer still
+// returns `done: true` with `done_reason: "length"`.
+function thinkingOnlyPayload(extra = {}) {
+  return {
+    model: "qwen-test",
+    response: "",
+    thinking: "SECRET-REASONING chain of thought that must never be surfaced",
+    done: true,
+    prompt_eval_count: 24,
+    eval_count: 20,
+    ...extra,
+  };
+}
+
+test("reports a thinking-only turn as an empty response, not an invalid one", async () => {
+  const ollama = provider({
+    now: () => 10,
+    fetch: async () =>
+      new Response(JSON.stringify(thinkingOnlyPayload({ done_reason: "length" }))),
+  });
+
+  await assert.rejects(
+    ollama.generate({ prompt: "Explain quicksort" }),
+    (error) => {
+      assert.equal(error.category, "empty_response");
+      assert.equal(error.evidence.doneReason, "length");
+      assert.equal(error.evidence.provider, "ollama");
+      assert.equal(error.evidence.model, "qwen-test");
+      return true;
+    },
+  );
+});
+
+test("never surfaces hidden reasoning content in an empty response failure", async () => {
+  const ollama = provider({
+    now: () => 10,
+    fetch: async () =>
+      new Response(JSON.stringify(thinkingOnlyPayload({ done_reason: "length" }))),
+  });
+
+  await assert.rejects(
+    ollama.generate({ prompt: "Explain quicksort" }),
+    (error) => {
+      assert.doesNotMatch(error.message, /SECRET-REASONING/);
+      assert.equal(
+        JSON.stringify(error.evidence).includes("SECRET-REASONING"),
+        false,
+      );
+      return true;
+    },
+  );
+});
+
+test("treats a whitespace-only response as an empty response", async () => {
+  const ollama = provider({
+    now: () => 10,
+    fetch: async () =>
+      new Response(
+        JSON.stringify(thinkingOnlyPayload({ response: " \n\t ", done_reason: "stop" })),
+      ),
+  });
+
+  await rejectsWith(ollama.generate({ prompt: "Explain quicksort" }), {
+    category: "empty_response",
+  });
+});
+
+test("omits doneReason from evidence when Ollama does not report one", async () => {
+  const ollama = provider({
+    now: () => 10,
+    fetch: async () => new Response(JSON.stringify(thinkingOnlyPayload())),
+  });
+
+  await assert.rejects(
+    ollama.generate({ prompt: "Explain quicksort" }),
+    (error) => {
+      assert.equal(error.category, "empty_response");
+      assert.equal("doneReason" in error.evidence, false);
+      return true;
+    },
+  );
+});
+
+test("keeps a malformed payload distinct from an empty response", async () => {
+  const missingResponseField = provider({
+    now: () => 10,
+    fetch: async () =>
+      new Response(JSON.stringify({ model: "qwen-test", done: true })),
+  });
+  const unfinishedTurn = provider({
+    now: () => 10,
+    fetch: async () =>
+      new Response(JSON.stringify({ ...thinkingOnlyPayload(), done: false })),
+  });
+
+  await rejectsWith(missingResponseField.generate({ prompt: "Explain quicksort" }), {
+    category: "invalid_response",
+  });
+  await rejectsWith(unfinishedTurn.generate({ prompt: "Explain quicksort" }), {
+    category: "invalid_response",
+  });
+});
+
+test("still succeeds when a reasoning model returns a short visible answer", async () => {
+  const ollama = provider({
+    now: () => {
+      return 0;
+    },
+    fetch: async () =>
+      new Response(
+        JSON.stringify(
+          thinkingOnlyPayload({ response: "4", done_reason: "stop" }),
+        ),
+      ),
+  });
+
+  const result = await ollama.generate({ prompt: "What is 2+2?" });
+  assert.equal(result.success, true);
+  assert.equal(result.output, "4");
+  assert.equal(result.metrics.completionTokens, 20);
+});

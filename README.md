@@ -158,10 +158,10 @@ exits non-zero:
 }
 ```
 
-`statusCode` may appear under `error`; `provider`, `model`, and
-`clientLatencyMs` may appear under `evidence`. Stable categories are `usage`,
-`configuration`, `network`, `timeout`, `http`, `invalid_response`, `provider`,
-and `internal`. JSON failures leave standard error empty so callers can always
+`statusCode` may appear under `error`; `provider`, `model`, `clientLatencyMs`,
+and `doneReason` may appear under `evidence`. Stable categories are `usage`,
+`configuration`, `network`, `timeout`, `http`, `invalid_response`,
+`empty_response`, `provider`, and `internal`. JSON failures leave standard error empty so callers can always
 parse standard output.
 
 #### Metric mapping
@@ -187,6 +187,24 @@ reasoning tokens alongside the visible answer, and Ollama counts both in
 evaluation count, which is not necessarily the token count of the visible
 answer text in `output`. Treat it as the work the runtime performed, not as a
 measure of response length.
+
+#### Turns with no visible answer
+
+Ollama returns hidden reasoning in a `thinking` field, separate from
+`response`. A turn can therefore finish with `done: true` while `response` is
+empty — most often because generation was truncated before the model produced a
+visible answer, which Ollama reports as `done_reason: "length"`.
+
+Such a payload is well formed, so Forge does not call it an invalid response.
+It fails with the `empty_response` category and a non-zero exit status, because
+an empty answer does not satisfy the contract that a successful result carries
+response text. When Ollama supplies `done_reason`, Forge repeats it under
+`evidence.doneReason` so callers can tell a truncated turn from one that simply
+stopped without answering, without parsing the message text.
+
+Forge never emits the `thinking` content. Hidden reasoning is treated as
+sensitive intermediate state and stays out of `output`, error messages, and
+evidence.
 
 #### Opt-in live verification
 
@@ -230,6 +248,7 @@ manage the existing Ollama/Qwen installation.
 
 ## Current status
 
-Ticket 01.1 is complete. Ticket 01.2 is in progress with structured evidence,
-JSON output, and deterministic failure coverage implemented; Feature 01 remains
-incomplete until final live verification and human acceptance.
+Tickets 01.1 and 01.2 are complete: structured evidence, JSON output, and
+deterministic failure coverage are implemented and live-verified. Ticket 01.3 is
+in progress, covering how Forge reports a turn that finishes without a visible
+answer. Feature 01 remains incomplete until human acceptance.
