@@ -1,5 +1,6 @@
 export interface InferenceRequest {
   prompt: string;
+  signal?: AbortSignal;
 }
 
 export interface InferenceMetrics {
@@ -29,6 +30,7 @@ export type ForgeErrorCategory =
   | "usage"
   | "configuration"
   | "network"
+  | "aborted"
   | "timeout"
   | "http"
   | "invalid_response"

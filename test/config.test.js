@@ -16,6 +16,37 @@ test("loads a remote Ollama host and model", () => {
   );
 });
 
+test("loads an optional finite request timeout", () => {
+  assert.deepEqual(
+    loadConfig({
+      OLLAMA_HOST: "http://ollama.test:11434",
+      FORGE_MODEL: "qwen-test",
+      FORGE_TIMEOUT_MS: "240000",
+    }),
+    {
+      ollamaHost: "http://ollama.test:11434",
+      model: "qwen-test",
+      timeoutMs: 240_000,
+    },
+  );
+});
+
+test("rejects invalid request timeouts", () => {
+  for (const timeout of ["", "0", "not-a-number"]) {
+    assert.throws(
+      () =>
+        loadConfig({
+          OLLAMA_HOST: "http://ollama.test:11434",
+          FORGE_MODEL: "qwen-test",
+          FORGE_TIMEOUT_MS: timeout,
+        }),
+      (error) =>
+        error.category === "configuration" &&
+        /FORGE_TIMEOUT_MS must be a positive number/.test(error.message),
+    );
+  }
+});
+
 test("requires both configuration values", () => {
   assert.throws(
     () => loadConfig({ FORGE_MODEL: "qwen-test" }),

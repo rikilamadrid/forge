@@ -4,9 +4,20 @@
   "private": true,
   "description": "Forge — The Local AI Kit",
   "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/src/index.d.ts",
+      "import": "./dist/src/index.js"
+    }
+  },
   "bin": {
     "forge": "./dist/src/cli.js"
   },
+  "files": [
+    "dist/src/**/*.js",
+    "dist/src/**/*.d.ts",
+    "README.md"
+  ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
@@ -16,6 +27,7 @@
   "engines": {
     "node": ">=22"
   },
+  "dependencies": {},
   "devDependencies": {
     "typescript": "^5.9.2"
   }
