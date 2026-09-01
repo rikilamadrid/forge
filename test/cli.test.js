@@ -80,6 +80,50 @@ test("validates configuration before network activity", async () => {
   assert.doesNotMatch(result.stderr, /at .*cli/);
 });
 
+test("applies the configured finite timeout and preserves JSON failure shape", async (context) => {
+  const server = createServer(() => {});
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  context.after(
+    () =>
+      new Promise((resolve) => {
+        server.closeAllConnections();
+        server.close(resolve);
+      }),
+  );
+  const address = server.address();
+  assert.notEqual(address, null);
+  assert.equal(typeof address, "object");
+
+  const result = await runCli(["ask", "Review this function", "--json"], {
+    OLLAMA_HOST: `http://127.0.0.1:${address.port}`,
+    FORGE_MODEL: "qwen-test",
+    FORGE_TIMEOUT_MS: "5",
+  });
+
+  assert.equal(result.code, 1);
+  assert.equal(result.stderr, "");
+  const failure = JSON.parse(result.stdout);
+  assert.deepEqual(
+    {
+      ...failure,
+      evidence: { ...failure.evidence, clientLatencyMs: 0 },
+    },
+    {
+      success: false,
+      error: {
+        category: "timeout",
+        message: "Ollama request timed out after 5 ms.",
+      },
+      evidence: {
+        provider: "ollama",
+        model: "qwen-test",
+        clientLatencyMs: 0,
+      },
+    },
+  );
+  assert.equal(typeof failure.evidence.clientLatencyMs, "number");
+});
+
 test("prints the exact human-readable success contract", async (context) => {
   const server = await withServer(context, {
     body: JSON.stringify(successPayload),

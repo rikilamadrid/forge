@@ -35,7 +35,24 @@ export class OllamaProvider implements InferenceProvider {
 
   async generate(request: InferenceRequest): Promise<InferenceResult> {
     const controller = new AbortController();
-    const timeout = setTimeout(() => controller.abort(), this.#timeoutMs);
+    let abortSource: "caller" | "timeout" | undefined;
+    const abortFromCaller = (): void => {
+      if (abortSource === undefined) {
+        abortSource = "caller";
+        controller.abort(request.signal?.reason);
+      }
+    };
+    if (request.signal?.aborted === true) {
+      abortFromCaller();
+    } else {
+      request.signal?.addEventListener("abort", abortFromCaller, { once: true });
+    }
+    const timeout = setTimeout(() => {
+      if (abortSource === undefined) {
+        abortSource = "timeout";
+        controller.abort();
+      }
+    }, this.#timeoutMs);
     const startedAt = this.#now();
 
     try {
@@ -120,15 +137,22 @@ export class OllamaProvider implements InferenceProvider {
         metrics: mapMetrics(parsed, clientLatencyMs),
       };
     } catch (error) {
-      if (error instanceof ForgeError) {
-        throw error;
+      if (abortSource === "caller") {
+        throw this.#error(
+          "aborted",
+          "Ollama request was aborted by the caller.",
+          startedAt,
+        );
       }
-      if (controller.signal.aborted) {
+      if (abortSource === "timeout") {
         throw this.#error(
           "timeout",
           `Ollama request timed out after ${this.#timeoutMs} ms.`,
           startedAt,
         );
+      }
+      if (error instanceof ForgeError) {
+        throw error;
       }
       throw this.#error(
         "network",
@@ -137,12 +161,14 @@ export class OllamaProvider implements InferenceProvider {
       );
     } finally {
       clearTimeout(timeout);
+      request.signal?.removeEventListener("abort", abortFromCaller);
     }
   }
 
   #error(
     category:
       | "network"
+      | "aborted"
       | "timeout"
       | "http"
       | "invalid_response"

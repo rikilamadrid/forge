@@ -208,9 +208,11 @@ evidence.
 
 #### Opt-in live verification
 
-Forge reads `OLLAMA_HOST` and `FORGE_MODEL` from the process environment and
-does not load `.env` files itself. From a trusted local checkout with an
-ignored `.env`, an explicit live verification can use:
+Forge reads `OLLAMA_HOST`, `FORGE_MODEL`, and the optional
+`FORGE_TIMEOUT_MS` from the process environment and does not load `.env` files
+itself. The timeout remains finite and defaults to 120000 milliseconds. From a
+trusted local checkout with an ignored `.env`, an explicit live verification
+can use:
 
 ```sh
 set -a
@@ -218,7 +220,7 @@ source .env
 set +a
 npm run dev -- ask "<non-sensitive development prompt>"
 npm run dev -- ask "<non-sensitive development prompt>" --json
-unset OLLAMA_HOST FORGE_MODEL
+unset OLLAMA_HOST FORGE_MODEL FORGE_TIMEOUT_MS
 ```
 
 Do not publish the `.env`, private host, prompt, or raw terminal capture.
@@ -234,14 +236,14 @@ Do not publish the `.env`, private host, prompt, or raw terminal capture.
 
 ## Configuration and privacy
 
-Machine-specific settings such as `OLLAMA_HOST` and `FORGE_MODEL` will be
-provided through configuration. Safe examples will be committed; real private
-LAN addresses, credentials, prompts, personal information, Lorekeeper data,
-and LAMA configuration will not be.
+Machine-specific settings such as `OLLAMA_HOST`, `FORGE_MODEL`, and
+`FORGE_TIMEOUT_MS` will be provided through configuration. Safe examples will
+be committed; real private LAN addresses, credentials, prompts, personal
+information, Lorekeeper data, and LAMA configuration will not be.
 
-Use `.env.example` as a reference and export its two values through your
-preferred local environment setup. Forge reads them directly from the process
-environment and never commits their private values.
+Use `.env.example` as a reference and export its values through your preferred
+local environment setup. Forge reads them directly from the process environment
+and never commits their private values.
 
 Forge does not expose Ollama to the public Internet and will not modify or
 manage the existing Ollama/Qwen installation.

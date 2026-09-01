@@ -191,6 +191,81 @@ test("categorizes a configured request timeout", async () => {
   });
 });
 
+test("keeps caller cancellation distinct from configured timeout", async () => {
+  const controller = new AbortController();
+  const ollama = provider({
+    timeoutMs: 60_000,
+    fetch: async (_input, init) =>
+      new Promise((_resolve, reject) => {
+        init.signal.addEventListener("abort", () => reject(new Error("aborted")));
+      }),
+  });
+
+  const result = ollama.generate({
+    prompt: "Review this function",
+    signal: controller.signal,
+  });
+  controller.abort();
+
+  await rejectsWith(result, { category: "aborted" });
+});
+
+function responseWithPendingBody() {
+  let markBodyStarted;
+  const bodyStarted = new Promise((resolve) => {
+    markBodyStarted = resolve;
+  });
+
+  return {
+    bodyStarted,
+    fetch: async (_input, init) => ({
+      ok: true,
+      status: 200,
+      json: () => {
+        markBodyStarted();
+        return new Promise((_resolve, reject) => {
+          init.signal.addEventListener(
+            "abort",
+            () => reject(new DOMException("aborted", "AbortError")),
+            { once: true },
+          );
+        });
+      },
+    }),
+  };
+}
+
+test("categorizes caller cancellation during response-body parsing", async () => {
+  const controller = new AbortController();
+  const response = responseWithPendingBody();
+  const ollama = provider({
+    timeoutMs: 60_000,
+    fetch: response.fetch,
+  });
+
+  const result = ollama.generate({
+    prompt: "Review this function",
+    signal: controller.signal,
+  });
+  await response.bodyStarted;
+  controller.abort();
+
+  await rejectsWith(result, { category: "aborted" });
+});
+
+test("categorizes configured timeout during response-body parsing", async () => {
+  const response = responseWithPendingBody();
+  const ollama = provider({
+    timeoutMs: 5,
+    fetch: response.fetch,
+  });
+
+  const result = ollama.generate({ prompt: "Review this function" });
+  await response.bodyStarted;
+
+  await rejectsWith(result, { category: "timeout" });
+});
+
 // Payload shape observed live against qwen3.5:9b: `thinking` is a sibling of
 // `response`, and a turn truncated before it produced a visible answer still
 // returns `done: true` with `done_reason: "length"`.

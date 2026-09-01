@@ -36,3 +36,24 @@ test("rejects an empty prompt before calling the provider", async () => {
   await assert.rejects(ask(provider, "   "), /Prompt must not be empty/);
   assert.equal(called, false);
 });
+
+test("threads an optional caller signal through the provider request", async () => {
+  const controller = new AbortController();
+  let observed;
+  const provider = {
+    async generate(request) {
+      observed = request;
+      return {
+        success: true,
+        provider: "test-provider",
+        model: "test-model",
+        output: "Useful review",
+        metrics: { clientLatencyMs: 12 },
+      };
+    },
+  };
+
+  await ask(provider, "Review this function", { signal: controller.signal });
+
+  assert.equal(observed.signal, controller.signal);
+});

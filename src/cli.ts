@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import { ask } from "./ask.js";
 import { loadConfig, type Environment } from "./config.js";
+import { createForge } from "./index.js";
 import {
   ForgeError,
   type InferenceFailure,
@@ -9,7 +9,6 @@ import {
   type InferenceResult,
   toInferenceFailure,
 } from "./inference.js";
-import { OllamaProvider } from "./providers/ollama.js";
 
 interface ProcessLike {
   argv: string[];
@@ -31,11 +30,15 @@ async function main(process: ProcessLike): Promise<void> {
   try {
     const prompt = parsePrompt(arguments_);
     const config = loadConfig(process.env);
-    const provider = new OllamaProvider({
+    const forge = createForge({
+      provider: "ollama",
       host: config.ollamaHost,
       model: config.model,
+      ...(config.timeoutMs === undefined
+        ? {}
+        : { timeoutMs: config.timeoutMs }),
     });
-    const result = await ask(provider, prompt);
+    const result = await forge.ask(prompt);
 
     process.stdout.write(
       json ? `${JSON.stringify(result)}\n` : formatHumanResult(result),
