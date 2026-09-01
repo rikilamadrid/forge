@@ -248,7 +248,7 @@ manage the existing Ollama/Qwen installation.
 
 ## Current status
 
-Tickets 01.1 and 01.2 are complete: structured evidence, JSON output, and
-deterministic failure coverage are implemented and live-verified. Ticket 01.3 is
-in progress, covering how Forge reports a turn that finishes without a visible
-answer. Feature 01 remains incomplete until human acceptance.
+Feature 01 is complete. Forge's human-readable and JSON delegation paths are
+live-verified against the existing LAN Ollama/Qwen runtime, including normalized
+execution evidence and explicit handling for completed turns with no visible
+answer.
