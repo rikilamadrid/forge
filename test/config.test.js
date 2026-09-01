@@ -17,8 +17,18 @@ test("loads a remote Ollama host and model", () => {
 });
 
 test("requires both configuration values", () => {
-  assert.throws(() => loadConfig({ FORGE_MODEL: "qwen-test" }), /OLLAMA_HOST is required/);
-  assert.throws(() => loadConfig({ OLLAMA_HOST: "http://ollama.test:11434" }), /FORGE_MODEL is required/);
+  assert.throws(
+    () => loadConfig({ FORGE_MODEL: "qwen-test" }),
+    (error) =>
+      error.category === "configuration" &&
+      /OLLAMA_HOST is required/.test(error.message),
+  );
+  assert.throws(
+    () => loadConfig({ OLLAMA_HOST: "http://ollama.test:11434" }),
+    (error) =>
+      error.category === "configuration" &&
+      /FORGE_MODEL is required/.test(error.message),
+  );
 });
 
 test("rejects non-HTTP Ollama hosts", () => {

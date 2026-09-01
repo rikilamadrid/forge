@@ -21,12 +21,53 @@ function runCli(arguments_, environment = {}) {
   });
 }
 
-test("prints usage and exits non-zero for an unsupported invocation", async () => {
+async function withServer(context, response) {
+  let requestBody = "";
+  const server = createServer((request, outgoing) => {
+    request.setEncoding("utf8");
+    request.on("data", (chunk) => (requestBody += chunk));
+    request.on("end", () => {
+      outgoing.writeHead(response.status ?? 200, {
+        "content-type": response.contentType ?? "application/json",
+      });
+      outgoing.end(response.body);
+    });
+  });
+  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
+  context.after(() => new Promise((resolve) => server.close(resolve)));
+  const address = server.address();
+  assert.notEqual(address, null);
+  assert.equal(typeof address, "object");
+  return {
+    environment: {
+      OLLAMA_HOST: `http://127.0.0.1:${address.port}`,
+      FORGE_MODEL: "qwen-test",
+    },
+    requestBody: () => requestBody,
+  };
+}
+
+const successPayload = {
+  model: "qwen-test:latest",
+  response: "The function can return undefined.",
+  done: true,
+  total_duration: 5_250_000_000,
+  load_duration: 250_000_000,
+  prompt_eval_count: 12,
+  prompt_eval_duration: 300_000_000,
+  eval_count: 24,
+  eval_duration: 4_000_000_000,
+};
+
+test("prints categorized usage and exits non-zero", async () => {
   const result = await runCli([]);
 
   assert.equal(result.code, 1);
   assert.equal(result.stdout, "");
-  assert.match(result.stderr, /Usage: forge ask/);
+  assert.equal(
+    result.stderr,
+    'Forge error [usage]: Usage: forge ask "<prompt>" [--json]\n',
+  );
 });
 
 test("validates configuration before network activity", async () => {
@@ -34,47 +75,151 @@ test("validates configuration before network activity", async () => {
 
   assert.equal(result.code, 1);
   assert.equal(result.stdout, "");
+  assert.match(result.stderr, /Forge error \[configuration\]/);
   assert.match(result.stderr, /OLLAMA_HOST is required/);
   assert.doesNotMatch(result.stderr, /at .*cli/);
 });
 
-test("prints a generated answer and basic execution evidence", async (context) => {
-  let requestBody = "";
-  const server = createServer((request, response) => {
-    request.setEncoding("utf8");
-    request.on("data", (chunk) => (requestBody += chunk));
-    request.on("end", () => {
-      response.writeHead(200, { "content-type": "application/json" });
-      response.end(
-        JSON.stringify({
-          model: "qwen-test:latest",
-          response: "The function can return undefined.",
-          done: true,
-        }),
-      );
-    });
+test("prints the exact human-readable success contract", async (context) => {
+  const server = await withServer(context, {
+    body: JSON.stringify(successPayload),
   });
-  await new Promise((resolve) => server.listen(0, "127.0.0.1", resolve));
-  context.after(() => new Promise((resolve) => server.close(resolve)));
-
-  const address = server.address();
-  assert.notEqual(address, null);
-  assert.equal(typeof address, "object");
-
-  const result = await runCli(["ask", "Review this function"], {
-    OLLAMA_HOST: `http://127.0.0.1:${address.port}`,
-    FORGE_MODEL: "qwen-test",
-  });
+  const result = await runCli(
+    ["ask", "Review this function"],
+    server.environment,
+  );
 
   assert.equal(result.code, 0);
   assert.equal(result.stderr, "");
-  assert.match(result.stdout, /^The function can return undefined\./);
-  assert.match(result.stdout, /Provider: ollama/);
-  assert.match(result.stdout, /Model: qwen-test:latest/);
-  assert.match(result.stdout, /Latency: \d+\.\d ms/);
-  assert.deepEqual(JSON.parse(requestBody), {
+  assert.match(
+    result.stdout,
+    /^The function can return undefined\.\n\nProvider: ollama\nModel: qwen-test:latest\nClient latency: \d+\.\d ms\nTokens: prompt 12 \| completion 24 \| total 36\nOllama timings:\n  Total: 5250\.0 ms\n  Load: 250\.0 ms\n  Prompt evaluation: 300\.0 ms\n  Completion evaluation: 4000\.0 ms\n$/,
+  );
+  assert.deepEqual(JSON.parse(server.requestBody()), {
     model: "qwen-test",
     prompt: "Review this function",
     stream: false,
   });
+});
+
+test("prints exactly one JSON success object", async (context) => {
+  const server = await withServer(context, {
+    body: JSON.stringify(successPayload),
+  });
+  const result = await runCli(
+    ["ask", "Review this function", "--json"],
+    server.environment,
+  );
+
+  assert.equal(result.code, 0);
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout.trim().split("\n").length, 1);
+  const parsed = JSON.parse(result.stdout);
+  assert.deepEqual(
+    { ...parsed, metrics: { ...parsed.metrics, clientLatencyMs: 0 } },
+    {
+      success: true,
+      provider: "ollama",
+      model: "qwen-test:latest",
+      output: "The function can return undefined.",
+      metrics: {
+        clientLatencyMs: 0,
+        promptTokens: 12,
+        completionTokens: 24,
+        totalTokens: 36,
+        totalDurationMs: 5250,
+        loadDurationMs: 250,
+        promptEvalDurationMs: 300,
+        completionEvalDurationMs: 4000,
+      },
+    },
+  );
+  assert.equal(typeof parsed.metrics.clientLatencyMs, "number");
+});
+
+test("prints exactly one JSON failure object and exits non-zero", async () => {
+  const result = await runCli(["ask", "Review this function", "--json"]);
+
+  assert.equal(result.code, 1);
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout.trim().split("\n").length, 1);
+  assert.deepEqual(JSON.parse(result.stdout), {
+    success: false,
+    error: {
+      category: "configuration",
+      message: "OLLAMA_HOST is required. Set it to the Ollama API base URL.",
+    },
+    evidence: {},
+  });
+});
+
+test("routes usage failures to JSON when --json is requested", async () => {
+  const result = await runCli(["ask", "", "--json"]);
+
+  assert.equal(result.code, 1);
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout.trim().split("\n").length, 1);
+  assert.deepEqual(JSON.parse(result.stdout), {
+    success: false,
+    error: {
+      category: "usage",
+      message: 'Usage: forge ask "<prompt>" [--json]',
+    },
+    evidence: {},
+  });
+});
+
+test("rejects --json standing in for the prompt", async () => {
+  const result = await runCli(["ask", "--json"]);
+
+  assert.equal(result.code, 1);
+  assert.equal(result.stderr, "");
+  assert.deepEqual(JSON.parse(result.stdout), {
+    success: false,
+    error: {
+      category: "usage",
+      message: 'Usage: forge ask "<prompt>" [--json]',
+    },
+    evidence: {},
+  });
+});
+
+test("reports unavailable timings without inventing rows", async (context) => {
+  const server = await withServer(context, {
+    body: JSON.stringify({
+      model: "qwen-test:latest",
+      response: "The function can return undefined.",
+      done: true,
+    }),
+  });
+  const result = await runCli(
+    ["ask", "Review this function"],
+    server.environment,
+  );
+
+  assert.equal(result.code, 0);
+  assert.equal(result.stderr, "");
+  assert.match(
+    result.stdout,
+    /^The function can return undefined\.\n\nProvider: ollama\nModel: qwen-test:latest\nClient latency: \d+\.\d ms\nTokens: prompt unavailable \| completion unavailable \| total unavailable\nOllama timings: unavailable\n$/,
+  );
+});
+
+test("presents provider failures without a stack trace or private host", async (context) => {
+  const server = await withServer(context, {
+    status: 404,
+    body: JSON.stringify({ error: "model is unavailable" }),
+  });
+  const result = await runCli(
+    ["ask", "Review this function"],
+    server.environment,
+  );
+
+  assert.equal(result.code, 1);
+  assert.equal(result.stdout, "");
+  assert.equal(
+    result.stderr,
+    "Forge error [provider]: Ollama reported an error: model is unavailable\n",
+  );
+  assert.doesNotMatch(result.stderr, /127\.0\.0\.1|at .*cli/);
 });

@@ -9,10 +9,11 @@ test("delegates a prompt through the provider contract", async () => {
     async generate(request) {
       observed.push(request);
       return {
+        success: true,
         provider: "test-provider",
         model: "test-model",
         output: "Useful review",
-        clientLatencyMs: 12,
+        metrics: { clientLatencyMs: 12 },
       };
     },
   };

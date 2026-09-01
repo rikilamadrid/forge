@@ -53,15 +53,15 @@ later, without building a speculative plugin system now.
 
 ## Feature 01: Remote Local Inference
 
-The first vertical slice will let a developer or coding agent perform the
+The first vertical slice lets a developer or coding agent perform the
 equivalent of:
 
 ```sh
 forge ask "Review this TypeScript function for bugs"
 ```
 
-Forge will send the prompt to the configured Ollama runtime and return the
-answer. A JSON mode will expose the structured response and available execution
+Forge sends the prompt to the configured Ollama runtime and returns the
+answer. JSON mode exposes the structured response and available execution
 evidence for tooling.
 
 Feature 01 is complete only when a real request travels from the development
@@ -70,10 +70,9 @@ or HTTP 200 alone is not enough.
 
 See the [Feature specification](context/features/01-remote-local-inference.md).
 
-### Current CLI slice
+### CLI
 
-Ticket 01.1 implements the first human-readable delegation path. Install and
-build it with:
+Install and build Forge with:
 
 ```sh
 npm install
@@ -92,15 +91,119 @@ Inside an unlinked development checkout, the equivalent command is:
 npm run dev -- ask "Review this TypeScript function for bugs"
 ```
 
-The command accepts exactly one non-empty prompt argument. It prints the model
-response followed by the `ollama` provider identity, the model name reported by
-Ollama, and client-observed latency in milliseconds. Requests time out after
-120 seconds. Errors are written to standard error with a non-zero exit status
-and no stack trace by default.
+The command accepts exactly one non-empty prompt argument followed optionally
+by `--json`. Requests time out after 120 seconds.
 
-Forge reads `OLLAMA_HOST` and `FORGE_MODEL` from the process environment; it
-does not load `.env` files itself. `--json` and complete provider metrics are
-planned for Ticket 01.2 and are not available yet.
+#### Human-readable output
+
+`forge ask "<prompt>"` writes the model response and available evidence to
+standard output:
+
+```text
+<response>
+
+Provider: ollama
+Model: <model reported by Ollama>
+Client latency: <milliseconds> ms
+Tokens: prompt <count|unavailable> | completion <count|unavailable> | total <count|unavailable>
+Ollama timings:
+  Total: <milliseconds> ms
+  Load: <milliseconds> ms
+  Prompt evaluation: <milliseconds> ms
+  Completion evaluation: <milliseconds> ms
+```
+
+Only timing rows supplied by Ollama are printed. When none are supplied, Forge
+prints `Ollama timings: unavailable`. Human-readable failures go to standard
+error as `Forge error [<category>]: <message>` and exit non-zero without a stack
+trace by default.
+
+#### JSON output
+
+`forge ask "<prompt>" --json` writes exactly one JSON object plus a trailing
+newline to standard output. A successful result has this contract:
+
+```json
+{
+  "success": true,
+  "provider": "ollama",
+  "model": "<model reported by Ollama>",
+  "output": "<response>",
+  "metrics": {
+    "clientLatencyMs": 123.4,
+    "promptTokens": 12,
+    "completionTokens": 24,
+    "totalTokens": 36,
+    "totalDurationMs": 5250,
+    "loadDurationMs": 250,
+    "promptEvalDurationMs": 300,
+    "completionEvalDurationMs": 4000
+  }
+}
+```
+
+Every metric except `clientLatencyMs` is optional and omitted when unavailable.
+Forge derives `totalTokens` only when both component counts are present. A
+failed JSON invocation also writes exactly one object to standard output and
+exits non-zero:
+
+```json
+{
+  "success": false,
+  "error": {
+    "category": "configuration",
+    "message": "<actionable message>"
+  },
+  "evidence": {}
+}
+```
+
+`statusCode` may appear under `error`; `provider`, `model`, and
+`clientLatencyMs` may appear under `evidence`. Stable categories are `usage`,
+`configuration`, `network`, `timeout`, `http`, `invalid_response`, `provider`,
+and `internal`. JSON failures leave standard error empty so callers can always
+parse standard output.
+
+#### Metric mapping
+
+Forge converts Ollama nanoseconds to milliseconds at the adapter boundary:
+
+| Ollama field | Forge field |
+| --- | --- |
+| `prompt_eval_count` | `promptTokens` |
+| `eval_count` | `completionTokens` |
+| both counts | `totalTokens` (derived sum) |
+| `total_duration` | `totalDurationMs` |
+| `load_duration` | `loadDurationMs` |
+| `prompt_eval_duration` | `promptEvalDurationMs` |
+| `eval_duration` | `completionEvalDurationMs` |
+
+`clientLatencyMs` is measured by Forge around the complete HTTP operation and
+is independent of provider-reported timing.
+
+Reasoning-capable Ollama models such as `qwen3.5:9b` may generate hidden
+reasoning tokens alongside the visible answer, and Ollama counts both in
+`eval_count`. `completionTokens` therefore reports Ollama's completion-side
+evaluation count, which is not necessarily the token count of the visible
+answer text in `output`. Treat it as the work the runtime performed, not as a
+measure of response length.
+
+#### Opt-in live verification
+
+Forge reads `OLLAMA_HOST` and `FORGE_MODEL` from the process environment and
+does not load `.env` files itself. From a trusted local checkout with an
+ignored `.env`, an explicit live verification can use:
+
+```sh
+set -a
+source .env
+set +a
+npm run dev -- ask "<non-sensitive development prompt>"
+npm run dev -- ask "<non-sensitive development prompt>" --json
+unset OLLAMA_HOST FORGE_MODEL
+```
+
+Do not publish the `.env`, private host, prompt, or raw terminal capture.
 
 ## Local-first principles
 
@@ -127,6 +230,6 @@ manage the existing Ollama/Qwen installation.
 
 ## Current status
 
-Ticket 01.1 is in progress. Its CLI, Ollama adapter, and deterministic tests are
-implemented; Feature 01 remains incomplete until its later evidence contract
-and final verification ticket are complete.
+Ticket 01.1 is complete. Ticket 01.2 is in progress with structured evidence,
+JSON output, and deterministic failure coverage implemented; Feature 01 remains
+incomplete until final live verification and human acceptance.
