@@ -1,5 +1,7 @@
 #!/usr/bin/env node
 
+import { readFileSync } from "node:fs";
+
 import { loadConfig, type Environment } from "./config.js";
 import { createForge } from "./index.js";
 import {
@@ -21,9 +23,23 @@ interface ProcessLike {
 const runtime = globalThis as typeof globalThis & { process: ProcessLike };
 
 const JSON_FLAG = "--json";
+const HELP_FLAG = "--help";
+const VERSION_FLAG = "--version";
 
 async function main(process: ProcessLike): Promise<void> {
   const arguments_ = process.argv.slice(2);
+
+  // Serve --help and --version before configuration or any network activity, so
+  // a published executable answers them offline and exits 0.
+  if (arguments_.includes(HELP_FLAG)) {
+    process.stdout.write(helpText());
+    return;
+  }
+  if (arguments_.includes(VERSION_FLAG)) {
+    process.stdout.write(`${readPackageVersion()}\n`);
+    return;
+  }
+
   // Read the output mode before validating, so usage failures honour --json too.
   const json = arguments_.includes(JSON_FLAG);
 
@@ -46,6 +62,46 @@ async function main(process: ProcessLike): Promise<void> {
   } catch (error) {
     writeFailure(process, toInferenceFailure(error), json);
   }
+}
+
+function helpText(): string {
+  return [
+    "Forge — the Local AI Kit",
+    "",
+    "Usage:",
+    '  forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime',
+    "  forge --help                    Show this help and exit",
+    "  forge --version                 Print the version and exit",
+    "",
+    "Flags:",
+    "  --json      Emit the result or failure as a single JSON object",
+    "  --help      Show this help and exit",
+    "  --version   Print the version and exit",
+    "",
+    "Configuration (environment variables):",
+    "  OLLAMA_HOST      Base URL of the Ollama API (required)",
+    "  FORGE_MODEL      Model to run (required)",
+    "  FORGE_TIMEOUT_MS Request timeout in milliseconds (optional)",
+    "",
+  ].join("\n");
+}
+
+function readPackageVersion(): string {
+  // Resolve the package manifest relative to this compiled file so it works in
+  // both the repository layout (dist/src/cli.js) and the packed layout
+  // (package/dist/src/cli.js); "../../package.json" is the package root in each.
+  const manifestUrl = new URL("../../package.json", import.meta.url);
+  const manifest: unknown = JSON.parse(readFileSync(manifestUrl, "utf8"));
+  if (
+    typeof manifest === "object" &&
+    manifest !== null &&
+    "version" in manifest &&
+    typeof manifest.version === "string"
+  ) {
+    return manifest.version;
+  }
+
+  throw new ForgeError("internal", "Package version is unavailable.");
 }
 
 function parsePrompt(arguments_: string[]): string {
