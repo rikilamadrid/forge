@@ -1,8 +1,29 @@
 {
   "name": "forge-local-ai-kit",
-  "version": "0.0.0",
-  "private": true,
-  "description": "Forge — The Local AI Kit",
+  "version": "0.1.0",
+  "description": "Forge — The Local AI Kit: call language models running on machines you control, from TypeScript or the command line.",
+  "license": "MIT",
+  "author": {
+    "name": "Ricardo Lamadrid",
+    "url": "https://github.com/rikilamadrid"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/rikilamadrid/forge.git"
+  },
+  "homepage": "https://github.com/rikilamadrid/forge#readme",
+  "bugs": {
+    "url": "https://github.com/rikilamadrid/forge/issues"
+  },
+  "keywords": [
+    "ollama",
+    "local-ai",
+    "llm",
+    "inference",
+    "esm",
+    "typescript",
+    "cli"
+  ],
   "type": "module",
   "exports": {
     ".": {
@@ -16,13 +37,15 @@
   "files": [
     "dist/src/**/*.js",
     "dist/src/**/*.d.ts",
-    "README.md"
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
     "check": "tsc -p tsconfig.json --noEmit",
     "dev": "npm run build --silent && node dist/src/cli.js",
-    "test": "npm run build --silent && node --test test/*.test.js"
+    "test": "npm run build --silent && node --test test/*.test.js",
+    "prepack": "npm run build"
   },
   "engines": {
     "node": ">=22"
