@@ -1,10 +1,14 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
 
 const cliPath = fileURLToPath(new URL("../dist/src/cli.js", import.meta.url));
+const packageVersion = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+).version;
 
 function runCli(arguments_, environment = {}) {
   return new Promise((resolve, reject) => {
@@ -58,6 +62,37 @@ const successPayload = {
   eval_count: 24,
   eval_duration: 4_000_000_000,
 };
+
+test("prints help and exits zero without reaching configuration", async () => {
+  // No OLLAMA_HOST: reaching configuration loading would fail non-zero, so a
+  // clean exit proves --help is served before configuration and the network.
+  const result = await runCli(["--help"]);
+
+  assert.equal(result.code, 0);
+  assert.equal(result.stderr, "");
+  assert.match(result.stdout, /forge ask "<prompt>" \[--json\]/);
+  assert.match(result.stdout, /--help/);
+  assert.match(result.stdout, /--version/);
+  assert.match(result.stdout, /OLLAMA_HOST/);
+  assert.match(result.stdout, /FORGE_MODEL/);
+  assert.match(result.stdout, /FORGE_TIMEOUT_MS/);
+});
+
+test("prints the manifest version and exits zero without reaching configuration", async () => {
+  const result = await runCli(["--version"]);
+
+  assert.equal(result.code, 0);
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout, `${packageVersion}\n`);
+});
+
+test("serves --version even when combined with other arguments", async () => {
+  const result = await runCli(["ask", "Review this function", "--version"]);
+
+  assert.equal(result.code, 0);
+  assert.equal(result.stderr, "");
+  assert.equal(result.stdout, `${packageVersion}\n`);
+});
 
 test("prints categorized usage and exits non-zero", async () => {
   const result = await runCli([]);
