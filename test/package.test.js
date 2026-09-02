@@ -48,11 +48,12 @@ test("the packed artifact works for a clean external consumer", async (context) 
   assert.ok(packedFiles.includes("dist/src/index.d.ts"));
   assert.ok(packedFiles.includes("dist/src/cli.js"));
   assert.ok(packedFiles.includes("README.md"));
+  assert.ok(packedFiles.includes("LICENSE"));
   assert.ok(packedFiles.includes("package.json"));
   for (const path of packedFiles) {
     assert.match(
       path,
-      /^(README\.md|package\.json|dist\/src\/(?:.+\/)?[^/]+\.(?:js|d\.ts))$/,
+      /^(README\.md|LICENSE|package\.json|dist\/src\/(?:.+\/)?[^/]+\.(?:js|d\.ts))$/,
       `unexpected packed file: ${path}`,
     );
   }
@@ -92,8 +93,22 @@ test("the packed artifact works for a clean external consumer", async (context) 
       "utf8",
     ),
   );
-  assert.equal(installedManifest.private, true);
+  // The package is publishable: no private flag, a real version, and MIT terms
+  // that ship with the artifact.
+  assert.equal("private" in installedManifest, false);
+  assert.equal(installedManifest.version, "0.1.0");
+  assert.equal(installedManifest.license, "MIT");
+  assert.match(
+    await readFile(join(consumerDirectory, "node_modules", "forge-local-ai-kit", "LICENSE"), "utf8"),
+    /^MIT License\n\nCopyright \(c\) 2026 Ricardo Lamadrid$/m,
+  );
   assert.deepEqual(installedManifest.dependencies, {});
+  // prepack is what guarantees this tarball was built from current source.
+  assert.equal(
+    JSON.parse(await readFile(join(packageRoot, "package.json"), "utf8")).scripts
+      .prepack,
+    "npm run build",
+  );
   assert.deepEqual(installedManifest.exports, {
     ".": {
       types: "./dist/src/index.d.ts",
