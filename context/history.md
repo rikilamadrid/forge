@@ -4,6 +4,13 @@ Compact record of completed work.
 
 ## Completed
 
+### 2026-09-03 — Feature 03: Public npm Release
+
+- Outcome: Forge is published to the public npm registry as MIT-licensed `forge-local-ai-kit@0.1.0`, so any Node.js 22+ ESM consumer can `npm install forge-local-ai-kit` and use the root `createForge`/`ForgeError` API and the installed `forge` executable without a local tarball. The manifest dropped `private`, gained a `prepack` build and source-traceability metadata, the CLI gained `--help` and `--version`, and the README became the npm landing page.
+- Verification: 43 deterministic tests, type check, and production build; a `prepack` proof that packs a complete artifact from a deleted `dist/`; tarball inspection recording 17 files and shasum `599ee65b44e7882bcd896a78d502d802fa79acd4`, reproduced byte-identically across repacks and matching the published `dist.shasum`. Clean external consumers — one from the tarball, one from the registry — each proved the root ESM import, TypeScript declaration compilation under strict `NodeNext`, refusal of `loadConfig`/`Environment`/`ForgeConfig` and of every internal subpath, and the installed bin across `--version`, `--help`, usage failure, and the `ask` success and failure contracts. No source, test, context, skill, `.env`, or private host file ships, and no configured host appears in any failure message.
+- Commit/PR: GitHub Issues #8, #9, #10, and #11; pull requests #12, #13, and #14. Published as npm user `riki.lamadrid` after separate human approval at the publication gate.
+- Follow-up: `Release process` and `CI/CD` remain `TBD` in `context/project-overview.md`. Ongoing versioning policy, changelog, provenance, and release automation are still unresolved human decisions. LAMA's migration from the CLI to the library API is its own Feature.
+
 ### 2026-09-02 — Feature 02: Installable Forge
 
 - Outcome: Forge is a locally packable, installable ESM kit, `forge-local-ai-kit`, whose root API and packaged `forge` executable share one configuration, inference, result, and error path; the artifact ships only build output and README, stays `private: true`, and adds caller cancellation without changing Feature 01 semantics.
