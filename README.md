@@ -1,45 +1,113 @@
 # 🔥 Forge — The Local AI Kit
 
-Forge is a small, installable TypeScript kit for calling language models that
-run on machines you control. Applications and developer tools can use its root
-API, while humans and scripts can use the packaged `forge` executable. Both
-interfaces share the same configuration validation, inference path, Ollama
-adapter, result mapping, and structured errors.
+Forge calls language models running on machines you control, from TypeScript or
+the command line.
 
-Forge currently supports one runtime: an Ollama HTTP API serving a model such
-as `qwen3.5:9b` on a trusted local network. It is ESM-only, requires Node.js 22
-or newer, and has zero production dependencies.
+If you want an application to use a local model, you normally end up writing the
+same layer twice: HTTP calls to a runtime, configuration validation, timeout and
+cancellation handling, token and latency metrics, and error handling that
+distinguishes "the host is unreachable" from "the model returned nothing." Forge
+is that layer, written once and installable.
 
-Forge is not published to the npm registry. Install it from a locally produced
-tarball until publication is separately approved.
-
-## Install from the packed artifact
-
-Build and pack Forge from a trusted checkout:
-
-```sh
-npm install
-npm run build
-mkdir -p /tmp/forge-package
-npm pack --pack-destination /tmp/forge-package
+```text
+Application  →  Forge  →  local AI runtime  →  model
 ```
 
-The pack command prints the generated filename, currently similar to
-`forge-local-ai-kit-0.0.0.tgz`. Install that tarball in a separate Node.js 22+
-ESM project:
+Forge is the reusable boundary in the middle. It is infrastructure: not a model,
+not an agent framework, not a prompt or chain library. It has no opinion about
+what you ask or why.
+
+Forge supports one runtime today, [Ollama](https://ollama.com), reached over
+HTTP on a machine you trust. It is ESM-only, requires Node.js 22 or newer, and
+has zero production dependencies.
+
+## Install
 
 ```sh
-cd /path/to/consumer
-npm install /tmp/forge-package/forge-local-ai-kit-0.0.0.tgz
+npm install forge-local-ai-kit
 ```
 
-The artifact exposes one package root, `forge-local-ai-kit`, plus the `forge`
-bin. Internal provider modules and Ollama wire types are not public subpaths.
-The package remains `private: true`; these instructions do not publish it.
+## Requirements
 
-## TypeScript API
+Forge is a client. It never installs, pulls, configures, or modifies a runtime
+or a model — you bring those.
 
-Import the factory and public contracts from the package root:
+- **Node.js 22 or newer**, and an ESM project (`"type": "module"`, or `.mjs`).
+- **A running Ollama server** you can reach over HTTP, on this machine or
+  another one on your local network.
+- **A model already pulled** on that server, for example `ollama pull qwen3:8b`.
+
+Verify the runtime before pointing Forge at it:
+
+```sh
+ollama list                       # the model you want is in this list
+curl http://localhost:11434/api/version
+```
+
+## Setup: one machine
+
+The simplest case. Ollama runs on the same machine as your application, on its
+default port.
+
+`ollama serve` runs in the foreground and holds the terminal, so use two.
+
+**Terminal 1 — run the server.** Skip this if Ollama is already running; the
+macOS and Windows desktop apps start it for you.
+
+```sh
+ollama serve
+```
+
+**Terminal 2 — pull a model and call it.**
+
+```sh
+ollama pull qwen3:8b
+
+export OLLAMA_HOST="http://localhost:11434"
+export FORGE_MODEL="qwen3:8b"
+
+npx forge ask "Summarize what a bloom filter is good for."
+```
+
+## Setup: two machines over a LAN
+
+Run the model on the machine that has the memory for it, and call it from your
+laptop. Nothing leaves your network.
+
+On the **server** machine, bind Ollama to the network instead of loopback. As
+above, the server holds its terminal, so use two.
+
+**Server, terminal 1 — serve on the network.**
+
+```sh
+OLLAMA_HOST=0.0.0.0:11434 ollama serve
+```
+
+**Server, terminal 2 — pull the model.**
+
+```sh
+ollama pull qwen3:8b
+```
+
+On the **client** machine, point Forge at the server's address:
+
+```sh
+export OLLAMA_HOST="http://192.0.2.10:11434"   # your server's LAN address
+export FORGE_MODEL="qwen3:8b"
+
+npx forge ask "Summarize what a bloom filter is good for."
+```
+
+Note that `OLLAMA_HOST` means two different things by convention. To the Ollama
+server it is the address to bind to (`0.0.0.0:11434`); to Forge it is the base
+URL to call (`http://192.0.2.10:11434`). Forge requires the URL form.
+
+Ollama has no authentication. Bind it to a network you trust and do not expose
+that port to the Internet.
+
+## Library usage
+
+Import from the package root:
 
 ```ts
 import {
@@ -50,17 +118,14 @@ import {
 
 const forge = createForge({
   provider: "ollama",
-  host: process.env.OLLAMA_HOST!,
-  model: process.env.FORGE_MODEL!,
-  timeoutMs: 120_000,
+  host: "http://localhost:11434",
+  model: "qwen3:8b",
 });
 
 try {
-  const result: InferenceResult = await forge.ask(
-    "Review this TypeScript function for correctness.",
-  );
+  const result: InferenceResult = await forge.ask("Explain a bloom filter.");
   console.log(result.output);
-  console.log(result.provider, result.model, result.metrics);
+  console.log(result.model, result.metrics.clientLatencyMs);
 } catch (error) {
   if (error instanceof ForgeError) {
     console.error(error.category, error.message, error.evidence);
@@ -70,7 +135,7 @@ try {
 }
 ```
 
-The public API is deliberately small:
+The whole public API:
 
 ```ts
 interface CreateForgeOptions {
@@ -91,31 +156,90 @@ interface Forge {
 function createForge(options: CreateForgeOptions): Forge;
 ```
 
-`host` must be an HTTP or HTTPS Ollama base URL. `model` is the exact model
-name requested from Ollama. `timeoutMs` is optional and defaults to 120000.
+`createForge`, `ForgeError`, and the public types are exported from the package
+root and nowhere else. Internal modules — the provider, its wire types, and the
+CLI's own environment reader — are not importable subpaths.
+
+Forge reads no environment variables and loads no `.env` file. Your application
+owns its own configuration and passes normalized values in:
+
+```ts
+const forge = createForge({
+  provider: "ollama",
+  host: process.env.MY_APP_OLLAMA_HOST ?? "http://localhost:11434",
+  model: process.env.MY_APP_MODEL ?? "qwen3:8b",
+  timeoutMs: 60_000,
+});
+```
 
 ### Cancellation
 
-Pass a native `AbortSignal` when the caller needs to cancel abandoned work:
+Pass a native `AbortSignal` to abandon work in flight:
 
 ```ts
 const controller = new AbortController();
-const pending = forge.ask("Review this change.", {
+const pending = forge.ask("Explain a bloom filter.", {
   signal: controller.signal,
 });
 
 controller.abort();
-await pending;
+await pending; // rejects with ForgeError, category "aborted"
 ```
 
-Caller cancellation rejects with a `ForgeError` whose category is `aborted`.
-Forge's configured deadline rejects with `timeout`. The categories stay
-distinct whether cancellation happens while fetching or consuming the response
-body.
+Caller cancellation rejects as `aborted`. Forge's own deadline rejects as
+`timeout`. The two stay distinct.
 
-## Structured results and metrics
+## CLI usage
 
-A successful call resolves this provider-neutral shape:
+Installing the package installs a `forge` executable.
+
+```sh
+forge --help      # supported commands and configuration; exits 0
+forge --version   # the installed package version; exits 0
+
+forge ask "Explain a bloom filter."
+forge ask "Explain a bloom filter." --json
+```
+
+`--help` and `--version` answer offline, before any configuration or network
+work. `ask` takes exactly one non-empty prompt and an optional `--json`.
+
+Human-readable success prints the response, then provider, model, client
+latency, token counts, and whichever Ollama timings were reported. Failures
+print one line to standard error — `Forge error [category]: message` — with no
+stack trace, and exit non-zero.
+
+`--json` writes exactly one result or failure object, plus a newline, to
+standard output. The result and error semantics are identical to the library's.
+
+The CLI reads its configuration from the environment, and does not load `.env`
+files — that belongs to your shell or process manager:
+
+| Variable | Required | Meaning |
+| --- | --- | --- |
+| `OLLAMA_HOST` | yes | Base URL of the Ollama API, `http://` or `https://` |
+| `FORGE_MODEL` | yes | Exact name of a model installed on that server |
+| `FORGE_TIMEOUT_MS` | no | Request timeout in milliseconds; positive number |
+
+## Configuration
+
+The library and the CLI validate the same three things through the same code
+path, so they cannot disagree.
+
+- **`provider`** — `"ollama"`. The only supported value today.
+- **`host`** — the Ollama base URL. Must parse as an `http://` or `https://`
+  URL. A trailing slash is trimmed.
+- **`model`** — the exact model name as Ollama knows it. Forge does not resolve
+  aliases or pull missing models.
+- **`timeoutMs`** — optional, defaults to `120000` (two minutes). Must be a
+  positive finite number. Cold model loads are slow; raise it rather than
+  fighting it.
+
+Anything invalid rejects as a `configuration` error before a request is made.
+
+## Results and metrics
+
+A successful call resolves to:
 
 ```ts
 interface InferenceResult {
@@ -127,13 +251,13 @@ interface InferenceResult {
 }
 ```
 
-Example JSON:
+As JSON:
 
 ```json
 {
   "success": true,
   "provider": "ollama",
-  "model": "qwen3.5:9b",
+  "model": "qwen3:8b",
   "output": "A useful answer.",
   "metrics": {
     "clientLatencyMs": 1234.5,
@@ -148,8 +272,9 @@ Example JSON:
 }
 ```
 
-`clientLatencyMs` is always present and measures the complete operation from
-Forge. Other metrics are included only when Ollama supplies their source data:
+`clientLatencyMs` is always present and measures the whole operation as Forge
+saw it. Every other metric appears only when Ollama reported its source data,
+and is otherwise absent — Forge does not substitute zeros.
 
 | Ollama field | Forge metric | Unit |
 | --- | --- | --- |
@@ -161,116 +286,70 @@ Forge. Other metrics are included only when Ollama supplies their source data:
 | `prompt_eval_duration` | `promptEvalDurationMs` | milliseconds |
 | `eval_duration` | `completionEvalDurationMs` | milliseconds |
 
-Missing metrics remain absent; Forge does not invent zero values. Ollama may
-include hidden-reasoning work in `eval_count`, so `completionTokens` describes
-runtime work and is not necessarily the visible output's token count.
+Ollama counts hidden reasoning in `eval_count`, so `completionTokens` measures
+runtime work, not the length of the visible answer.
 
-## Structured errors
+## Failures
 
-Known failures reject with the exported `ForgeError`. It provides a stable
-`category`, a safe `message`, optional `statusCode`, and structured `evidence`
-containing available provider, model, latency, or completion-reason details.
+Known failures reject with `ForgeError`, which carries a stable `category`, a
+safe `message`, an optional `statusCode`, and `evidence` holding whatever
+provider, model, latency, or completion-reason detail was available.
 
-The categories are:
-
-- `usage` — the prompt or CLI invocation is invalid
-- `configuration` — required options or environment values are invalid
-- `aborted` — the caller cancelled through its `AbortSignal`
-- `timeout` — Forge's configured deadline expired
-- `network` — the configured runtime could not be reached
-- `http` — Ollama returned a non-success HTTP response without provider detail
-- `invalid_response` — the response was not valid completed Ollama JSON
-- `empty_response` — the turn completed without visible response text
-- `provider` — Ollama returned a structured provider error
-- `internal` — an unexpected failure was safely normalized for CLI output
-
-Forge never exposes Ollama's `thinking` content. A completed thinking-only turn
-fails as `empty_response`; `evidence.doneReason` is retained when available,
-without copying hidden reasoning into output, errors, or evidence.
-
-## Installed CLI
-
-The same tarball installs the `forge` executable. In the consuming project:
-
-```sh
-export OLLAMA_HOST="http://your-trusted-ollama-host:11434"
-export FORGE_MODEL="qwen3.5:9b"
-export FORGE_TIMEOUT_MS="120000" # optional
-
-./node_modules/.bin/forge ask "Review this TypeScript function for bugs"
-./node_modules/.bin/forge ask "Review this TypeScript function for bugs" --json
+```ts
+catch (error) {
+  if (error instanceof ForgeError && error.category === "timeout") {
+    // retry with a longer deadline
+  }
+}
 ```
 
-The CLI accepts exactly one non-empty prompt and an optional `--json` flag.
-Human-readable success writes the response followed by provider, model,
-latency, token counts, and available Ollama timings. Human-readable failures go
-to standard error and exit non-zero without a stack trace.
+Branch on `category`, never on message text:
 
-JSON mode writes exactly one result or failure object plus a trailing newline
-to standard output. This makes it suitable for scripts while preserving the
-same result, metric, timeout, and error semantics as the library. Caller-owned
-`AbortSignal` cancellation is available through the library API.
+| Category | Meaning |
+| --- | --- |
+| `usage` | The prompt or CLI invocation is invalid |
+| `configuration` | Required options or environment values are invalid |
+| `network` | The configured runtime could not be reached |
+| `aborted` | The caller cancelled through its `AbortSignal` |
+| `timeout` | Forge's configured deadline expired |
+| `http` | A non-success HTTP response with no provider detail |
+| `invalid_response` | The response was not valid completed Ollama JSON |
+| `empty_response` | The turn completed with no visible response text |
+| `provider` | Ollama returned a structured provider error |
+| `internal` | An unexpected failure, safely normalized |
 
-`FORGE_TIMEOUT_MS` must be a positive finite number when supplied. The CLI does
-not load `.env` files; environment loading belongs to the invoking shell or
-application.
+In `--json` mode the same information arrives as `{ "success": false, "error":
+{ "category", "message", "statusCode"? }, "evidence": {} }`.
 
-## One execution path
+Forge never surfaces Ollama's hidden `thinking` content. A turn that produced
+only reasoning fails as `empty_response`, keeping `evidence.doneReason` when
+available, without copying the reasoning anywhere.
 
-The public factory and installed CLI converge before inference:
+## Local-first and privacy
 
-```text
-TypeScript caller ─┐
-                  ├─> createForge ─> ask ─> Ollama adapter ─> Ollama/Qwen
-installed CLI ────┘          │                         │
-                             └─ shared results/errors ─┘
-```
+- Prompts and responses go to the host you configure and nowhere else. Forge
+  contacts no other service.
+- Forge adds no persistence, no telemetry, no analytics, and no logging of
+  prompts or responses. Everything is ephemeral.
+- Only the requested response is returned. Hidden reasoning is never surfaced.
+- Forge holds no credentials and reads no environment of its own as a library.
+- Keep Ollama on a trusted network. It has no authentication of its own.
+- Keep real hosts out of version control; hosts in this README are placeholders.
 
-The CLI is an argument, environment, and presentation adapter over
-`createForge`. It does not construct a separate provider path or remap metrics
-and errors independently. Applications do not import `OllamaProvider` or
-provider wire types.
+## Scope
 
-Ollama is Forge's first and currently only provider. Keeping the public result
-and error contracts provider-neutral avoids coupling consumers to Ollama's wire
-format; it does not claim another provider, routing, or plugin system exists.
+Forge is deliberately small. It does not do, and does not plan to do:
 
-## Local-first and privacy boundaries
+- Model management — discovery, pulling, configuration, or serving.
+- Prompt templating, chains, agents, tools, or memory.
+- Streaming, embeddings, or chat-history management.
+- CommonJS, a browser build, or public subpaths.
 
-- Keep Ollama on a trusted network; Forge does not expose it to the Internet.
-- Provide machine-specific hosts, model names, and timeouts at runtime.
-- Never commit `.env`, real LAN addresses, credentials, or private prompts.
-- Prompts and responses are ephemeral; Forge adds no persistence or telemetry.
-- Only the explicitly requested response is returned or printed.
-- Hidden reasoning is never surfaced.
-- Forge does not discover, install, pull, configure, or modify models.
-- Forge contains no LAMA-, Lorekeeper-, or user-specific behavior or data.
+Ollama is the first and currently only provider. The result and error contracts
+are provider-neutral so consumers are not coupled to Ollama's wire format; that
+is a design choice, not a claim that other providers, routing, or a plugin
+system exist.
 
-## Development and verification
+## License
 
-From the Forge checkout:
-
-```sh
-npm test
-npm run check
-npm run build
-npm pack --dry-run
-```
-
-The deterministic package test creates the real tarball, installs it into a
-clean temporary ESM consumer, imports the package root, compiles against the
-shipped declarations, rejects private subpath imports, and invokes the
-tarball-installed CLI against local controlled infrastructure.
-
-Live verification is intentionally opt-in. Source the ignored private
-environment only for the verification process, install one generated tarball
-into a clean external consumer, and exercise both that installed root API and
-that installed `forge` bin. Retain only sanitized path, provider/model,
-completion, latency, token, and normalized timing evidence—never the host,
-prompt, output text, hidden reasoning, credentials, or raw terminal capture.
-
-## Current status
-
-Feature 01's CLI delegation and evidence contracts are complete. Forge is now
-locally packable and installable as `forge-local-ai-kit`; registry publication
-remains a separate, unapproved release decision.
+MIT © 2026 Ricardo Lamadrid. See [LICENSE](LICENSE).
