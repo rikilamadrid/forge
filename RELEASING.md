@@ -136,11 +136,14 @@ git push -u origin "release/v$VERSION"
 gh pr create --base main --head "release/v$VERSION" \
   --title "chore(release): v$VERSION" --body-file "$RELEASE_DIR/release-notes.md"
 PR="$(gh pr view "release/v$VERSION" --json number -q .number)" && echo "$PR"
-gh pr checks "$PR" --watch --required
+gh run watch "$(gh run list --workflow CI --commit "$(gh pr view "$PR" --json headRefOid -q .headRefOid)" --event pull_request --json databaseId -q '.[0].databaseId')" --exit-status
+gh pr checks "$PR" --required
 ```
 
-If `gh pr checks` reports that no checks exist yet, wait a few seconds and run it
-again. Continue only when `CI` passes.
+The run can take a few seconds to appear after a push; if `gh run watch` finds no
+run, run it again. Do not use `gh pr checks --watch --required`: the required
+`CI` check is only reported after every matrix cell finishes, so that command
+exits early. Continue only when the run succeeds and `CI` shows `pass`.
 
 ### 3. Merge after human approval
 
@@ -156,7 +159,8 @@ Update the branch normally and wait for `CI` again, then re-check:
 
 ```sh
 gh pr update-branch "$PR"
-gh pr checks "$PR" --watch --required
+gh run watch "$(gh run list --workflow CI --commit "$(gh pr view "$PR" --json headRefOid -q .headRefOid)" --event pull_request --json databaseId -q '.[0].databaseId')" --exit-status
+gh pr checks "$PR" --required
 gh pr view "$PR" --json mergeStateStatus
 ```
 
