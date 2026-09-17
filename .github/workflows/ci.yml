@@ -1,0 +1,56 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  test:
+    name: test (${{ matrix.os }}, node ${{ matrix.node }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - os: ubuntu-latest
+            node: 22
+          - os: ubuntu-latest
+            node: 24
+          - os: macos-latest
+            node: 22
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-node@820762786026740c76f36085b0efc47a31fe5020 # v7.0.0
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - run: npm ci
+      - run: npm run check
+      - run: npm test
+      - name: Pack the artifact
+        id: pack
+        run: |
+          mkdir -p "$RUNNER_TEMP/pack"
+          filename="$(npm pack --json --pack-destination "$RUNNER_TEMP/pack" \
+            | node -p 'JSON.parse(require("node:fs").readFileSync(0, "utf8"))[0].filename')"
+          echo "tarball=$RUNNER_TEMP/pack/$filename" >> "$GITHUB_OUTPUT"
+      - name: Verify the artifact
+        run: node scripts/verify-package.mjs "${{ steps.pack.outputs.tarball }}"
+
+  # The one status check branch protection requires. It stays named "CI" however
+  # the matrix above changes.
+  CI:
+    name: CI
+    needs: test
+    if: always()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Require every matrix cell to succeed
+        run: |
+          echo "matrix result: ${{ needs.test.result }}"
+          test "${{ needs.test.result }}" = "success"

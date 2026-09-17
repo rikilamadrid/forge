@@ -93,10 +93,13 @@ test("the packed artifact works for a clean external consumer", async (context) 
       "utf8",
     ),
   );
-  // The package is publishable: no private flag, a real version, and MIT terms
-  // that ship with the artifact.
+  // The package is publishable: no private flag, the version the repository
+  // declares, and MIT terms that ship with the artifact.
+  const repositoryManifest = JSON.parse(
+    await readFile(join(packageRoot, "package.json"), "utf8"),
+  );
   assert.equal("private" in installedManifest, false);
-  assert.equal(installedManifest.version, "0.1.0");
+  assert.equal(installedManifest.version, repositoryManifest.version);
   assert.equal(installedManifest.license, "MIT");
   assert.match(
     await readFile(join(consumerDirectory, "node_modules", "forge-local-ai-kit", "LICENSE"), "utf8"),

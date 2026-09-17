@@ -1,5 +1,7 @@
 # 🔥 Forge — The Local AI Kit
 
+[![CI](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml)
+
 Forge calls language models running on machines you control, from TypeScript or
 the command line.
 
