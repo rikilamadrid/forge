@@ -84,11 +84,15 @@ npm version patch --no-git-tag-version   # or: npm version minor --no-git-tag-ve
 VERSION="$(node -p 'require("./package.json").version')" && echo "$VERSION"
 git ls-remote --tags origin "v$VERSION"            # must print nothing
 npm view "forge-local-ai-kit@$VERSION" version     # must fail with E404
-git checkout -b "release/v$VERSION"
 ```
 
-If the tag exists or npm prints a version, that version is already taken. Stop, and discard
-the bump with `git checkout main && git restore package.json package-lock.json`.
+If the tag exists or npm prints a version, that version is already taken. Stop,
+and discard the bump with `git restore package.json package-lock.json`.
+Otherwise, create the release branch; the uncommitted bump moves with it:
+
+```sh
+git checkout -b "release/v$VERSION"
+```
 
 Move the `Unreleased` entries into a dated section for this version:
 
@@ -144,7 +148,7 @@ A human approves the release pull request. Then check that GitHub will accept th
 merge under the normal protection rules:
 
 ```sh
-gh pr view "$PR" --json reviewDecision,mergeStateStatus
+gh pr view "$PR" --json mergeStateStatus
 ```
 
 If `mergeStateStatus` is `BEHIND`, `main` moved since the branch was created.
@@ -153,7 +157,7 @@ Update the branch normally and wait for `CI` again, then re-check:
 ```sh
 gh pr update-branch "$PR"
 gh pr checks "$PR" --watch --required
-gh pr view "$PR" --json reviewDecision,mergeStateStatus
+gh pr view "$PR" --json mergeStateStatus
 ```
 
 Merge only when `mergeStateStatus` is `CLEAN`:
@@ -228,6 +232,8 @@ Report to the human, and wait for their explicit approval to publish:
 Do not continue without that approval.
 
 If publication is declined, delete the local tag and stop. The release ends here.
+`main` still carries the unpublished version; what happens to it next is the
+human's decision.
 
 ```sh
 git tag -d "v$VERSION"
