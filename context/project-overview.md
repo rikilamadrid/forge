@@ -61,7 +61,7 @@ human resolves it.
 | Preference | TypeScript on Node.js with minimal dependencies | Use platform capabilities where practical. |
 | Constraint | Provider independence without speculative extensibility | Add one interface required by the Ollama implementation, not a plugin system. |
 | Constraint | Feature 01 proves real delegation | An HTTP 200 or fully mocked test is insufficient evidence. |
-| Open decision | Public package name and registry publication | TBD; not required for Feature 01. |
+| Requirement | Publish as the unscoped `forge-local-ai-kit` on the public npm registry, MIT licensed | Resolved by Feature 03: `0.1.0` published 2026-09-03. Later versions follow the Delivery Workflow release rows. |
 
 ## System
 
@@ -114,9 +114,9 @@ build/package: npm run build
 | Commit convention | Conventional Commits |
 | Review policy | Human acceptance is required; tester review verifies the Feature contract before completion. |
 | Merge strategy | Squash merge after approval |
-| CI/CD | TBD; select when a remote Git host is chosen. |
-| Versioning and changelog | Semantic Versioning after the first distributable release; no changelog required during the prototype. |
-| Release process | TBD; Feature 01 does not publish a package. |
+| CI/CD | TBD; the remote host is GitHub (`rikilamadrid/forge`), so the condition is met. Feature 04 proposes GitHub Actions. |
+| Versioning and changelog | Semantic Versioning applies since `0.1.0` (2026-09-03). The 0.x rule and changelog policy are TBD; Feature 04 proposes them. |
+| Release process | TBD; `0.1.0` was published manually by Feature 03 behind a human publication gate. Feature 04 proposes the repeatable process. |
 
 ## Environments and Integrations
 
@@ -155,6 +155,7 @@ anything a prototype proved must not reach production.
 | 2026-09-01 | Keep Forge independent of LAMA and personal data. | Forge is reusable infrastructure intended for a public repository. |
 | 2026-09-01 | Start with one provider contract and one Ollama adapter. | Enable future substitution without speculative plugin architecture. |
 | 2026-09-01 | Use structured results internally and offer human and JSON CLI output. | The same evidence must serve people, tools, and later comparisons. |
+| 2026-09-02 | License Forge MIT and publish it as the unscoped `forge-local-ai-kit`. | Public, reusable infrastructure needs a permissive license and a name that assumes no npm scope ownership. |
 
 ## Learning
 
