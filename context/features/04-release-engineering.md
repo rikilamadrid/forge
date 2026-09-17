@@ -48,16 +48,17 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
 ### Deterministic manual release process
 
 - Add `RELEASING.md` at the repository root. It contains the complete process as exact commands in order, so that a person following only that file from a clean checkout reaches the publication gate with a verified artifact and no undocumented step:
-  1. Preconditions: `main` checked out and clean, `CI` green on `HEAD` (`gh run list`), `npm whoami` returning the publishing account.
-  2. Release pull request from a `release/vX.Y.Z` branch: `npm version <patch|minor> --no-git-tag-version`, move `Unreleased` entries to a new dated version section, commit as `chore(release): vX.Y.Z`, open the pull request, wait for `CI`.
-  3. Squash merge after human approval, then `git checkout main && git pull`.
-  4. Tag: annotated `vX.Y.Z` on the merged `main` commit only, pushed to `origin`. Never tag a branch commit.
+  1. Preconditions: `main` checked out, clean, and in sync with `origin/main`, and `CI` green on that exact commit (`gh run list --workflow CI --commit "$(git rev-parse HEAD)"`). npm authentication is not a precondition.
+  2. Release pull request from a `release/vX.Y.Z` branch: `npm version <patch|minor> --no-git-tag-version`, move `Unreleased` entries to a new dated version section, commit `package.json`, `package-lock.json`, and `CHANGELOG.md` together as `chore(release): vX.Y.Z`, open the pull request, wait for `CI`.
+  3. Squash merge (`gh pr merge --squash`) after human approval, once GitHub considers the pull request mergeable under the normal protection rules; then `git checkout main && git pull` and confirm `CI` is green on the merged commit with `gh run list --workflow CI --commit "$(git rev-parse HEAD)"`. If strict protection reports the branch out of date, update it normally and wait for `CI` again. The repository admin bypass is never used.
+  4. Tag: create annotated `vX.Y.Z` locally on the verified merged `main` commit. Never tag a branch commit, and do not push the tag yet.
   5. Artifact verification from that commit: `rm -rf dist node_modules && npm ci && npm test && npm pack`, then `node scripts/verify-package.mjs <tarball>`; record the tarball's shasum and file count. The document does not restate what the script checks.
-  6. Publication gate: stop and obtain explicit human approval to publish. This approval is separate from accepting the release pull request.
+  6. Publication gate: a hard stop. Check npm authentication here, immediately before publishing, and obtain explicit human approval to publish. This approval is separate from accepting the release pull request. If publication is declined, delete the local tag and stop.
   7. `npm publish <tarball>` — publish the verified tarball, not a fresh pack.
-  8. Post-publish verification: `npm view forge-local-ai-kit@X.Y.Z dist.shasum dist.fileCount` match the recorded values, and a clean external consumer installs `forge-local-ai-kit@X.Y.Z` from the registry, imports `createForge` and `ForgeError` from the root, and runs `forge --version` printing `X.Y.Z`.
-  9. GitHub Release `vX.Y.Z` from the tag, body taken from the changelog section.
-- Treat npm authentication as a publication-gate concern only, exactly as Feature 03: it does not block slicing, implementation, or pre-publication verification. At the gate, if `npm whoami` shows no account, stop and ask the human to run `npm login --auth-type=web`.
+  8. Post-publish verification: `npm view forge-local-ai-kit@X.Y.Z dist.shasum dist.fileCount` match the recorded values, and the published tarball fetched from the registry passes `node scripts/verify-package.mjs`, which is where the clean-consumer install, root import, and `forge --version` checks live.
+  9. Push the tag to `origin` only now that the package is published and verified, then create GitHub Release `vX.Y.Z` with `gh release create --verify-tag`, body taken from the changelog section.
+- `RELEASING.md` never instructs the releaser to use the repository admin bypass.
+- Treat npm authentication as a publication-gate concern only, exactly as Feature 03: it does not block slicing, implementation, pre-publication verification, or the release preconditions. At the gate, if `npm whoami` shows no account, stop and ask the human to run `npm login --auth-type=web`.
 - Prove the process by executing `RELEASING.md` once for real, releasing `0.1.1`. The README badge is a change to the shipped artifact, so `0.1.1` is a PATCH under the policy above. A dry run alone is not sufficient. Publication happens only after the human's explicit approval at step 6.
 - When the release completes, resolve the `CI/CD`, `Versioning and changelog`, and `Release process` rows in `context/project-overview.md` to what was actually built, and remove `TBD` from them.
 
@@ -78,7 +79,7 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
 - Branch protection on `main` requires the `CI` check, applied only after a successful push run on `main`, or its refusal is recorded.
 - `CHANGELOG.md` exists with `Unreleased` and a `0.1.0` section backfilled from history; `npm pack --dry-run` does not list it.
 - `RELEASING.md` documents the nine steps with exact commands, including the publication gate and post-publish verification, and delegates artifact checks to the script.
-- `forge-local-ai-kit@0.1.1` is published only after explicit human approval; annotated tag `v0.1.1` exists on a `main` commit; GitHub Release `v0.1.1` exists with the changelog section; registry `dist.shasum` and `dist.fileCount` match the verified tarball; a clean external consumer installs `0.1.1` from the registry and `forge --version` prints `0.1.1`.
+- `forge-local-ai-kit@0.1.1` is published only after explicit human approval; annotated tag `v0.1.1` exists on a `main` commit and reached `origin` only after publication was verified; GitHub Release `v0.1.1` exists with the changelog section, created with `--verify-tag`; registry `dist.shasum` and `dist.fileCount` match the verified tarball; the tarball fetched from the registry passes `scripts/verify-package.mjs`, including its clean-consumer install and `forge --version` printing `0.1.1`.
 - `context/project-overview.md` carries no `TBD` in the `CI/CD`, `Versioning and changelog`, or `Release process` rows, and each row matches what shipped.
 - `npm test`, `npm run check`, and `npm run build` pass; `dependencies` remains empty; `devDependencies` is unchanged.
 
@@ -97,3 +98,11 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
   10. The one existing-test correction in `test/package.test.js`, approved 2026-09-17 after loading 04.1. It is not a new behavior test; it removes an accidental version-specific assumption so the suite stays valid across releases.
 - `0.1.0` was published as npm user `riki.lamadrid`. The npm identity, 2FA method, and token remain the human's and are provided at the gate, never stored in the repository.
 - Actions are pinned to commit SHAs because the repository does not require SHA pinning and a workflow that runs on every pull request is the project's main supply-chain exposure.
+- Release-command amendments approved on 2026-09-17, before implementing 04.2:
+  - P1 — npm authentication moves out of the preconditions into the publication gate, immediately before publishing.
+  - P2 — the release tag is not pushed before publication approval. The merged commit is verified first, the annotated tag is created locally, and it is pushed only after the package is published and verified from the registry. If publication is declined, the local tag is deleted and the release stops.
+  - P3 — `gh release create` runs with `--verify-tag`, so GitHub can never silently create a lightweight tag.
+  - P4 — CI verification is tied to the exact release commit: `gh run list --workflow CI --commit "$(git rev-parse HEAD)"`.
+  - P5 — the release pull request commits `package.json` and `package-lock.json` together. On the first release pull request the lockfile's own version moving from `0.0.0` to `0.1.1` is expected.
+  - P6 — post-publication verification fetches the published tarball and runs `scripts/verify-package.mjs` against it; `RELEASING.md` does not duplicate the script's package-contract rules.
+  - `RELEASING.md` never instructs the releaser to use the repository admin bypass. If strict branch protection reports the release pull request stale, the branch is updated normally and `CI` reruns before merging; `gh pr merge --squash` runs once GitHub considers the pull request mergeable under the normal protection rules.
