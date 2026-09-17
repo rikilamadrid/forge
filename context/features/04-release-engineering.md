@@ -2,7 +2,7 @@
 
 ## Status
 
-Proposed
+In Progress
 
 ## Goal
 
@@ -12,7 +12,7 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
 
 - Read: `package.json`, `package-lock.json`, `README.md`, `context/features/03-public-npm-release.md` (artifact verification requirements and the publication gate), the Feature 03 entry in `context/history.md` (published file count and shasum), and the Delivery Workflow, Technology, and Commands sections of `context/project-overview.md`.
 - Relevant area: `.github/workflows/`, `scripts/`, release documentation at the repository root, the manifest version, git tags, GitHub Releases, and the registry state of `forge-local-ai-kit`.
-- Avoid: `src/` and `test/`. This Feature changes no runtime, CLI, or test behavior; the existing suite is what CI runs.
+- Avoid: `src/` and, with one exception, `test/`. This Feature changes no runtime, CLI, or test behavior; the existing suite is what CI runs. The exception: `test/package.test.js` asserts that the installed version is the literal `0.1.0`, which would fail the moment a release bumps the version; ticket 04.1 replaces that literal with the repository manifest's version and changes nothing else under `test/`.
 - Repository state on 2026-09-16: no `.github/` directory, workflows, git tags, GitHub Releases, branch protection, or rulesets. GitHub Actions is enabled with default read-only workflow permissions. `forge-local-ai-kit@0.1.0` is the only published version (2026-09-03, 17 files, shasum `599ee65b44e7882bcd896a78d502d802fa79acd4`, no provenance attestation). `npm test` is fully deterministic — the live Qwen verification is a manual step, not a test — so CI needs no Ollama host.
 
 ## Requirements
@@ -34,6 +34,7 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
 - The workflow declares `permissions: contents: read`, uses no secrets, and uses only `actions/checkout` and `actions/setup-node`, each pinned to a full commit SHA with the version in a trailing comment.
 - CI never contacts an Ollama host. Live verification stays a documented manual step.
 - The README header shows the `CI` workflow status badge.
+- In `test/package.test.js`, replace the hardcoded expected installed version `"0.1.0"` with the version read from the repository `package.json`, preserving the test's intent. No other change under `test/`.
 - After the workflow has run successfully on `main` (the push run following the merge), and with the human's approval, enable branch protection on `main` requiring the `CI` status check. Change nothing else in branch policy. If declined, record that under Notes / Decisions.
 
 ### Versioning and changelog policy
@@ -63,7 +64,7 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
 ## Out of Scope
 
 - Release automation of any kind: publishing from CI, npm trusted publishing or OIDC, provenance attestations, automatic tag or GitHub Release creation, release tooling such as release-please or Changesets, and npm credentials in the repository or in GitHub secrets. That is a later Feature, planned only after `0.1.1` proves the manual path.
-- Any change under `src/` or `test/`; any inference, provider, result, metric, error, or CLI behavior change.
+- Any change under `src/`; any change under `test/` other than the single version-literal correction in `test/package.test.js`; any inference, provider, result, metric, error, or CLI behavior change.
 - New devDependencies, linters, formatters, or coverage tooling.
 - Retroactive tagging of `v0.1.0`: its exact publish commit is not recorded, and the changelog notes that `0.1.0` predates tagging.
 - Branch-policy changes beyond the required `CI` status check.
@@ -93,5 +94,6 @@ Make Forge safely and repeatably releasable: every push to `main` and every pull
   7. Branch protection requiring `CI`, applied only after the workflow has succeeded on `main`, with no unrelated branch-policy changes.
   8. Release automation is deferred to a later Feature.
   9. `scripts/verify-package.mjs` is the single deterministic source of truth for package verification; CI and `RELEASING.md` invoke it rather than duplicating the contract.
+  10. The one existing-test correction in `test/package.test.js`, approved 2026-09-17 after loading 04.1. It is not a new behavior test; it removes an accidental version-specific assumption so the suite stays valid across releases.
 - `0.1.0` was published as npm user `riki.lamadrid`. The npm identity, 2FA method, and token remain the human's and are provided at the gate, never stored in the repository.
 - Actions are pinned to commit SHAs because the repository does not require SHA pinning and a workflow that runs on every pull request is the project's main supply-chain exposure.
