@@ -124,12 +124,19 @@ process.stdout.write(`${notes}\n`);
 ' "$VERSION" > "$RELEASE_DIR/release-notes.md" && cat "$RELEASE_DIR/release-notes.md"
 ```
 
-Review the change. It must touch only `package.json`, `package-lock.json`, and
-`CHANGELOG.md`. On the first release from this process, the lockfile's own
-`version` moving from `0.0.0` to the new version is expected.
+Review the change before committing anything:
 
 ```sh
+git status --short
 git diff
+```
+
+It must touch only `package.json`, `package-lock.json`, and `CHANGELOG.md`. On
+the first release from this process, the lockfile's own `version` moving from
+`0.0.0` to the new version is expected. Commit only once the diff is what you
+expect:
+
+```sh
 git add package.json package-lock.json CHANGELOG.md
 git commit -m "chore(release): v$VERSION"
 git push -u origin "release/v$VERSION"
