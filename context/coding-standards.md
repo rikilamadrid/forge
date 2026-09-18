@@ -36,7 +36,8 @@ Project-specific conventions override them when explicit.
 
 ## Scope
 
-- Work on one coherent change at a time.
+- Work on one coherent change per worker. Orchestrator mode coordinates
+  independent workers; each retains its own ticket and context boundary.
 - Read only the files and dependencies needed for that work.
 - Avoid unrelated refactors, formatting churn, or speculative cleanup.
 - Keep the repository stable and verifiable after each meaningful change.
@@ -118,6 +119,8 @@ Keep durable truth in its appropriate project artifact.
   `context/tickets/`
 - completed outcomes:
   `context/history.md`
+- how Pathfinder runs the project, human-in-the-loop or orchestrator:
+  `context/execution-mode.md`
 - active workspace state:
   `context/current-ticket.md`
 - state handed to the next session:
@@ -142,6 +145,7 @@ context/features/
 context/tickets/ # only when local Markdown is the ticket store
 context/history.md
 context/tracker.md
+context/execution-mode.md
 ```
 
 **Ignore transient workspace state.** It is the answer to "what was I doing",
@@ -160,6 +164,13 @@ context/current-ticket.md
 context/handoff.md
 ```
 
+A project in orchestrator mode adds one more line, for the machine-local
+worktrees each ticket worker runs in:
+
+```text
+/.pathfinder/
+```
+
 **Do not ignore `context/` as a directory.** It is the one mistake worth naming,
 because it looks tidier and quietly untracks the project truth every later
 session depends on — including the file that documents your stack and workflow.
@@ -168,6 +179,11 @@ Ignore the two transient files by name.
 A team that would rather share workspace state — a single-machine project, or a
 handoff meant to be read by a colleague — can track them instead. Nothing in the
 kit reads Git state to decide how to behave.
+
+`context/execution-mode.md` is durable and tracked: it records, on one marker
+line, whether Pathfinder runs the project human-in-the-loop or as an
+orchestrator, and a project with no file runs human-in-the-loop. The installer
+writes it when asked or told; nothing else creates it.
 
 `context/tracker.md` is durable and tracked when the project selects a store
 other than local Markdown. With local Markdown, `context/tickets/` is durable

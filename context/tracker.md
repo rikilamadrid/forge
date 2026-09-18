@@ -1,5 +1,7 @@
 # Ticket Tracker
 
+<!-- pathfinder:ticket-store github-issues rikilamadrid/forge -->
+
 - Store: GitHub Issues
 - Repository: `rikilamadrid/forge`
 - URL: `https://github.com/rikilamadrid/forge/issues`
