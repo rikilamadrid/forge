@@ -79,20 +79,32 @@ npm authentication is not a precondition. It is checked at the publication gate.
 
 Choose the bump from the policy above: `patch` or `minor`.
 
+Work out the version the bump produces, and check nothing has claimed it. These
+commands only read; nothing is modified yet.
+
 ```sh
-npm version patch --no-git-tag-version   # or: npm version minor --no-git-tag-version
-VERSION="$(node -p 'require("./package.json").version')" && echo "$VERSION"
+BUMP=patch   # or: BUMP=minor
+VERSION="$(node -p '
+const [major, minor, patch] = require("./package.json").version.split(".").map(Number);
+process.argv[1] === "minor" ? `${major}.${minor + 1}.0` : `${major}.${minor}.${patch + 1}`;
+' "$BUMP")" && echo "$VERSION"
+git tag -l "v$VERSION"                             # must print nothing
 git ls-remote --tags origin "v$VERSION"            # must print nothing
 npm view "forge-local-ai-kit@$VERSION" version     # must fail with E404
 ```
 
-If the tag exists or npm prints a version, that version is already taken. Stop,
-and discard the bump with `git restore package.json package-lock.json`.
-Otherwise, create the release branch; the uncommitted bump moves with it:
+If either tag exists or npm prints a version, that version is already taken.
+Stop; nothing has been changed. Otherwise bump the manifest and create the
+release branch; the uncommitted bump moves with it:
 
 ```sh
+npm version "$BUMP" --no-git-tag-version
+test "$(node -p 'require("./package.json").version')" = "$VERSION" && echo "manifest is v$VERSION"
 git checkout -b "release/v$VERSION"
 ```
+
+If the bump does not produce `$VERSION`, discard it with
+`git restore package.json package-lock.json` and stop.
 
 Move the `Unreleased` entries into a dated section for this version:
 
@@ -124,12 +136,19 @@ process.stdout.write(`${notes}\n`);
 ' "$VERSION" > "$RELEASE_DIR/release-notes.md" && cat "$RELEASE_DIR/release-notes.md"
 ```
 
-Review the change. It must touch only `package.json`, `package-lock.json`, and
-`CHANGELOG.md`. On the first release from this process, the lockfile's own
-`version` moving from `0.0.0` to the new version is expected.
+Review the change before committing anything:
 
 ```sh
+git status --short
 git diff
+```
+
+It must touch only `package.json`, `package-lock.json`, and `CHANGELOG.md`. On
+the first release from this process, the lockfile's own `version` moving from
+`0.0.0` to the new version is expected. Commit only once the diff is what you
+expect:
+
+```sh
 git add package.json package-lock.json CHANGELOG.md
 git commit -m "chore(release): v$VERSION"
 git push -u origin "release/v$VERSION"
