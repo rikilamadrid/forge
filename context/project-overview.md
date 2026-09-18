@@ -114,9 +114,9 @@ build/package: npm run build
 | Commit convention | Conventional Commits |
 | Review policy | Human acceptance is required; tester review verifies the Feature contract before completion. |
 | Merge strategy | Squash merge after approval |
-| CI/CD | TBD; the remote host is GitHub (`rikilamadrid/forge`), so the condition is met. Feature 04 proposes GitHub Actions. |
-| Versioning and changelog | Semantic Versioning applies since `0.1.0` (2026-09-03). The 0.x rule and changelog policy are TBD; Feature 04 proposes them. |
-| Release process | TBD; `0.1.0` was published manually by Feature 03 behind a human publication gate. Feature 04 proposes the repeatable process. |
+| CI/CD | GitHub Actions workflow `CI` (`.github/workflows/ci.yml`) on pushes to `main` and pull requests targeting it: `npm ci`, `npm run check`, `npm test`, `npm pack`, and `node scripts/verify-package.mjs` on the packed tarball, across Ubuntu with Node.js 22 and 24 and macOS with Node.js 22. `main` requires the `CI` check with strict up-to-date branches. No publishing from CI. |
+| Versioning and changelog | Semantic Versioning since `0.1.0` (2026-09-03), with the 0.x rule in `RELEASING.md`: a breaking public API, CLI, or Node.js range change bumps MINOR; everything else bumps PATCH. Hand-maintained `CHANGELOG.md` in Keep a Changelog format, updated in the same pull request as the change and never shipped in the package; the manifest `version` changes only in a release pull request. |
+| Release process | The nine steps in `RELEASING.md`, run by hand: preconditions, release pull request, squash merge with CI verified on the exact merged commit, local annotated `vX.Y.Z` tag, clean pack verified by `scripts/verify-package.mjs`, the publication gate as a hard human stop, `npm publish` of that exact tarball, registry verification of the downloaded copy, then the tag push and `gh release create --verify-tag`. Proven by `0.1.1` (2026-09-18). |
 
 ## Environments and Integrations
 

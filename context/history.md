@@ -4,6 +4,13 @@ Compact record of completed work.
 
 ## Completed
 
+### 2026-09-18 — Feature 04: Release Engineering
+
+- Outcome: Forge is repeatably releasable. Every push to `main` and every pull request is verified by the GitHub Actions `CI` workflow on Ubuntu with Node.js 22 and 24 and macOS with Node.js 22, `main` requires that check, and `scripts/verify-package.mjs` is the single package-artifact contract that CI and the release process both invoke. `RELEASING.md` documents the versioning and changelog policy and the nine-step manual release as exact commands, with npm authentication and a hard human stop at the publication gate; `CHANGELOG.md` records `0.1.0` and `0.1.1`. The process was proven by releasing `forge-local-ai-kit@0.1.1`.
+- Verification: 43 deterministic tests, type check, and production build green on every CI cell and locally; the process rehearsed end to end on throwaway branches before it was written down, then executed for real. `0.1.1` packed from a deleted `dist/` and `node_modules/` gave 17 files and shasum `b668853bc017e7c5728b3e01d3210521f89cd4eb`, byte-identical to the rehearsal pack and to the tarball later downloaded from the registry, whose `dist.shasum` and `dist.fileCount` match and where `dist-tags.latest` is `0.1.1`. `scripts/verify-package.mjs` passed all eleven named checks on the pre-publication tarball and again on the registry copy, covering the file allowlist, manifest, clean-consumer install, root import, refusal of internal subpaths, and the installed `forge --version`.
+- Commit/PR: GitHub Issues #16, #17, and #18; pull requests #19, #20, #21, and #22. Annotated tag `v0.1.1` on `48ec34f` and GitHub Release `v0.1.1`, both created only after the registry copy was verified. Published as npm user `riki.lamadrid` after separate human approval at the publication gate.
+- Follow-up: Release automation — publishing from CI, trusted publishing or OIDC, provenance attestations, and release tooling — remains a later Feature, deliberately deferred until the manual path was proven. `0.1.0` has no tag and none will be added.
+
 ### 2026-09-03 — Feature 03: Public npm Release
 
 - Outcome: Forge is published to the public npm registry as MIT-licensed `forge-local-ai-kit@0.1.0`, so any Node.js 22+ ESM consumer can `npm install forge-local-ai-kit` and use the root `createForge`/`ForgeError` API and the installed `forge` executable without a local tarball. The manifest dropped `private`, gained a `prepack` build and source-traceability metadata, the CLI gained `--help` and `--version`, and the README became the npm landing page.
