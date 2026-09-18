@@ -7,6 +7,8 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ## [Unreleased]
 
+## [0.1.1] - 2026-09-18
+
 ### Added
 
 - The README shows the `CI` workflow status badge.
