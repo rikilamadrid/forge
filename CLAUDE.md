@@ -1,6 +1,8 @@
 # Project Agent Guide
 
-This repository uses an AI-assisted, human-in-the-loop workflow. Project truth lives in `context/`, and reusable behaviors live in `skills/`.
+This repository uses Pathfinder’s AI-assisted delivery workflow. Read
+`context/execution-mode.md` as `skills/ticket/SKILL.md` defines: human-in-the-loop
+or orchestrator, with human-in-the-loop as the default when the file is absent. Project truth lives in `context/`, and reusable behaviors live in `skills/`.
 
 ## Read only what is needed
 
@@ -30,7 +32,9 @@ rule; do not ignore `context/` wholesale.
 
 Lifecycle skills assume their responsible role for each invocation and read its
 contract themselves: planning uses `planner`, ticket implementation and
-completion use `developer`, and ticket review uses `tester`.
+completion use `developer`, and ticket review uses `tester`. Orchestration uses
+`orchestrator`; integration uses `integrator`. Each worker implements one active
+ticket in its own worktree; roles never call one another directly.
 
 The human can explicitly override that default with `/role <name>`. Read the
 named `roles/<name>.md` before anything else and follow it for the session. A
@@ -43,6 +47,11 @@ merge, and release remain the human's whether a role was assumed or explicit.
 ## Project-selected policies
 
 Follow the stack, architecture, commands, Git workflow, review policy, and release process documented in `context/project-overview.md`.
+
+For contributors working on Pathfinder itself, that file does not exist: this
+repository’s Git and release workflow is in `CONTRIBUTING.md` §Git workflow and
+§Releasing. This exception applies only to Pathfinder’s own repository; a
+destination project records its own choices in `context/project-overview.md`.
 
 If a policy is `TBD`, do not invent it. Ask the human or clearly mark it unresolved.
 
@@ -90,7 +99,10 @@ An adapter carries the canonical skill's frontmatter and a pointer to it, and no
 - `to-specs` — generate context-sized feature specs
 - `to-tickets` — decompose one approved Feature into blocker-linked tickets
 - `ticket` — run one action of the ticket delivery loop: `load`, `start`, `review`, `complete`
+- `orchestrate` — coordinate several dependency-safe ticket workers at once in orchestrator mode
 - `debug-issue` — diagnose an observed failure to its root cause, apply the smallest justified fix, and verify it
+- `render-artifact` — compile a typed specification into a deterministic, self-contained visual artifact
+- `map-system` — turn a plain request about a system into a semantic diagram artifact
 - `learn-feature` — create an interactive lesson for a completed feature
 - `learn-codebase` — create a modular learning portal for the repository
 - `teach-feature` — teach the verified current feature from its spec, diff, tests, and implementation

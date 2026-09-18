@@ -1,5 +1,6 @@
 context/current-ticket.md
 context/handoff.md
+.pathfinder/
 
 node_modules/
 dist/

@@ -156,6 +156,7 @@ anything a prototype proved must not reach production.
 | 2026-09-01 | Start with one provider contract and one Ollama adapter. | Enable future substitution without speculative plugin architecture. |
 | 2026-09-01 | Use structured results internally and offer human and JSON CLI output. | The same evidence must serve people, tools, and later comparisons. |
 | 2026-09-02 | License Forge MIT and publish it as the unscoped `forge-local-ai-kit`. | Public, reusable infrastructure needs a permissive license and a name that assumes no npm scope ownership. |
+| 2026-09-18 | Run Forge on a pre-release Pathfinder 4.4.0 kit, installed by `create-pathfinder` from the Pathfinder working copy at commit `65c8fa5` (`chore: prepare the 4.4.0 release (#126)`), in `orchestrator` execution mode. | Forge is the deliberate real-world canary for Pathfinder's orchestration capability before 4.4.0 is tagged and published. Re-run the official installer once 4.4.0 ships and confirm no drift. |
 
 ## Learning
 
