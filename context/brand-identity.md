@@ -66,9 +66,12 @@ interpolation and no third state.
 
 Both states are defined on both grounds, so **size alone decides the state** and
 a surface that has to present on either ground keeps whichever state its size
-gives it. Only the palette swaps: every element drops to the darker member of
-its own family on Bone and returns to its iron-ground token on Iron. The mark
-never changes structure between a reader's light and dark theme.
+gives it. Only the palette swaps: every drawn element — the solid state's punch,
+and in the struck state the punch outline and both halves of the F — drops to
+the darker member of its own family on Bone and returns to its iron-ground token
+on Iron. The solid state's F is not drawn but knocked out, so it takes the
+ground colour either way: Iron `#17130D` on Iron, Bone `#F2EDE6` on Bone. The
+mark never changes structure between a reader's light and dark theme.
 
 The README header lockup is therefore struck at 48px, on Bone and on Iron
 alike — GitHub renders a README in both themes, and the struck state holds on
@@ -84,6 +87,14 @@ on Iron.
 | 32px | solid | app icon, favicon |
 | 48px | struck | README header lockup — see above |
 | 72px | struck | website hero |
+| 96px | struck | Open Graph card, 1200×630 |
+
+The Open Graph card's mark is pinned at 96px because a 1200×630 card is commonly
+rendered at about half its authored width in a feed, where a 96px mark reads as
+48px — the struck state's own floor. The npm page and the repository page both
+render `README.md`, so the mark they show is the README header lockup at 48px
+rather than a size of their own. The architecture graphic has no pinned size; a
+ticket that needs one reports the gap.
 
 ## Wordmark lockup
 
