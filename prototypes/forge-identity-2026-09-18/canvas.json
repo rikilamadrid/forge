@@ -1,0 +1,100 @@
+{
+  "v": 3,
+  "attachments": {},
+  "boards": {
+    "Ecosystem.dc.html": {
+      "h": 780,
+      "title": "The village",
+      "w": 1480,
+      "x": 0,
+      "y": 5720
+    },
+    "Main.dc.html": {
+      "h": 3240,
+      "title": "Desktop landing page",
+      "w": 1440,
+      "x": 0,
+      "y": 0
+    },
+    "Mark.dc.html": {
+      "h": 820,
+      "title": "The Maker's Mark",
+      "w": 1200,
+      "x": 0,
+      "y": 3680
+    },
+    "Mobile.dc.html": {
+      "h": 2260,
+      "title": "Mobile landing page",
+      "w": 390,
+      "x": 1520,
+      "y": 0
+    },
+    "Palette.dc.html": {
+      "h": 820,
+      "title": "Palette",
+      "w": 1200,
+      "x": 1280,
+      "y": 3680
+    },
+    "Taglines.dc.html": {
+      "h": 780,
+      "title": "Hero taglines",
+      "w": 1200,
+      "x": 1280,
+      "y": 4620
+    },
+    "Type.dc.html": {
+      "h": 780,
+      "title": "Typography",
+      "w": 1200,
+      "x": 0,
+      "y": 4620
+    }
+  },
+  "createdOnFiles": {
+    "at": "2026-09-18T12:00:00Z",
+    "v": 1
+  },
+  "designSystems": [],
+  "launch": {
+    "view": "canvas"
+  },
+  "notes": {
+    "n1": {
+      "kind": "title1",
+      "maxW": 1910,
+      "text": "The page",
+      "w": 240,
+      "x": 0,
+      "y": -260
+    },
+    "n2": {
+      "kind": "title1",
+      "maxW": 2480,
+      "text": "The system",
+      "w": 240,
+      "x": 0,
+      "y": 3420
+    },
+    "n3": {
+      "kind": "title1",
+      "maxW": 1480,
+      "text": "The world",
+      "w": 240,
+      "x": 0,
+      "y": 5460
+    }
+  },
+  "order": [
+    "Main.dc.html",
+    "Mobile.dc.html",
+    "Mark.dc.html",
+    "Palette.dc.html",
+    "Type.dc.html",
+    "Taglines.dc.html",
+    "Ecosystem.dc.html"
+  ],
+  "pages": [],
+  "title": "Forge Identity Prototype"
+}
