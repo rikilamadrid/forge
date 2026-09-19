@@ -1,0 +1,101 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Forge — the village</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body { margin: 0; background: #121110; font-family: 'Instrument Sans', system-ui, sans-serif; }
+a { color: #E0B166; }
+a:hover { color: #F0CE95; }
+</style>
+</helmet>
+
+<div style="width: 1480px; height: 780px; box-sizing: border-box; background: #121110; color: #F2EDE6; padding: 56px 56px 48px; display: flex; flex-direction: column; gap: 30px;">
+
+  <div style="display: flex; align-items: baseline; gap: 16px;">
+    <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 30px; letter-spacing: -0.02em; color: #F7F3EC;">Four buildings, one settlement</h2>
+    <span style="font-size: 15px; color: #8A9299;">Same punch, different glyph. Only the smithy is warm.</span>
+  </div>
+
+  <div style="flex-grow: 1; display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 24px;">
+
+    <!-- FORGE -->
+    <div style="box-sizing: border-box; padding: 32px 28px 30px; background: #1B1A18; border: 1px solid #C98B3E; border-radius: 12px; display: flex; flex-direction: column; gap: 18px;">
+      <svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#1B1A18"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.015em; color: #F7F3EC;">Forge</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #C98B3E;">THE SMITHY</span>
+      </div>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #B9BEC3;">Takes raw local intelligence and returns a tool another program can hold — shaped, measured, and marked.</p>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #C98B3E; flex-shrink: 0;"></span><span style="font-size: 13px; color: #CBA167;">Bronze · warm</span></div>
+        <span style="font-size: 13px; color: #8A9299;">Verb: <span style="color: #E0DAD1;">shapes</span></span>
+      </div>
+    </div>
+
+    <!-- PATHFINDER -->
+    <div style="box-sizing: border-box; padding: 32px 28px 30px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 18px;">
+      <svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#8A9299"></path><path d="M10.5 23.5L16 9l5.5 14.5" fill="none" stroke="#1B1A18" stroke-width="3.2" stroke-linejoin="round" stroke-linecap="round"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.015em; color: #F2EDE6;">Pathfinder</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #8A9299;">THE GUIDE</span>
+      </div>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #9BA1A7;">Walks ahead and marks the route through the work, from first debate to a released version.</p>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #E0611F; flex-shrink: 0;"></span><span style="font-size: 13px; color: #9BA1A7;">Ember · its own</span></div>
+        <span style="font-size: 13px; color: #8A9299;">Verb: <span style="color: #C7C2BA;">leads</span></span>
+      </div>
+    </div>
+
+    <!-- LOREKEEPER -->
+    <div style="box-sizing: border-box; padding: 32px 28px 30px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 18px;">
+      <svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#8A9299"></path><path d="M10.8 11h10.4M10.8 16h10.4M10.8 21h6" fill="none" stroke="#1B1A18" stroke-width="3" stroke-linecap="round"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.015em; color: #F2EDE6;">Lorekeeper</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #8A9299;">THE ARCHIVE</span>
+      </div>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #9BA1A7;">Keeps what has been learned in a shape that can be found again, long after anyone remembers it.</p>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #4A5259; flex-shrink: 0;"></span><span style="font-size: 13px; color: #9BA1A7;">Deep · cool</span></div>
+        <span style="font-size: 13px; color: #8A9299;">Verb: <span style="color: #C7C2BA;">remembers</span></span>
+      </div>
+    </div>
+
+    <!-- LAMA -->
+    <div style="box-sizing: border-box; padding: 32px 28px 30px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 18px;">
+      <svg viewBox="0 0 32 32" width="56" height="56" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#8A9299"></path><path d="M11.2 23.5v-6.3a4.8 4.8 0 0 1 9.6 0v6.3" fill="none" stroke="#1B1A18" stroke-width="3.2" stroke-linecap="round"></path></svg>
+      <div style="display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 24px; letter-spacing: -0.015em; color: #F2EDE6;">LAMA</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11.5px; letter-spacing: 0.08em; color: #8A9299;">THE COMPANION</span>
+      </div>
+      <p style="margin: 0; font-size: 14.5px; line-height: 1.6; color: #9BA1A7;">The door you knock on and the face you talk to. First to carry a tool out of the smithy and use it.</p>
+      <div style="margin-top: auto; display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 9px;"><span style="width: 9px; height: 9px; border-radius: 50%; background: #6E7479; flex-shrink: 0;"></span><span style="font-size: 13px; color: #9BA1A7;">Open · present</span></div>
+        <span style="font-size: 13px; color: #8A9299;">Verb: <span style="color: #C7C2BA;">accompanies</span></span>
+      </div>
+    </div>
+  </div>
+
+  <div style="box-sizing: border-box; padding: 20px 26px; background: #171513; border: 1px solid #2E2B27; border-radius: 10px; display: flex; align-items: center; gap: 30px;">
+    <div style="display: flex; align-items: center; gap: 12px; flex-shrink: 0;">
+      <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+      <span style="font-size: 14px; font-weight: 600; color: #E0DAD1;">Shared grammar</span>
+    </div>
+    <span style="font-size: 14px; line-height: 1.55; color: #9BA1A7;">One punch shape, one glyph each, one accent per product, the same iron ground, the same voice. The three sibling glyphs here are a proposal for how the system would extend — not those products' existing identities.</span>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1480,"height":780}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>

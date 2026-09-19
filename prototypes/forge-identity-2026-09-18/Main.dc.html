@@ -1,0 +1,269 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Forge — desktop landing page</title>
+<script src="./support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@400;600;700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap">
+<style>
+body { margin: 0; background: #121110; font-family: 'Instrument Sans', system-ui, sans-serif; }
+a { color: #E0B166; }
+a:hover { color: #F0CE95; }
+</style>
+</helmet>
+
+<div style="width: 1440px; height: 3240px; box-sizing: border-box; background: #121110; color: #F2EDE6; display: flex; flex-direction: column;">
+
+  <!-- NAV -->
+  <div style="height: 88px; flex-shrink: 0; box-sizing: border-box; padding: 0 96px; display: flex; align-items: center; gap: 12px; border-bottom: 1px solid #262320;">
+    <svg viewBox="0 0 32 32" width="24" height="24" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#121110"></path></svg>
+    <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 700; font-size: 19px; letter-spacing: -0.01em;">Forge</span>
+    <span style="flex-grow: 1;"></span>
+    <a href="#docs" style="font-size: 14px; color: #A8AEB3; text-decoration: none; margin-right: 28px;">Docs</a>
+    <a href="https://github.com/rikilamadrid/forge" style="font-size: 14px; color: #A8AEB3; text-decoration: none; margin-right: 28px;">GitHub</a>
+    <a href="https://www.npmjs.com/package/forge-local-ai-kit" style="font-size: 14px; color: #A8AEB3; text-decoration: none;">npm</a>
+  </div>
+
+  <!-- HERO -->
+  <div style="box-sizing: border-box; padding: 104px 96px 96px; display: flex; gap: 72px; align-items: flex-start;">
+
+    <div style="width: 660px; flex-shrink: 0; display: flex; flex-direction: column; gap: 28px;">
+      <div style="display: flex; align-items: center; gap: 10px;">
+        <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#121110"></path></svg>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #C98B3E; letter-spacing: 0.04em;">forge-local-ai-kit</span>
+        <span style="width: 1px; height: 14px; background: #3A3F44;"></span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #8A9299;">v0.1.1</span>
+      </div>
+
+      <h1 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 62px; line-height: 1.04; letter-spacing: -0.025em; color: #F7F3EC;">Where local intelligence is shaped into tools.</h1>
+
+      <p style="margin: 0; font-size: 19px; line-height: 1.6; color: #B9BEC3; max-width: 560px;">Forge sends a prompt to an Ollama runtime on a machine you already control and hands back a typed result with real execution evidence. One small interface, zero production dependencies, nothing leaves your network.</p>
+
+      <div style="display: flex; align-items: center; gap: 14px; margin-top: 4px;">
+        <div style="display: flex; align-items: center; gap: 14px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 8px; padding: 0 16px; height: 52px;">
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #6E7479;">$</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #F2EDE6;">npm i forge-local-ai-kit</span>
+          <button type="button" aria-label="Copy install command" style="background: none; border: none; padding: 8px; margin-right: -8px; cursor: pointer; line-height: 0;">
+            <svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="#8A9299" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="9" y="9" width="11" height="11" rx="2"></rect><path d="M5 15V6a2 2 0 0 1 2-2h8"></path></svg>
+          </button>
+        </div>
+        <a href="https://github.com/rikilamadrid/forge" style="height: 52px; box-sizing: border-box; display: flex; align-items: center; padding: 0 22px; border-radius: 8px; background: #C98B3E; color: #16130F; font-size: 15px; font-weight: 600; text-decoration: none;">Read the source</a>
+      </div>
+    </div>
+
+    <!-- CODE CARD -->
+    <div style="flex-grow: 1; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; overflow: hidden;">
+      <div style="height: 44px; box-sizing: border-box; padding: 0 18px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid #262320;">
+        <svg viewBox="0 0 32 32" width="14" height="14" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#1B1A18"></path></svg>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; color: #8A9299;">ask.mjs</span>
+      </div>
+      <pre style="margin: 0; padding: 26px 24px; font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; line-height: 1.85; color: #D9D4CC; white-space: pre; overflow: hidden;"><span style="color: #8A9299;">import</span> { createForge } <span style="color: #8A9299;">from</span> <span style="color: #C98B3E;">'forge-local-ai-kit'</span>;
+
+<span style="color: #8A9299;">const</span> forge = <span style="color: #E0B166;">createForge</span>({
+  provider: <span style="color: #C98B3E;">'ollama'</span>,
+  host: process.env.<span style="color: #F2EDE6;">OLLAMA_HOST</span>,
+  model: <span style="color: #C98B3E;">'qwen3.5:9b'</span>,
+});
+
+<span style="color: #8A9299;">const</span> result = <span style="color: #8A9299;">await</span> forge.<span style="color: #E0B166;">ask</span>(
+  <span style="color: #C98B3E;">'Name three risks in this plan.'</span>
+);
+
+console.<span style="color: #E0B166;">log</span>(result.output);
+console.<span style="color: #E0B166;">log</span>(result.metrics.clientLatencyMs);</pre>
+    </div>
+  </div>
+
+  <!-- ARCHITECTURE -->
+  <div style="box-sizing: border-box; margin: 0 96px; padding: 56px 56px 48px; border: 1px solid #262320; border-radius: 14px; background: #171513; display: flex; flex-direction: column; gap: 40px;">
+    <div style="display: flex; align-items: baseline; gap: 14px;">
+      <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 23px; letter-spacing: -0.01em; color: #F7F3EC;">The shop floor</h2>
+      <span style="font-size: 15px; color: #8A9299;">Four parts, one direction of travel.</span>
+    </div>
+
+    <div style="display: flex; align-items: stretch; gap: 0;">
+
+      <div style="flex-grow: 1; flex-basis: 0; box-sizing: border-box; padding: 22px 20px; border: 1px solid #343A3F; border-radius: 10px; background: #1B1A18; display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #6E7479;">01</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 19px; color: #F2EDE6;">Your app</span>
+        <span style="font-size: 14px; color: #8A9299;">TypeScript or ESM, Node 22+</span>
+      </div>
+
+      <div style="width: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 40 16" width="40" height="16" fill="none" stroke="#4A5259" stroke-width="1.4" aria-hidden="true"><path d="M0 8h34"></path><path d="M28 3l6 5-6 5"></path></svg>
+      </div>
+
+      <div style="flex-grow: 1; flex-basis: 0; box-sizing: border-box; padding: 22px 20px; border: 1px solid #C98B3E; border-radius: 10px; background: #221B12; display: flex; flex-direction: column; gap: 7px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+          <svg viewBox="0 0 32 32" width="14" height="14" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#221B12"></path></svg>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #C98B3E;">02</span>
+        </div>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 19px; color: #F7F3EC;">Forge</span>
+        <span style="font-size: 14px; color: #CBA167;">The smithy — shapes, measures, marks</span>
+      </div>
+
+      <div style="width: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 40 16" width="40" height="16" fill="none" stroke="#4A5259" stroke-width="1.4" aria-hidden="true"><path d="M0 8h34"></path><path d="M28 3l6 5-6 5"></path></svg>
+      </div>
+
+      <div style="flex-grow: 1; flex-basis: 0; box-sizing: border-box; padding: 22px 20px; border: 1px solid #343A3F; border-radius: 10px; background: #1B1A18; display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #6E7479;">03</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 19px; color: #F2EDE6;">Ollama</span>
+        <span style="font-size: 14px; color: #8A9299;">Over your LAN, plain HTTP</span>
+      </div>
+
+      <div style="width: 72px; flex-shrink: 0; display: flex; align-items: center; justify-content: center;">
+        <svg viewBox="0 0 40 16" width="40" height="16" fill="none" stroke="#4A5259" stroke-width="1.4" aria-hidden="true"><path d="M0 8h34"></path><path d="M28 3l6 5-6 5"></path></svg>
+      </div>
+
+      <div style="flex-grow: 1; flex-basis: 0; box-sizing: border-box; padding: 22px 20px; border: 1px solid #343A3F; border-radius: 10px; background: #1B1A18; display: flex; flex-direction: column; gap: 7px;">
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 11px; letter-spacing: 0.1em; color: #6E7479;">04</span>
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 19px; color: #F2EDE6;">Local model</span>
+        <span style="font-size: 14px; color: #8A9299;">A machine you own</span>
+      </div>
+    </div>
+
+    <p style="margin: 0; font-size: 15px; color: #8A9299; max-width: 720px;">Forge does not own the fire. The runtime and the model are yours and stay yours; Forge is the hands, the tongs, and the mark on the finished piece.</p>
+  </div>
+
+  <!-- WHAT LEAVES THE SHOP -->
+  <div style="box-sizing: border-box; padding: 104px 96px 0;">
+    <h2 style="margin: 0 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 38px; letter-spacing: -0.02em; color: #F7F3EC;">What leaves the shop</h2>
+    <p style="margin: 0 0 44px; font-size: 17px; color: #8A9299; max-width: 620px;">A small kit that makes few things, and makes them the same way every time.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px;">
+
+      <div style="box-sizing: border-box; padding: 30px 28px 32px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+        <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true" style="display: block; margin-bottom: 4px;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#1B1A18"></path></svg>
+        <h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 20px; color: #F2EDE6;">One edge, held</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #9BA1A7;">The library and the <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; color: #CBA167;">forge</span> CLI run the same configuration, inference, result, and error path. There is no second implementation to drift.</p>
+      </div>
+
+      <div style="box-sizing: border-box; padding: 30px 28px 32px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+        <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true" style="display: block; margin-bottom: 4px;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#1B1A18"></path></svg>
+        <h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 20px; color: #F2EDE6;">Measured, not guessed</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #9BA1A7;">Every result carries provider, model, client latency, and whatever token and timing evidence the runtime reported. Failures carry a category, not a stack trace.</p>
+      </div>
+
+      <div style="box-sizing: border-box; padding: 30px 28px 32px; background: #1B1A18; border: 1px solid #2E2B27; border-radius: 12px; display: flex; flex-direction: column; gap: 12px;">
+        <svg viewBox="0 0 32 32" width="20" height="20" aria-hidden="true" style="display: block; margin-bottom: 4px;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#1B1A18"></path></svg>
+        <h3 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 20px; color: #F2EDE6;">Nothing you did not ask for</h3>
+        <p style="margin: 0; font-size: 15px; line-height: 1.6; color: #9BA1A7;">Zero production dependencies. No registry, no plugin system, no agent framework. Your host never leaves your <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13.5px; color: #CBA167;">.env</span>.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- HALLMARK / EVIDENCE -->
+  <div style="box-sizing: border-box; padding: 112px 96px 0;">
+    <div style="box-sizing: border-box; padding: 56px 56px 52px; border: 1px solid #2E2B27; border-radius: 14px; background: #171513; display: flex; gap: 64px;">
+
+      <div style="width: 420px; flex-shrink: 0; display: flex; flex-direction: column; gap: 20px;">
+        <svg viewBox="0 0 32 32" width="52" height="52" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="none" stroke="#C98B3E" stroke-width="1.5"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H12.5Z" fill="#C98B3E"></path><path d="M12.5 15.5H21.5V18.9H15.9V24H12.5Z" fill="#8A9299"></path></svg>
+        <h2 style="margin: 0; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 38px; line-height: 1.1; letter-spacing: -0.02em; color: #F7F3EC;">Every tool bears the mark.</h2>
+        <p style="margin: 0; font-size: 16px; line-height: 1.65; color: #9BA1A7;">A smith stamps finished work so you know the shop it came from and what it is made of. Forge does the same: the mark sits beside anything that has actually been verified, and nowhere else.</p>
+        <p style="margin: 0; font-size: 14px; line-height: 1.6; color: #6E7479;">If a number on this page carries the hallmark, it was produced by a run, not a claim.</p>
+      </div>
+
+      <div style="flex-grow: 1; display: flex; flex-direction: column; gap: 0;">
+
+        <div style="display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid #262320;">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+          <span style="width: 150px; flex-shrink: 0; font-size: 14px; color: #8A9299;">Published version</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #F2EDE6;">0.1.1</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid #262320;">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+          <span style="width: 150px; flex-shrink: 0; font-size: 14px; color: #8A9299;">Tarball shasum</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F2EDE6; word-break: break-all;">b668853bc017e7c5728b3e01d3210521f89cd4eb</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid #262320;">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+          <span style="width: 150px; flex-shrink: 0; font-size: 14px; color: #8A9299;">Files packed</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: #F2EDE6;">17</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px; padding: 15px 0; border-bottom: 1px solid #262320;">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+          <span style="width: 150px; flex-shrink: 0; font-size: 14px; color: #8A9299;">CI</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F2EDE6;">43 tests · ubuntu node 22, 24 · macos node 22</span>
+        </div>
+
+        <div style="display: flex; align-items: center; gap: 14px; padding: 15px 0;">
+          <svg viewBox="0 0 32 32" width="16" height="16" aria-hidden="true" style="display: block; flex-shrink: 0;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#C98B3E"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#171513"></path></svg>
+          <span style="width: 150px; flex-shrink: 0; font-size: 14px; color: #8A9299;">Last run</span>
+          <span style="font-family: 'IBM Plex Mono', monospace; font-size: 13px; color: #F2EDE6;">qwen3.5:9b · [LATENCY] ms · [TOKENS] tokens</span>
+        </div>
+
+        <div style="margin-top: 26px; background: #121110; border: 1px solid #262320; border-radius: 10px; overflow: hidden;">
+          <div style="padding: 10px 16px; border-bottom: 1px solid #1F1D1A; font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #6E7479;">forge ask "…" --json</div>
+          <pre style="margin: 0; padding: 18px 16px; font-family: 'IBM Plex Mono', monospace; font-size: 12.5px; line-height: 1.8; color: #D9D4CC; white-space: pre; overflow: hidden;">{
+  <span style="color: #8A9299;">"success"</span>: <span style="color: #C98B3E;">true</span>,
+  <span style="color: #8A9299;">"provider"</span>: <span style="color: #C98B3E;">"ollama"</span>,
+  <span style="color: #8A9299;">"model"</span>: <span style="color: #C98B3E;">"qwen3.5:9b"</span>,
+  <span style="color: #8A9299;">"output"</span>: <span style="color: #C98B3E;">"…"</span>,
+  <span style="color: #8A9299;">"metrics"</span>: { <span style="color: #8A9299;">"clientLatencyMs"</span>: [MS], <span style="color: #8A9299;">"totalTokens"</span>: [N] }
+}</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- THE VILLAGE -->
+  <div style="box-sizing: border-box; padding: 112px 96px 0;">
+    <h2 style="margin: 0 0 12px; font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 38px; letter-spacing: -0.02em; color: #F7F3EC;">Forge keeps company</h2>
+    <p style="margin: 0 0 44px; font-size: 17px; color: #8A9299; max-width: 620px;">Four small tools, one settlement. Each does one job and knows where the others are.</p>
+
+    <div style="display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 20px;">
+
+      <div style="box-sizing: border-box; padding: 26px 24px 28px; background: #1B1A18; border: 1px solid #2E2B27; border-top: 2px solid #C98B3E; border-radius: 10px; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 18px; color: #F7F3EC;">Forge</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #C98B3E; letter-spacing: 0.04em;">THE SMITHY</span>
+        <span style="font-size: 14px; line-height: 1.6; color: #9BA1A7;">Shapes raw local intelligence into tools another program can hold.</span>
+      </div>
+
+      <div style="box-sizing: border-box; padding: 26px 24px 28px; background: #1B1A18; border: 1px solid #2E2B27; border-top: 2px solid #4A5259; border-radius: 10px; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 18px; color: #F2EDE6;">Pathfinder</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A9299; letter-spacing: 0.04em;">THE GUIDE</span>
+        <span style="font-size: 14px; line-height: 1.6; color: #9BA1A7;">Marks the route through the work, from first debate to release.</span>
+      </div>
+
+      <div style="box-sizing: border-box; padding: 26px 24px 28px; background: #1B1A18; border: 1px solid #2E2B27; border-top: 2px solid #4A5259; border-radius: 10px; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 18px; color: #F2EDE6;">Lorekeeper</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A9299; letter-spacing: 0.04em;">THE ARCHIVE</span>
+        <span style="font-size: 14px; line-height: 1.6; color: #9BA1A7;">Keeps what has been learned so it can be found again.</span>
+      </div>
+
+      <div style="box-sizing: border-box; padding: 26px 24px 28px; background: #1B1A18; border: 1px solid #2E2B27; border-top: 2px solid #4A5259; border-radius: 10px; display: flex; flex-direction: column; gap: 10px;">
+        <span style="font-family: 'Bricolage Grotesque', sans-serif; font-weight: 600; font-size: 18px; color: #F2EDE6;">LAMA</span>
+        <span style="font-family: 'IBM Plex Mono', monospace; font-size: 12px; color: #8A9299; letter-spacing: 0.04em;">THE COMPANION</span>
+        <span style="font-size: 14px; line-height: 1.6; color: #9BA1A7;">The face you talk to. First to carry a tool out of the shop.</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <div style="margin-top: auto; box-sizing: border-box; padding: 0 96px;">
+    <div style="border-top: 1px solid #262320; padding: 40px 0 48px; display: flex; align-items: center; gap: 12px;">
+      <svg viewBox="0 0 32 32" width="18" height="18" aria-hidden="true" style="display: block;"><path d="M9 1.5H23L30 16L23 30.5H9L2 16Z" fill="#6E7479"></path><path d="M12.5 9H23.5V12.4H15.9V15.5H21.5V18.9H15.9V24H12.5Z" fill="#121110"></path></svg>
+      <span style="font-size: 14px; color: #8A9299;">Forge — MIT. Made on a machine you can walk over to.</span>
+      <span style="flex-grow: 1;"></span>
+      <a href="https://github.com/rikilamadrid/forge" style="font-size: 14px; color: #8A9299; text-decoration: none; margin-right: 26px;">GitHub</a>
+      <a href="https://www.npmjs.com/package/forge-local-ai-kit" style="font-size: 14px; color: #8A9299; text-decoration: none;">npm</a>
+    </div>
+  </div>
+
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props='{"$preview":{"width":1440,"height":3240}}'>
+class Component extends DCLogic {
+  renderVals() { return {}; }
+}
+</script>
+</body>
+</html>
