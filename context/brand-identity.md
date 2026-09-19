@@ -46,13 +46,25 @@ The punch is an open outline: `fill: none`, `stroke: #C8973F`,
 
 ### Between 33px and 47px
 
-Use the **solid** state. The struck state is not permitted below 48px.
+Use the **solid** state. The struck state is not permitted below 48px, and is
+not permitted on the light ground at any size.
 
 At 47px the punch outline's 1.5-unit stroke renders at 2.2 device pixels and the
 counters of the F close up, so the two-tone quench reading is lost while the
 hairline is still thin enough to alias. Solid is therefore the default state and
-struck is the exception, used only at 48px and above. There is no interpolation
-and no third state.
+struck is the exception, permitted only at 48px and above. There is no
+interpolation and no third state.
+
+### Surfaces that must serve both grounds
+
+The struck state is defined on the iron ground only; the light ground has no
+struck definition (see [The light ground](#the-light-ground)). A surface that
+has to present on either ground therefore uses **solid on both**, so the mark
+does not change structure between a reader's light and dark themes.
+
+That is why the README header lockup is solid at 48px rather than struck: GitHub
+renders a README in both themes, so the asset must hold on Bone and on Iron. The
+website hero at 72px sits on a ground Forge controls, and is struck.
 
 ### Sizes in use
 
@@ -61,7 +73,7 @@ and no third state.
 | 16px | solid | favicon, inline beside a verified fact |
 | 24px | solid | navigation |
 | 32px | solid | app icon, favicon |
-| 48px | struck | README header lockup |
+| 48px | solid | README header lockup — see below |
 | 72px | struck | website hero |
 
 ## Wordmark lockup
@@ -79,6 +91,15 @@ Let **M** be the mark's box height.
 | Clear space, all four sides of the lockup bounding box | `0.5 × M` |
 | Minimum lockup width | 120px |
 | Minimum mark size, standing alone | 16px |
+
+On the iron ground the wordmark is set in Chalk `#F7F3EC`: 16.72:1 on Iron,
+16.13:1 on Hearth, 15.49:1 on Billet. All three clear 4.5:1, so the wordmark
+holds at any size the lockup permits. On the light ground it is set in Iron
+`#17130D` on Bone `#F2EDE6`, 15.88:1.
+
+The wordmark is never set in Bronze, Brass or Steel. The mark is the only bronze
+element in the lockup, and a bronze wordmark beside it would read as two accents
+and spend the single-accent budget on type.
 
 Below 120px total width the mark stands alone and the wordmark is dropped. The
 wordmark never appears without the mark on a first impression — a page header, a
@@ -115,7 +136,17 @@ another is not a hairline and uses Quench or Steel instead.
 | Dark bronze | `#85601A` | 43.40 | 43.97 | 79.1° | the mark on a light ground |
 
 The three share one hue across a 0.55° spread. They are one accent at three
-lightnesses, not three accents. Bronze appears **once per view**.
+lightnesses, not three accents.
+
+**Bronze appears once per view as emphasis.** At most one bronze accent-text or
+mono-accent element in a view — that is the whole restraint. The Maker's Mark is
+outside it: the [hallmark rule](#hallmark-rule) alone decides where the mark
+appears, and a view carrying six pieces of verified evidence carries six marks.
+Marks are a repeated system element and read as one; bronze emphasis draws the
+eye and is rationed. So a view may hold several marks and one bronze accent
+phrase, and must not hold two bronze accent phrases.
+
+Brass is a separate token with its own use — links — and is not rationed.
 
 ### Steel — structure only, never decoration
 
@@ -132,7 +163,29 @@ lightnesses, not three accents. Bronze appears **once per view**.
 | Chalk | `#F7F3EC` | 95.97 | display headings |
 | Bone | `#F2EDE6` | 93.95 | body text; also the light ground itself |
 
-On the light-ground variant, body text is Iron `#17130D` on Bone `#F2EDE6`.
+### The light ground
+
+Bone `#F2EDE6` is also a ground. On it exactly two pairs are permitted:
+
+| Element | Colour | Ratio on Bone |
+| --- | --- | --- |
+| All text — display, body, caption, mono | Iron `#17130D` | 15.88:1 |
+| The Maker's Mark, solid state | Dark bronze `#85601A` punch, Bone knock-out | 4.89:1 |
+
+No other token is permitted on Bone, whether or not it passes. Steel (2.71:1),
+Ash (3.08:1), Bronze (2.27:1) and Brass (1.69:1) all fail 4.5:1 there. Quench
+reaches 4.58:1 and is still forbidden, because the light ground carries no
+secondary-text tier at all: it exists for the mark and for plain text, and text
+on Bone is Iron or it is not shown. Every one of these pairs is in
+[Contrast](#contrast) as an explicit do-not-use row, so none of them is
+rediscovered and argued for again.
+
+**The struck mark has no light-ground definition, and is not given one.** Its
+lower bar is Steel, which computes 2.71:1 on Bone against the 3:1 SC 1.4.11
+requires of a non-text graphical object, and no other token reads as quenched
+steel at that lightness. On the light ground the mark is solid at every size,
+including 48px and above. The Open Graph card and every other light-ground asset
+uses the solid mark.
 
 ### Approved adjustment 1 — the warmed iron ground
 
@@ -141,10 +194,14 @@ The ground is `#17130D`, warmer than the prototype's `#121110`.
 | Measure | `#121110` | `#17130D` | Change |
 | --- | --- | --- | --- |
 | CIELAB a\* | 0.19 | 0.63 | +0.44 |
-| CIELAB b\* | 0.66 | 3.73 | +3.07 |
+| CIELAB b\* | 0.66 | 3.73 | +3.06 |
 | Chroma C\* | 0.69 | 3.78 | +3.09 (×5.47) |
 | HSL saturation | 5.9% | 27.8% | ×4.72 |
 | CIEDE2000 | — | — | 2.91 |
+
+Unrounded: a\* 0.188182 → 0.632221; b\* 0.664835 → 3.726975, a change of
+3.062140; C\* 0.690954 → 3.780217, a change of 3.089263 and a ratio of 5.4710.
+The b\* change is +3.06, not the +3.07 the rounded columns would give.
 
 It reads as warmed iron rather than as neutral near-black because at C\* 0.69 the
 prototype ground is within a hair of the neutral axis — a grey that happens to
@@ -261,7 +318,17 @@ ratio and the threshold it meets. Thresholds are WCAG 2.1 AA: 4.5:1 for text,
 Ratios are computed from the WCAG relative-luminance definition —
 `L = 0.2126R + 0.7152G + 0.0722B` over linearised sRGB channels, ratio
 `(L_lighter + 0.05) / (L_darker + 0.05)`. L\*, C\*, h_ab are CIELAB and LCh(ab)
-at D65, 2°. Perceptual distances are CIEDE2000.
+at D65, 2°, with the white point derived from chromaticity (0.3127, 0.3290) —
+Xn 0.950456, Yn 1, Zn 1.089058 — over the standard sRGB-to-XYZ matrix.
+Perceptual distances are CIEDE2000.
+
+Every figure in this document is rounded from the unrounded computation, never
+derived from the rounded columns around it. A stated change can therefore differ
+in its last digit from the difference of the two rounded values shown beside it.
+Near-neutral tones are the sensitive case: the chroma of `#121110` is 0.69, so
+its ratios shift in the second decimal under a different white-point convention.
+The pipeline above is the one that produced every number here, and a
+recomputation should use it.
 
 ### Text
 
@@ -299,6 +366,26 @@ at D65, 2°. Perceptual distances are CIEDE2000.
 | Quench `#646C73` | Iron `#17130D` | 3.47:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Hearth `#1B1711` | 3.34:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Billet `#1F1B15` | 3.21:1 | 3:1 | pass | architecture connectors and arrows |
+
+Quench on Billet computes 3.2095:1 against a 3:1 requirement — the thinnest
+margin in this document. Darkening Quench or lightening Billet by any
+appreciable amount breaks SC 1.4.11 for every connector drawn on a card. Neither
+token moves without recomputing this row.
+
+### Forbidden on the light ground
+
+Bone `#F2EDE6` carries Iron text and the Dark bronze mark, and nothing else. The
+pairs below are recorded so they are not rediscovered and proposed again.
+
+| Foreground | Background | Ratio | Threshold | Result |
+| --- | --- | --- | --- | --- |
+| Chalk `#F7F3EC` | Bone `#F2EDE6` | 1.05:1 | 4.5:1 | fail — do not use |
+| Brass `#E0B166` | Bone `#F2EDE6` | 1.69:1 | 4.5:1 | fail — do not use |
+| Bronze `#C8973F` | Bone `#F2EDE6` | 2.27:1 | 4.5:1 | fail — do not use |
+| Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 4.5:1 | fail — do not use |
+| Ash `#818890` | Bone `#F2EDE6` | 3.08:1 | 4.5:1 | fail — do not use |
+| Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 3:1 | fail — do not use: this is why the struck mark has no light-ground state |
+| Quench `#646C73` | Bone `#F2EDE6` | 4.58:1 | 4.5:1 | passes, and is still forbidden — the light ground carries no secondary-text tier |
 
 ### Decorative, no threshold
 
