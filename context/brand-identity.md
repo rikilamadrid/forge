@@ -106,11 +106,25 @@ Let **M** be the mark's box height.
 | Measure | Value |
 | --- | --- |
 | Wordmark type size | `0.90 × M` |
-| Resulting cap height | `0.64 × M`, aligned to the mark's flats |
+| Resulting cap height | `0.594 × M`, optically centred on the mark |
 | Gap, mark right edge to wordmark left sidebearing | `0.375 × M` |
 | Clear space, all four sides of the lockup bounding box | `0.5 × M` |
 | Minimum lockup width | 120px |
 | Minimum mark size, standing alone | 16px |
+
+The type size governs and the cap height follows from it. Bricolage Grotesque
+carries a cap height of 660/1000 em (OS/2 `sCapHeight`, invariant across the
+`wght` and `opsz` axes, since MVAR records no `cpht`), so `0.660 × 0.90 =
+0.594`. This row first read `0.64 × M`, which was derived against `Avenir
+Next` — the first fallback in the display stack, cap height 0.708 em — rather
+than against the recorded display face: `0.708 × 0.90 = 0.6372`. The assets in
+`assets/` were always drawn to the type size and are unchanged.
+
+Centring, not a flat fit, is what aligns the two. The cap is optically centred
+on the mark, so the cap and the mark's flats share a centre line. The flats
+themselves sit at `1.5` and `30.5` on the mark's 32-unit grid, a flat-to-flat
+height of `29/32 = 0.90625 × M`, which no `0.90 × M` setting's cap height
+meets.
 
 On the iron ground the wordmark is set in Chalk `#F7F3EC`: 16.72:1 on Iron,
 16.13:1 on Hearth, 15.49:1 on Billet. All three clear 4.5:1, so the wordmark
