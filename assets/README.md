@@ -62,10 +62,39 @@ Atelier Triay) at `wght` 700, `wdth` 100, with kerning applied by HarfBuzz and
 is set to the rendered type size in pixels, which is what a browser's default
 `font-optical-sizing: auto` produces for the same text at the same size.
 
-`architecture.svg` is outlined the same way: Instrument Sans at weight 400 for
-three labels, Bricolage Grotesque at weight 700 for `Forge`.
+`architecture.svg` is outlined the same way: Instrument Sans (SIL Open Font
+License 1.1, The Instrument Sans Project Authors) at weight 400 for three
+labels, Bricolage Grotesque at weight 700 for `Forge`.
+
+Its four labels read `Your app`, `Forge`, `Ollama`, `local model`. The
+capitalisation is deliberate: `Forge` and `Ollama` are product names, and
+`Your app` begins the sentence the diagram reads as — the same sentence its
+`aria-label` spells out, `Your app sends a prompt to Forge, Forge calls
+Ollama, Ollama runs a local model`. A local model is a common noun and no
+particular product, so it is set like one.
 
 No file here references a font, a raster, or a network resource.
+
+Outlining has one cost worth stating: a later change to the display face in
+`brand-identity.md` will not propagate here. The shapes are frozen in the
+files, so every asset that carries type has to be regenerated.
+
+## Cap height, and how the lockup is centred
+
+The type size governs. `brand-identity.md` specifies `0.90 × M`, and Bricolage
+Grotesque carries a cap height of 660/1000 em, so the cap measures `0.660 ×
+0.90 = 0.594 × M` — 28.512px against the 48px mark in `lockup-iron.svg`,
+`lockup-light.svg` and `readme-header.svg`. The document first recorded `0.64 ×
+M`, a figure derived against `Avenir Next`, the first fallback in the display
+stack, rather than against the recorded display face. That row now reads `0.594
+× M`. The assets were drawn to the type size from the start and did not change.
+
+The rule a future lockup must reproduce is the centre line, not a flat fit. The
+cap is optically centred on the mark: cap top 33.744, cap bottom 62.256, centre
+48.0 — which is the centre of the 48px mark box and of the hexagon's flats,
+themselves at `1.5` and `30.5` on the 32-unit grid. Flat-to-flat is `29/32 =
+0.90625 × M`, so no cap height of a `0.90 × M` setting fits the flats; sharing
+their centre is what the lockup does instead.
 
 ## Two things this directory does not decide
 
