@@ -44,10 +44,17 @@ The punch is an open outline: `fill: none`, `stroke: #C8973F`,
 `stroke-width: 1.5` on the 32-unit grid. The F above the quench line is Bronze
 `#C8973F`; the F below it is Steel `#8A9299`.
 
+On a light ground each of the three elements drops to the darker member of its
+own family — the same substitution the solid state already makes when its punch
+goes from Bronze to Dark bronze. The punch outline and the F above the quench
+line become Dark bronze `#85601A`; the F below it becomes Quench `#646C73`. The
+geometry, the stroke width and the two-tone hot/quenched reading are unchanged;
+only lightness moves. The reasoning and the measured ratios are in
+[The light ground](#the-light-ground).
+
 ### Between 33px and 47px
 
-Use the **solid** state. The struck state is not permitted below 48px, and is
-not permitted on the light ground at any size.
+Use the **solid** state. The struck state is not permitted below 48px.
 
 At 47px the punch outline's 1.5-unit stroke renders at 2.2 device pixels and the
 counters of the F close up, so the two-tone quench reading is lost while the
@@ -57,14 +64,16 @@ interpolation and no third state.
 
 ### Surfaces that must serve both grounds
 
-The struck state is defined on the iron ground only; the light ground has no
-struck definition (see [The light ground](#the-light-ground)). A surface that
-has to present on either ground therefore uses **solid on both**, so the mark
-does not change structure between a reader's light and dark themes.
+Both states are defined on both grounds, so **size alone decides the state** and
+a surface that has to present on either ground keeps whichever state its size
+gives it. Only the palette swaps: every element drops to the darker member of
+its own family on Bone and returns to its iron-ground token on Iron. The mark
+never changes structure between a reader's light and dark theme.
 
-That is why the README header lockup is solid at 48px rather than struck: GitHub
-renders a README in both themes, so the asset must hold on Bone and on Iron. The
-website hero at 72px sits on a ground Forge controls, and is struck.
+The README header lockup is therefore struck at 48px, on Bone and on Iron
+alike — GitHub renders a README in both themes, and the struck state holds on
+both grounds. The website hero at 72px sits on a ground Forge controls and is struck
+on Iron.
 
 ### Sizes in use
 
@@ -73,7 +82,7 @@ website hero at 72px sits on a ground Forge controls, and is struck.
 | 16px | solid | favicon, inline beside a verified fact |
 | 24px | solid | navigation |
 | 32px | solid | app icon, favicon |
-| 48px | solid | README header lockup — see below |
+| 48px | struck | README header lockup — see above |
 | 72px | struck | website hero |
 
 ## Wordmark lockup
@@ -133,7 +142,7 @@ another is not a hairline and uses Quench or Steel instead.
 | --- | --- | --- | --- | --- | --- |
 | Bronze | `#C8973F` | 65.57 | 52.70 | 79.7° | the mark, accent text, mono accent |
 | Brass | `#E0B166` | 74.98 | 45.30 | 79.3° | links and link hover |
-| Dark bronze | `#85601A` | 43.40 | 43.97 | 79.1° | the mark on a light ground |
+| Dark bronze | `#85601A` | 43.40 | 43.97 | 79.1° | the mark on a light ground, in both states |
 
 The three share one hue across a 0.55° spread. They are one accent at three
 lightnesses, not three accents.
@@ -152,9 +161,9 @@ Brass is a separate token with its own use — links — and is not rationed.
 
 | Token | Hex | L\* | C\* | h_ab | Use |
 | --- | --- | --- | --- | --- | --- |
-| Steel | `#8A9299` | 60.12 | 4.90 | 252.9° | secondary text; the struck mark below the quench line |
+| Steel | `#8A9299` | 60.12 | 4.90 | 252.9° | secondary text; the struck mark below the quench line, on the iron ground |
 | Ash | `#818890` | 56.38 | 5.22 | 260.3° | captions and section labels |
-| Quench | `#646C73` | 45.18 | 5.15 | 253.3° | connectors, arrows, and rules that carry meaning |
+| Quench | `#646C73` | 45.18 | 5.15 | 253.3° | connectors, arrows, and rules that carry meaning; the struck mark below the quench line, on the light ground |
 
 ### Text tones
 
@@ -165,27 +174,55 @@ Brass is a separate token with its own use — links — and is not rationed.
 
 ### The light ground
 
-Bone `#F2EDE6` is also a ground. On it exactly two pairs are permitted:
+Bone `#F2EDE6` is also a ground. On it exactly these pairs are permitted:
 
 | Element | Colour | Ratio on Bone |
 | --- | --- | --- |
 | All text — display, body, caption, mono | Iron `#17130D` | 15.88:1 |
 | The Maker's Mark, solid state | Dark bronze `#85601A` punch, Bone knock-out | 4.89:1 |
+| The Maker's Mark, struck state — punch outline | Dark bronze `#85601A` | 4.89:1 |
+| The Maker's Mark, struck state — F above the quench line | Dark bronze `#85601A` | 4.89:1 |
+| The Maker's Mark, struck state — F below the quench line | Quench `#646C73` | 4.58:1 |
 
-No other token is permitted on Bone, whether or not it passes. Steel (2.71:1),
-Ash (3.08:1), Bronze (2.27:1) and Brass (1.69:1) all fail 4.5:1 there. Quench
-reaches 4.58:1 and is still forbidden, because the light ground carries no
-secondary-text tier at all: it exists for the mark and for plain text, and text
-on Bone is Iron or it is not shown. Every one of these pairs is in
-[Contrast](#contrast) as an explicit do-not-use row, so none of them is
-rediscovered and argued for again.
+No other token is permitted on Bone, and no token above is permitted outside
+the row that names it. Steel (2.71:1), Ash (3.08:1), Bronze (2.27:1) and Brass
+(1.69:1) all fail 4.5:1 there, so none of them is ever text on Bone. Quench
+reaches 4.58:1 and clears that threshold, and is still not text on Bone: the
+light ground carries no secondary-text tier at all — it exists for the mark and
+for plain text, and text on Bone is Iron or it is not shown. Quench appears on
+Bone only as the struck mark's lower bar, where it is a non-text graphical
+object against 3:1. Every one of these pairs is in [Contrast](#contrast) as an
+explicit row, so none of them is rediscovered and argued for again.
 
-**The struck mark has no light-ground definition, and is not given one.** Its
-lower bar is Steel, which computes 2.71:1 on Bone against the 3:1 SC 1.4.11
-requires of a non-text graphical object, and no other token reads as quenched
-steel at that lightness. On the light ground the mark is solid at every size,
-including 48px and above. The Open Graph card and every other light-ground asset
-uses the solid mark.
+**The struck state's light-ground variant is a substitution, not a new
+colour.** Its iron-ground tokens fail on Bone at all three of its elements,
+each against the 3:1 that SC 1.4.11 requires of a non-text graphical object —
+and the punch itself is the worse failure, not the quenched bar:
+
+| Element | Iron-ground token | Ratio on Bone | vs 3:1 |
+| --- | --- | --- | --- |
+| Punch outline | Bronze `#C8973F` | 2.2669:1 | fail |
+| F above the quench line | Bronze `#C8973F` | 2.2669:1 | fail |
+| F below the quench line | Steel `#8A9299` | 2.7106:1 | fail |
+
+So each element drops to the darker member of its own family, exactly as the
+solid state's punch already drops from Bronze to Dark bronze:
+
+| Element | Light-ground token | Ratio on Bone | vs 3:1 |
+| --- | --- | --- | --- |
+| Punch outline | Dark bronze `#85601A` | 4.8928:1 | pass |
+| F above the quench line | Dark bronze `#85601A` | 4.8928:1 | pass |
+| F below the quench line | Quench `#646C73` | 4.5830:1 | pass |
+
+Quench is Steel's own hue: h_ab 253.31 against Steel's 252.91, a 0.40° spread —
+tighter than the bronze family's own 0.55° — at C\* 5.15 against 4.90. The two
+differ essentially in lightness, ΔL\* 14.94, a smaller step than the approved
+Bronze → Dark bronze swap's 22.17. The two-tone hot/quenched reading therefore
+survives the substitution: Dark bronze against Quench is CIEDE2000 28.00,
+close to the 30.15 that separates Bronze and Steel on the iron ground.
+
+No colour is invented. All three substitutes are existing named tokens, and the
+rows above are in [Contrast](#contrast).
 
 ### Approved adjustment 1 — the warmed iron ground
 
@@ -328,7 +365,14 @@ in its last digit from the difference of the two rounded values shown beside it.
 Near-neutral tones are the sensitive case: the chroma of `#121110` is 0.69, so
 its ratios shift in the second decimal under a different white-point convention.
 The pipeline above is the one that produced every number here, and a
-recomputation should use it.
+recomputation should use it. One detail matters to anyone who does: the white
+point is derived from the chromaticity rather than normalised to the matrix.
+The IEC 61966-2-1 matrix has row sums (0.950470, 1, 1.088830), which are not
+quite (0.950456, 1, 1.089058), so sRGB white does not land exactly achromatic
+here — Lab(`#FFFFFF`) computes C\* 0.0142 rather than 0. The offset is far below
+anything reportable at the precision this document states, but a recomputation
+that normalises the white point to the matrix instead will differ from these
+figures in their last digits.
 
 ### Text
 
@@ -361,8 +405,11 @@ recomputation should use it.
 | Bronze `#C8973F` | Iron `#17130D` | 7.01:1 | 3:1 | pass | the mark on the iron ground |
 | Iron `#17130D` | Bronze `#C8973F` | 7.01:1 | 3:1 | pass | the F knocked out of the solid punch |
 | Steel `#8A9299` | Iron `#17130D` | 5.86:1 | 3:1 | pass | struck-state stroke below the quench line |
-| Dark bronze `#85601A` | Bone `#F2EDE6` | 4.89:1 | 3:1 | pass | the mark on the light ground |
-| Bone `#F2EDE6` | Dark bronze `#85601A` | 4.89:1 | 3:1 | pass | the F knocked out on the light ground |
+| Dark bronze `#85601A` | Bone `#F2EDE6` | 4.89:1 | 3:1 | pass | the solid punch on the light ground |
+| Bone `#F2EDE6` | Dark bronze `#85601A` | 4.89:1 | 3:1 | pass | the F knocked out of the solid punch on the light ground |
+| Dark bronze `#85601A` | Bone `#F2EDE6` | 4.89:1 | 3:1 | pass | struck-state punch outline on the light ground |
+| Dark bronze `#85601A` | Bone `#F2EDE6` | 4.89:1 | 3:1 | pass | struck-state F above the quench line on the light ground |
+| Quench `#646C73` | Bone `#F2EDE6` | 4.58:1 | 3:1 | pass | struck-state F below the quench line on the light ground |
 | Quench `#646C73` | Iron `#17130D` | 3.47:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Hearth `#1B1711` | 3.34:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Billet `#1F1B15` | 3.21:1 | 3:1 | pass | architecture connectors and arrows |
@@ -374,8 +421,9 @@ token moves without recomputing this row.
 
 ### Forbidden on the light ground
 
-Bone `#F2EDE6` carries Iron text and the Dark bronze mark, and nothing else. The
-pairs below are recorded so they are not rediscovered and proposed again.
+Bone `#F2EDE6` carries Iron text, the Dark bronze mark, and Quench as that
+mark's quenched bar in the struck state — nothing else. The pairs below are
+recorded so they are not rediscovered and proposed again.
 
 | Foreground | Background | Ratio | Threshold | Result |
 | --- | --- | --- | --- | --- |
@@ -384,8 +432,9 @@ pairs below are recorded so they are not rediscovered and proposed again.
 | Bronze `#C8973F` | Bone `#F2EDE6` | 2.27:1 | 4.5:1 | fail — do not use |
 | Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 4.5:1 | fail — do not use |
 | Ash `#818890` | Bone `#F2EDE6` | 3.08:1 | 4.5:1 | fail — do not use |
-| Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 3:1 | fail — do not use: this is why the struck mark has no light-ground state |
-| Quench `#646C73` | Bone `#F2EDE6` | 4.58:1 | 4.5:1 | passes, and is still forbidden — the light ground carries no secondary-text tier |
+| Bronze `#C8973F` | Bone `#F2EDE6` | 2.27:1 | 3:1 | fail — do not use: the punch outline is a graphical object, held to 3:1 rather than 4.5:1, and fails that too |
+| Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 3:1 | fail — do not use: this is why the struck mark's lower bar is Quench on Bone |
+| Quench `#646C73` | Bone `#F2EDE6` | 4.58:1 | 4.5:1 | passes, and is still forbidden **as text** — the light ground carries no secondary-text tier. Permitted as the struck mark's lower bar, against 3:1 |
 
 ### Decorative, no threshold
 
