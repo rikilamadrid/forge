@@ -84,6 +84,92 @@ file is a Forge work item.
    earlier Features used and what `templates/ticket.template.md` still carries;
    the GitHub reader never looks at it.
 
+## First orchestrated run — Feature 05, ticket 05.1, 2026-09-19
+
+The first real `/orchestrate start` on this project. One `developer` worker,
+three independent `tester` rounds, one human gate, one squash merge, one clean
+release. What follows is what the run exposed, good and bad.
+
+### What worked exactly as documented
+
+- **Claim creation is atomic and correct.** `refs/pathfinder/claims/05.1`, the
+  worktree, and the branch were created together, and `--announce` posted the
+  ownership note with its `pathfinder:orchestrate claimed` marker and the full
+  execution profile.
+- **Status transitions through labels are reliable.** `status: proposed` on
+  `/ticket load` → `status: ready` → `status: in-progress` on `/ticket start`,
+  with exactly one status label present at every point.
+- **The gate flag is a flag, not a status.** `gate: human` was added alongside
+  `status: in-progress` and removed on resolve. The two never collided.
+- **Claims outlive sessions, as `skills/orchestrate/SKILL.md` §The model
+  promises.** A tester session died mid-review to a harness rate limit. The
+  claim ref, worktree, branch and state file were all intact afterwards, and
+  the review resumed from its own recorded position with nothing re-derived.
+- **`check` and `release` were accurate.** `check` reported `candidate` with a
+  correct `mergeBase`, and `release` removed the worktree, local branch and
+  claim ref cleanly after the squash merge.
+
+### Findings
+
+8. **A ticket key appears twice in its own branch name.**
+   `skills/orchestrate/engine/claim.mjs:120` builds the branch as
+   `` `ticket/${key}-${slugify(row.title)}` ``, and `titleOf` in
+   `engine/store.mjs` strips only a `NN.TT — ` title prefix. It does not strip
+   the `[NN.TT]` form that `context/tracker.md` documents and every issue in
+   this repository uses, so the key survives into the slug. Ticket `05.1`
+   produced `ticket/05.1-05-1-brand-foundations-prototype-evidenc` — key twice,
+   and the 40-character slug cap truncating `evidence` to `evidenc`. Cosmetic:
+   the claim, worktree and ref are all valid and the run completed normally.
+   Upstream, either `titleOf` should also strip `[NN.TT]`, or `slugify` should
+   drop a leading key before the cap applies.
+
+9. **A forge auto-close leaves the ticket unreadable, and blocks its
+   dependants.** The pull request body said `Closes #26`, so merging closed the
+   issue while it still carried `status: in-progress`. `engine/store.mjs:197-216`
+   reads a closed issue with a status label as `Unrecognised`, and
+   `engine/board.mjs` never lets an unrecognised ticket unblock a dependent. For
+   the window between the merge and `/ticket complete`, the board read
+   `05.1  Unrecognised  status unrecognised: ticket is closed but still labelled
+   status: in-progress` and `05.2  blocker 05.1 has an unrecognised status`.
+   `skills/orchestrate/actions/integrate.md` step 7 does warn that "a forge
+   auto-close is not the entire completion transition" and names the label
+   removal, so this is documented rather than unknown — but the engine offers no
+   command for it, the repair is manual, and an orchestrator that merged and
+   stopped would leave the board wedged with no error raised anywhere. Upstream,
+   completion should remove the obsolete label itself.
+
+10. **`release` does not remove the remote ticket branch.** After
+    `orchestrate release 05.1` removed the worktree, local branch and claim ref,
+    `refs/heads/ticket/05.1-05-1-brand-foundations-prototype-evidenc` still
+    existed on `origin`. Integration deliberately avoids `gh pr merge
+    --delete-branch`, because that would also try to delete the local branch that
+    the claim's worktree still has checked out, so nothing in the documented
+    sequence ever deletes the remote one. A project with short-lived branches
+    accumulates one stale remote branch per completed ticket. Upstream, `release`
+    should delete the remote branch too, or say that the human must.
+
+### Observed, not a defect
+
+- **The review loop earned its cost.** Numeric checking was clean at every
+  round — all 12 palette rows, 37 contrast rows and the 18-row tint table
+  recomputed against Sharma's published CIEDE2000 vectors with zero arithmetic
+  errors, across three independent rounds. Every defect found was in prose: a
+  false claim about the repository, an overgeneralised rule that contradicted a
+  definition six lines away, and a determination silently dropped when the
+  paragraph containing it was deleted. Two of the three were introduced *by a
+  repair round*, which is the argument for the whole-document coherence pass
+  that caught them rather than another pass over the numbers.
+- **The tester overruled its own earlier round.** Round 1 asked for a rounding
+  change the developer refused with an argument; round 2 adjudicated under three
+  white-point conventions and found the developer right and round 1 wrong. A
+  reviewer that can reverse itself on evidence is worth more than one that
+  defends its prior findings.
+- **The two-repair-round gate rule did its job.** The worker resolved a genuine
+  contradiction between two approved requirements by changing one of them, and
+  flagged that it had. The gate surfaced a better option — one that kept the
+  approved rule intact — that neither the worker nor the orchestrator would have
+  had authority to choose alone.
+
 ## Contract observed
 
 Orchestration coordinates **execution of tickets that already exist in the
