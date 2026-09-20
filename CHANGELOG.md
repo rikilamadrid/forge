@@ -7,6 +7,15 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ## [Unreleased]
 
+### Changed
+
+- The README opens with the Maker's Mark header lockup, the positioning line,
+  and the supporting tagline in place of the emoji heading, and adds an
+  architecture graphic, a minimal-API section, and a cited evidence section.
+  Every reference section it already carried is kept.
+- Every image and link in the README is an absolute URL, and no `<picture>`
+  element is used, so the page renders the same on GitHub and on npm.
+
 ## [0.1.1] - 2026-09-18
 
 ### Added
