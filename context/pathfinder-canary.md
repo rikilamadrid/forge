@@ -170,6 +170,57 @@ release. What follows is what the run exposed, good and bad.
   approved rule intact — that neither the worker nor the orchestrator would have
   had authority to choose alone.
 
+## Second orchestrated run — Feature 05, ticket 05.2, 2026-09-20
+
+One `developer` worker, a `tester` review interrupted mid-run by a harness rate
+limit and resumed in a later session, one squash merge. The run raised no new
+defect class. It is recorded because it put a second occurrence behind finding
+9, proved the direction of the fix for finding 10, and confirmed the claim
+model's resilience property a second time.
+
+### Findings 9 and 10, revisited
+
+**Finding 9 recurred. This is the second confirmed occurrence.** The pull
+request body said `Closes #27`, so the squash merge closed the issue while it
+still carried `status: in-progress` — the same sequence that produced the
+finding on `05.1`. The store read the ticket as unreadable for the window
+between the merge and `/ticket complete`, exactly as
+`engine/store.mjs:197-216` describes, and the repair was again manual: remove
+the obsolete label by hand. Two occurrences in two consecutive tickets, from
+the ordinary documented workflow rather than from any mistake, make this the
+default outcome of a forge auto-close and not an edge case. It strengthens the
+upstream recommendation already recorded under finding 10: completion should
+remove the lifecycle status label itself, ideally before closing the issue or
+atomically with it, so an auto-close can never leave the store wedged.
+
+**Finding 10 has a proven cleanup remedy.** This run merged with
+`gh pr merge --squash --delete-branch` rather than the documented `release`
+sequence. The remote ticket branch was deleted successfully, and the local
+branch — which the claim's worktree still owned — was not. Critically, the
+GitHub CLI did not wedge on that conflict: it skipped the local delete, said
+why, and printed the exact repair,
+`git worktree remove … && git branch -D …`, which then ran cleanly after the
+claim was released. The concern that kept integration away from
+`--delete-branch` is therefore real but non-blocking, and the ordering that
+resolves it is proven. Record this as the direction for the upstream fix:
+orchestrated integration should delete the remote branch during the merge and
+defer local branch cleanup until after claim and worktree release, instead of
+leaving the remote branch to accumulate.
+
+### Observed, not a defect
+
+- **Claims survive a harness interruption — second confirmation.** The `05.1`
+  run already recorded a tester session dying to a rate limit with its claim
+  intact. The same thing happened here, across a session boundary rather than
+  within one: the review of `05.2` was interrupted and resumed later.
+  `refs/pathfinder/claims/05.2`, the worktree and the branch were all healthy
+  afterwards, and the ref still pointed at the original base commit rather than
+  drifting to the work head. Resume required no reconstruction of ownership
+  state and no re-derivation of what the claim covered — the four resume checks
+  were reads that confirmed what was already there. This is a positive property
+  of the claim model: ownership is durable state in Git, not session state, so
+  an interruption costs the work in flight and nothing else.
+
 ## Contract observed
 
 Orchestration coordinates **execution of tickets that already exist in the
