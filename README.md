@@ -1,27 +1,17 @@
-# 🔥 Forge — The Local AI Kit
+# ![Forge](https://raw.githubusercontent.com/rikilamadrid/forge/main/assets/readme-header.svg)
+
+**The Local AI Kit.** Forge calls language models running on machines you
+control, from TypeScript or the command line.
+
+Shaped locally. Marked, measured, yours.
 
 [![CI](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml)
+[npm](https://www.npmjs.com/package/forge-local-ai-kit) ·
+[GitHub](https://github.com/rikilamadrid/forge)
 
-Forge calls language models running on machines you control, from TypeScript or
-the command line.
-
-If you want an application to use a local model, you normally end up writing the
-same layer twice: HTTP calls to a runtime, configuration validation, timeout and
-cancellation handling, token and latency metrics, and error handling that
-distinguishes "the host is unreachable" from "the model returned nothing." Forge
-is that layer, written once and installable.
-
-```text
-Application  →  Forge  →  local AI runtime  →  model
-```
-
-Forge is the reusable boundary in the middle. It is infrastructure: not a model,
-not an agent framework, not a prompt or chain library. It has no opinion about
-what you ask or why.
-
-Forge supports one runtime today, [Ollama](https://ollama.com), reached over
-HTTP on a machine you trust. It is ESM-only, requires Node.js 22 or newer, and
-has zero production dependencies.
+Every pull request packs the artifact and runs eleven named checks against the
+packed tarball. The published package is 17 files with zero production
+dependencies. Each figure is cited below, under "Every tool bears the mark."
 
 ## Install
 
@@ -45,6 +35,54 @@ Verify the runtime before pointing Forge at it:
 ollama list                       # the model you want is in this list
 curl http://localhost:11434/api/version
 ```
+
+## The minimal API
+
+Three options in, one typed result out:
+
+```ts
+import { createForge } from "forge-local-ai-kit";
+
+const forge = createForge({
+  provider: "ollama",
+  host: "http://localhost:11434",
+  model: "qwen3:8b",
+});
+
+const result = await forge.ask("Explain a bloom filter.");
+console.log(result.output, result.metrics.clientLatencyMs);
+```
+
+Or from the command line:
+
+```sh
+OLLAMA_HOST="http://localhost:11434" FORGE_MODEL="qwen3:8b" \
+  npx forge ask "Explain a bloom filter."
+```
+
+The full API, the metrics, and the error contract are below.
+
+## What Forge is
+
+If you want an application to use a local model, you normally end up writing the
+same layer twice: HTTP calls to a runtime, configuration validation, timeout and
+cancellation handling, token and latency metrics, and error handling that
+distinguishes "the host is unreachable" from "the model returned nothing." Forge
+is that layer, written once and installable.
+
+![Your app → Forge → Ollama → local model](https://raw.githubusercontent.com/rikilamadrid/forge/main/assets/architecture.svg)
+
+```text
+Your app  →  Forge  →  Ollama  →  local model
+```
+
+Forge is the reusable boundary in the middle. It is infrastructure: not a model,
+not an agent framework, not a prompt or chain library. It has no opinion about
+what you ask or why.
+
+Forge supports one runtime today, [Ollama](https://ollama.com), reached over
+HTTP on a machine you trust. It is ESM-only, requires Node.js 22 or newer, and
+has zero production dependencies.
 
 ## Setup: one machine
 
@@ -352,6 +390,31 @@ are provider-neutral so consumers are not coupled to Ollama's wire format; that
 is a design choice, not a claim that other providers, routing, or a plugin
 system exist.
 
+## Every tool bears the mark.
+
+Each figure here is traceable to a file in this repository or to a run of the
+`CI` workflow. Nothing is stated that cannot be checked.
+
+| Measured | Value | Source |
+| --- | --- | --- |
+| Files in the published tarball | 17 | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `files`, enforced by the `file-allowlist` check |
+| Production dependencies | 0 | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `dependencies`, enforced by the `manifest-dependencies` check |
+| Named checks run on the packed tarball | 11 | [`scripts/verify-package.mjs`](https://github.com/rikilamadrid/forge/blob/main/scripts/verify-package.mjs) |
+| Platforms the package is built and tested on | Ubuntu Node.js 22 and 24, macOS Node.js 22 | [`.github/workflows/ci.yml`](https://github.com/rikilamadrid/forge/blob/main/.github/workflows/ci.yml) |
+| Supported Node.js range | `>=22` | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `engines` |
+
+Every pull request packs the artifact and runs
+[`scripts/verify-package.mjs`](https://github.com/rikilamadrid/forge/blob/main/scripts/verify-package.mjs)
+against the tarball it just built, on each platform in the matrix. The checks
+cover the file allowlist, the required entry points, the packaged manifest, a
+root import from a clean consumer install, a refused internal subpath, and the
+installed executable's `--version`. No source, test, or project-context file
+ships in the package.
+
+Published to the public npm registry as
+[`forge-local-ai-kit`](https://www.npmjs.com/package/forge-local-ai-kit).
+
 ## License
 
-MIT © 2026 Ricardo Lamadrid. See [LICENSE](LICENSE).
+MIT © 2026 Ricardo Lamadrid. See
+[LICENSE](https://github.com/rikilamadrid/forge/blob/main/LICENSE).
