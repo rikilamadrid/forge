@@ -7,6 +7,14 @@ dist/
 coverage/
 .env
 .env.*
+
+# vercel link writes these two. They are listed by hand, and above the
+# negation below, because the rule vercel appends is `.env*` placed *after*
+# !.env.example, where it shadows the negation and starts ignoring the
+# committed example file.
+.vercel
+.env.local
+
 !.env.example
 *.log
 .DS_Store

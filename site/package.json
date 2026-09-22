@@ -1,0 +1,18 @@
+{
+  "name": "forge-site",
+  "private": true,
+  "version": "0.0.0",
+  "description": "The public one-page website for Forge. Built and deployed on its own; it is not part of the forge-local-ai-kit package.",
+  "type": "module",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview"
+  },
+  "engines": {
+    "node": ">=22"
+  },
+  "dependencies": {
+    "astro": "^5.14.1"
+  }
+}

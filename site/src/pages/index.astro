@@ -1,0 +1,339 @@
+---
+// The single page. Every identity value comes from context/brand-identity.md
+// via src/styles/forge.css, and every graphic is read straight out of assets/,
+// so this page consumes the 05.2 identity and redefines none of it.
+import "../styles/forge.css";
+
+import lockup from "../../../assets/lockup-iron.svg?raw";
+import markSolid from "../../../assets/mark-solid-iron.svg?raw";
+import markStruck from "../../../assets/mark-struck-iron.svg?raw";
+import architecture from "../../../assets/architecture.svg?raw";
+
+// The hallmark repeats once per verified figure. As a graphic it is identical
+// every time, so each repeat is hidden from assistive technology and the row
+// carries the word "Verified" instead. Only presentation changes here; no
+// geometry and no colour from assets/ is touched.
+const decorative = (svg: string) =>
+  svg
+    .replace(/\s+role="img"/, "")
+    .replace(/\s+aria-label="[^"]*"/, "")
+    .replace(/\s*<title>[\s\S]*?<\/title>/, "")
+    .replace("<svg", '<svg aria-hidden="true" focusable="false"');
+
+import favicon16 from "../../../assets/favicon-16.png";
+import favicon32 from "../../../assets/favicon-32.png";
+import favicon180 from "../../../assets/favicon-180.png";
+
+const repo = "https://github.com/rikilamadrid/forge";
+const blob = `${repo}/blob/main`;
+const npm = "https://www.npmjs.com/package/forge-local-ai-kit";
+
+// assets/README.md: anything that references an asset from outside the
+// repository uses the absolute raw URL. A social card is fetched by crawlers,
+// not by the browser rendering this page.
+const ogImage =
+  "https://raw.githubusercontent.com/rikilamadrid/forge/main/assets/og-card.png";
+
+const title = "Forge — The Local AI Kit";
+const description =
+  "Forge calls language models running on machines you control, from TypeScript or the command line.";
+
+// Every figure below is traceable to a repository file, a CI run, or the
+// registry, and cites that source where it is shown. A figure with no source
+// is not displayed — see the hallmark rule in context/brand-identity.md.
+const figures = [
+  {
+    value: "0.1.1",
+    what: "Published version on the public npm registry",
+    source: "registry · dist-tags.latest",
+    href: npm,
+  },
+  {
+    value: "0",
+    what: "Production dependencies",
+    source: "package.json · dependencies",
+    href: `${blob}/package.json`,
+  },
+  {
+    value: "17",
+    what: "Files in the published tarball",
+    source: "npm pack · scripts/verify-package.mjs",
+    href: `${blob}/scripts/verify-package.mjs`,
+  },
+  {
+    value: "11",
+    what: "Named checks run against every packed tarball",
+    source: "scripts/verify-package.mjs",
+    href: `${blob}/scripts/verify-package.mjs`,
+  },
+  {
+    value: "43",
+    what: "Tests, run on every matrix cell",
+    source: "test/ · node:test",
+    href: `${repo}/tree/main/test`,
+  },
+  {
+    value: "ubuntu 22 · ubuntu 24 · macos 22",
+    what: "Node.js versions and operating systems CI builds on",
+    source: ".github/workflows/ci.yml",
+    href: `${blob}/.github/workflows/ci.yml`,
+  },
+  {
+    value: ">=22",
+    what: "Node.js required by the package",
+    source: "package.json · engines.node",
+    href: `${blob}/package.json`,
+  },
+  {
+    value: "MIT",
+    what: "License",
+    source: "LICENSE",
+    href: `${blob}/LICENSE`,
+  },
+];
+
+// Roles, not identities. The other three keep their own design; nothing here
+// restyles them or claims to speak for them.
+const roles = [
+  {
+    name: "Forge",
+    role: "The smithy",
+    line: "Shapes raw local intelligence into tools another program can hold.",
+  },
+  {
+    name: "Pathfinder",
+    role: "The guide",
+    line: "Marks the route through the work, from first debate to release.",
+  },
+  {
+    name: "Lorekeeper",
+    role: "The archive",
+    line: "Keeps what has been learned so it can be found again.",
+  },
+  {
+    name: "LAMA",
+    role: "The companion",
+    line: "The face you talk to, and the first to carry a tool out of the smithy.",
+  },
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <meta name="color-scheme" content="dark" />
+    <meta name="theme-color" content="#17130D" />
+
+    <link rel="icon" type="image/png" sizes="32x32" href={favicon32.src} />
+    <link rel="icon" type="image/png" sizes="16x16" href={favicon16.src} />
+    <link rel="apple-touch-icon" sizes="180x180" href={favicon180.src} />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={ogImage} />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,600;12..96,700&family=IBM+Plex+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap"
+    />
+  </head>
+
+  <body>
+    <main>
+      <!-- Hero -->
+      <section class="hero">
+        <div class="shell">
+          <Fragment set:html={lockup} />
+          <h1>Where local intelligence is shaped into tools.</h1>
+          <p class="subline">
+            Forge calls language models running on machines you control, from
+            TypeScript or the command line. One small interface over your own
+            Ollama runtime, returning a typed result with the execution evidence
+            the runtime reported.
+          </p>
+        </div>
+      </section>
+
+      <!-- Architecture -->
+      <section>
+        <div class="shell">
+          <p class="label">The data path</p>
+          <h2>Four parts, one direction of travel.</h2>
+          <figure class="diagram">
+            <Fragment set:html={architecture} />
+            <figcaption>
+              Your app sends a prompt to Forge, Forge calls Ollama, Ollama runs
+              a local model. Forge owns the boundary in the middle and nothing
+              else.
+            </figcaption>
+          </figure>
+        </div>
+      </section>
+
+      <!-- Install -->
+      <section>
+        <div class="shell">
+          <p class="label">Install</p>
+          <h2>One package, no production dependencies.</h2>
+          <p class="lede">
+            Forge is ESM-only and requires Node.js 22 or newer. It never
+            installs, pulls, or configures a runtime or a model — you bring
+            those.
+          </p>
+          <div class="surface command">
+            <span class="sigil" aria-hidden="true">$</span>
+            <code class="accent">npm install forge-local-ai-kit</code>
+          </div>
+        </div>
+      </section>
+
+      <!-- Usage -->
+      <section>
+        <div class="shell">
+          <p class="label">Usage</p>
+          <h2>The whole public API is one function.</h2>
+          <p class="lede">
+            <code>createForge</code>, <code>ForgeError</code> and the public
+            types are exported from the package root and nowhere else.
+          </p>
+          <div class="surface">
+            <p class="code-caption">ask.mjs</p>
+            <div class="code">
+              <pre><code>{`import { createForge, ForgeError } from "forge-local-ai-kit";
+
+const forge = createForge({
+  provider: "ollama",
+  host: "http://localhost:11434",
+  model: "qwen3:8b",
+});
+
+try {
+  const result = await forge.ask("Explain a bloom filter.");
+  console.log(result.output);
+  console.log(result.model, result.metrics.clientLatencyMs);
+} catch (error) {
+  if (error instanceof ForgeError) {
+    `}<span class="comment">// Branch on the category, never on the message text.</span>{`
+    console.error(error.category, error.message, error.evidence);
+  } else {
+    throw error;
+  }
+}`}</code></pre>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Local-first -->
+      <section>
+        <div class="shell">
+          <p class="label">Local-first</p>
+          <h2>Nothing leaves the machines you already trust.</h2>
+          <ul class="points">
+            <li>
+              <h3>Your host, and no other</h3>
+              <p>
+                Prompts and responses go to the host you configure and nowhere
+                else. Forge contacts no other service.
+              </p>
+            </li>
+            <li>
+              <h3>Nothing kept</h3>
+              <p>
+                No persistence, no telemetry, no analytics, and no logging of
+                prompts or responses. Only the response you asked for is
+                returned; hidden reasoning is never surfaced.
+              </p>
+            </li>
+            <li>
+              <h3>No configuration of its own</h3>
+              <p>
+                As a library Forge holds no credentials and reads no
+                environment. Your application owns its configuration and passes
+                normalized values in.
+              </p>
+            </li>
+          </ul>
+        </div>
+      </section>
+
+      <!-- Evidence -->
+      <section class="evidence">
+        <div class="shell">
+          <div class="mark-heading">
+            <Fragment set:html={markStruck} />
+            <h2>Every tool bears the mark.</h2>
+          </div>
+          <p class="lede">
+            A smith stamps finished work so you know the shop it came from. The
+            mark sits beside anything that has actually been verified, and
+            nowhere else. Every figure below names the file, the workflow, or
+            the registry it was read from.
+          </p>
+          <ul class="figures">
+            {
+              figures.map((figure) => (
+                <li>
+                  <Fragment set:html={decorative(markSolid)} />
+                  <span>
+                    <span class="sr-only">Verified: </span>
+                    <span class="value">{figure.value}</span>
+                    <span class="what">{figure.what}</span>
+                  </span>
+                  <p class="source">
+                    <a href={figure.href}>{figure.source}</a>
+                  </p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+
+      <!-- Ecosystem -->
+      <section>
+        <div class="shell">
+          <p class="label">Where Forge sits</p>
+          <h2>Four roles, one ecosystem.</h2>
+          <p class="lede">
+            Each does one job and knows where the others are. The names below
+            are roles, not a shared visual identity: Pathfinder, Lorekeeper and
+            LAMA keep their own.
+          </p>
+          <ul class="roles">
+            {
+              roles.map((entry) => (
+                <li>
+                  <span class="name">{entry.name}</span>
+                  <span class="role">{entry.role}</span>
+                  <p>{entry.line}</p>
+                </li>
+              ))
+            }
+          </ul>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="shell">
+        <ul>
+          <li><a href={repo}>GitHub</a></li>
+          <li><a href={npm}>npm</a></li>
+        </ul>
+        <p class="colophon">
+          MIT licensed. No analytics, no tracking, and no cookies on this
+          page.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
