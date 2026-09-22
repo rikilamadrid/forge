@@ -222,10 +222,15 @@ Three repository constraints shape this Feature and are not negotiable:
   by the AA contrast requirement.
 - The Vercel project was created and configured as a planning precondition on
   2026-09-19, so the website, README, and repository-presentation tickets can run
-  in parallel instead of waiting on a deployment. The expected production URL is
+  in parallel instead of waiting on a deployment. The expected production URL was
   `https://forge-kit.vercel.app`; Vercel assigns the domain at the first
   deployment, so the website ticket records the real URL and the integration
-  ticket reconciles it if it differs.
+  ticket reconciles it if it differs. **It differed.** The observed canonical
+  URL is `https://forge-kit-nu.vercel.app`, recorded by `05.3` in
+  `context/project-overview.md` under `## Durable Decisions` and propagated by
+  `05.6` on 2026-09-22. The expected value is kept here only as the planning
+  record; `forge-kit.vercel.app` is an unrelated account's project and must not
+  be used to identify this website anywhere.
 - Ordering constraint: the README's absolute asset URLs point at `main`. Verified
   2026-09-19 that the repository is public and
   `raw.githubusercontent.com/rikilamadrid/forge/main/<path>` serves `200` for a
