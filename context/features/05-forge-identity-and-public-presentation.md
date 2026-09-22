@@ -135,7 +135,13 @@ Three repository constraints shape this Feature and are not negotiable:
 - A plain-text architecture fallback remains in the README so it is readable
   where images do not load.
 - Repository About description, topics, and website link are updated to match.
-  The GitHub social preview image is uploaded through repository settings.
+  A custom GitHub social preview image was originally required here, uploaded
+  through repository settings. That requirement was made **optional** on
+  2026-09-22 after GitHub was found to expose no supported mechanism for it —
+  see §Notes / Decisions. The public website's Open Graph metadata is the
+  automated, version-controlled source of truth for Forge's social
+  presentation, and GitHub's generated repository card is acceptable for this
+  Feature.
 
 ### npm package presentation
 
@@ -233,8 +239,40 @@ Three repository constraints shape this Feature and are not negotiable:
   website ticket must add `.vercel` and `.env.local` by hand, above
   `!.env.example` or as exact entries, and must not accept the generated `.env*`
   rule. None of these files were left in the tree by the planning precondition.
-- Uploading the GitHub social preview image is a human action in repository
-  settings; it cannot be committed.
+- **The custom GitHub social preview image is optional, decided 2026-09-22.**
+  The original requirement stands recorded above and is not withdrawn as a
+  wish: a custom card uploaded through repository settings. It is no longer a
+  blocking acceptance criterion, for two verified reasons.
+  - GitHub exposes no supported mechanism to set it. Checked on 2026-09-22
+    against a token holding `repo`, `workflow`, `gist`, and `read:org`, so this
+    is a missing capability and not a permissions gap: none of GitHub's 259
+    GraphQL mutations matches `opengraph`, `social`, `preview`, or `image`;
+    `UpdateRepositoryInput` has no image field; the REST paths
+    `/repos/{owner}/{repo}/social-preview`, `/social_preview`,
+    `/settings/social-preview`, and `/opengraph` all return `404`; a `PATCH`
+    to `/repos/{owner}/{repo}` carrying `social_preview` or `open_graph_image`
+    returns `200` and is silently ignored, leaving `usesCustomOpenGraphImage`
+    `false`; and `gh repo edit` has no such flag.
+  - The only working path is GitHub's own settings form, a
+    session-cookie-authenticated browser upload. That is **intentionally
+    outside this project's automated workflow**: it cannot be committed,
+    reviewed, replayed, or verified by CI, so the Feature does not depend on
+    it.
+- The revised acceptance criterion for repository presentation is the About
+  description, the topics, and the logged-out public page — all verifiable
+  through `gh api` and an unauthenticated fetch. Social presentation itself is
+  carried by the website's Open Graph metadata, which is version-controlled in
+  `site/src/pages/index.astro`, built by the `site` job inside the required
+  `CI` check, and served from the canonical production URL
+  `https://forge-kit-nu.vercel.app`: `og:image` resolves `200` as `image/png`
+  from `assets/og-card.png` on `main`, and `twitter:card` is
+  `summary_large_image`.
+- The optional human-only follow-up, outside Feature 05: produce a
+  GitHub-canvas 1280x640 card and upload it through repository settings.
+  `assets/README.md` records that no such asset exists — `og-card.png` is
+  1200x630, the Open Graph canvas — and **no 1280x640 asset is to be invented
+  to satisfy the earlier wording**. Until someone does both by hand, GitHub
+  serves its generated card, which already carries the correct description.
 - The repository-presentation ticket changes repository settings and may produce
   no diff. Its completion evidence is a settings read-back and a logged-out check
   of the public repository page, and it must not manufacture a commit to satisfy
