@@ -1,6 +1,6 @@
 {
   "name": "forge-local-ai-kit",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Forge — The Local AI Kit: call language models running on machines you control, from TypeScript or the command line.",
   "license": "MIT",
   "author": {
