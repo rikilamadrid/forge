@@ -11,7 +11,7 @@
     "type": "git",
     "url": "git+https://github.com/rikilamadrid/forge.git"
   },
-  "homepage": "https://github.com/rikilamadrid/forge#readme",
+  "homepage": "https://forge-kit-nu.vercel.app",
   "bugs": {
     "url": "https://github.com/rikilamadrid/forge/issues"
   },

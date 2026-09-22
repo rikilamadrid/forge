@@ -6,6 +6,7 @@ control, from TypeScript or the command line.
 Shaped locally. Marked, measured, yours.
 
 [![CI](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml)
+[Website](https://forge-kit-nu.vercel.app) ·
 [npm](https://www.npmjs.com/package/forge-local-ai-kit) ·
 [GitHub](https://github.com/rikilamadrid/forge)
 
