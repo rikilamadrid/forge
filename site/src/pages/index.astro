@@ -221,7 +221,7 @@ try {
   console.log(result.model, result.metrics.clientLatencyMs);
 } catch (error) {
   if (error instanceof ForgeError) {
-    // Branch on the category, never on the message text.
+    `}<span class="comment">// Branch on the category, never on the message text.</span>{`
     console.error(error.category, error.message, error.evidence);
   } else {
     throw error;
