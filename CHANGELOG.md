@@ -7,6 +7,8 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ## [Unreleased]
 
+## [0.1.2] - 2026-09-22
+
 ### Changed
 
 - The README opens with the Maker's Mark header lockup, the positioning line,
