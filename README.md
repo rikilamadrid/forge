@@ -6,6 +6,10 @@ control, from TypeScript or the command line.
 Shaped locally. Marked, measured, yours.
 
 [![CI](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml)
+`FG-047` · a [Wonder Wagon](https://github.com/rikilamadrid/wonder-wagon-ui) tool. Forge shares
+the family's design foundations without a browser or React in its dependency graph: its
+terminal identity is generated from `@wonder-wagon/themes` into `src/identity.ts` and checked for
+drift in CI.
 [Website](https://forge-kit-nu.vercel.app) ·
 [npm](https://www.npmjs.com/package/forge-local-ai-kit) ·
 [GitHub](https://github.com/rikilamadrid/forge)
