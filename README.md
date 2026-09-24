@@ -14,15 +14,22 @@ drift in CI.
 [npm](https://www.npmjs.com/package/forge-local-ai-kit) ·
 [GitHub](https://github.com/rikilamadrid/forge)
 
-Every pull request packs the artifact and runs eleven named checks against the
-packed tarball. The published package is 17 files with zero production
-dependencies. Each figure is cited below, under "Every tool bears the mark."
-
 ## Install
 
 ```sh
 npm install forge-local-ai-kit
 ```
+
+Point it at a running Ollama server and ask something:
+
+```sh
+OLLAMA_HOST="http://localhost:11434" FORGE_MODEL="qwen3:8b" \
+  npx forge ask "Explain a bloom filter."
+```
+
+Every pull request packs the artifact and runs eleven named checks against the
+packed tarball. The published package is 17 files with zero production
+dependencies. Each figure is cited below, under "Every tool bears the mark."
 
 ## Requirements
 
