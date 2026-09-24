@@ -18,7 +18,7 @@ interface ProcessLike {
   argv: string[];
   env: Environment;
   exitCode?: number;
-  stdout: { write(value: string): void; isTTY?: boolean };
+  stdout: { write(value: string): void; isTTY?: boolean; columns?: number };
   stderr: { write(value: string): void; isTTY?: boolean };
 }
 
@@ -61,7 +61,11 @@ async function main(process: ProcessLike): Promise<void> {
     process.stdout.write(
       json
         ? `${JSON.stringify(result)}\n`
-        : formatHumanResult(result, createTerminal(process.env, process.stdout.isTTY === true)),
+        : formatHumanResult(
+            result,
+            createTerminal(process.env, process.stdout.isTTY === true),
+            process.stdout.columns,
+          ),
     );
   } catch (error) {
     writeFailure(process, toInferenceFailure(error), json);
@@ -131,14 +135,24 @@ function parsePrompt(arguments_: string[]): string {
   return prompt;
 }
 
-function formatHumanResult(result: InferenceResult, terminal: Terminal): string {
+function formatHumanResult(
+  result: InferenceResult,
+  terminal: Terminal,
+  columns?: number,
+): string {
   // The answer is the object; the metrics are the plate beneath it. Labels dim, values
   // plain, so a reader's eye lands on the numbers. Colour never carries a value.
+  //
+  // The quench rule separates the two: the answer is hot, the metrics are measured. It
+  // exists only where colour does, so a pipe, NO_COLOR and TERM=dumb see exactly the
+  // bytes 0.1.2 emitted, and it is dropped whole in a terminal too narrow to hold it.
   const metrics = result.metrics;
   const label = (text: string) => terminal.dim(text);
+  const rule = terminal.quenchRule(columns);
   const lines = [
     result.output.trimEnd(),
     "",
+    ...(rule === "" ? [] : [rule, ""]),
     `${label("Provider:")} ${result.provider}`,
     `${label("Model:")} ${result.model}`,
     `${label("Client latency:")} ${formatMilliseconds(metrics.clientLatencyMs)}`,
