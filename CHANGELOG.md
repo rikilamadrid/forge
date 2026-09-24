@@ -16,6 +16,40 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
   byte of piped and `--json` output is unchanged. `src/identity.ts` is generated from
   `@wonder-wagon/themes` (a devDependency; nothing is added at run time) by
   `npm run wonder-wagon:sync` and verified by `npm run wonder-wagon:check`.
+- Human-readable results carry the **quench rule**: a fixed 24-column rule between
+  the answer and the metrics, eight cells in the brand colour and sixteen quenched,
+  in `─` (U+2500). It is drawn only where colour is, and a terminal narrower than
+  24 columns drops it whole rather than wrapping or shortening it. Piped output,
+  `NO_COLOR`, `FORCE_COLOR=0`, `TERM=dumb` and `--json` are unchanged.
+- The **hallmark plate**: the lockup's object state at 96px and above, the struck
+  mark in a recessed iron well on an ember enamel plate. It is the website hero,
+  both social cards and `favicon-180`, and it never appears in the README, on npm
+  or in the CLI.
+- `assets/github-preview.png`, a 1280×640 canvas for GitHub's social preview,
+  closing the gap `assets/README.md` has been reporting. Uploading it is a manual
+  step in repository settings.
+
+### Changed
+
+- The README header is a 1200×200 panel carrying the lockup, "The Local AI Kit",
+  one local-first line and the serial on its own iron ground, so GitHub light,
+  GitHub dark and npm render it identically. `npm install` and one command that
+  actually runs now sit on the first screen. No factual claim changed: the family
+  sentence, the five cited figures and every reference section are as they were.
+- The website has two environments — Iron at night, Bone by day — resolved from
+  `prefers-color-scheme` and overridable by a lever that remembers the choice.
+  The hero is the hallmark plate; depth is on the plate and the lever and nothing
+  else; code and command surfaces keep the iron ground in both environments.
+- The website's two stale evidence figures are corrected against their cited
+  sources: the published version reads `0.1.2` from the registry rather than
+  `0.1.1`, and the test count reads `55` rather than `43`.
+- `context/brand-identity.md` records the plate, Ember as product enamel, Bone as
+  Forge's product day environment, the objects-only depth exception, the chamfer
+  rule, the quench rule's gating, and twenty-two newly measured colour pairs.
+
+**Every byte of piped and `--json` output is unchanged.** No public API, CLI
+contract, error category, exit code or Node.js range moved, and the package still
+has zero production dependencies.
 
 ## [0.1.2] - 2026-09-22
 
