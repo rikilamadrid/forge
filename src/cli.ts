@@ -3,7 +3,9 @@
 import { readFileSync } from "node:fs";
 
 import { loadConfig, type Environment } from "./config.js";
+import { SERIAL } from "./identity.js";
 import { createForge } from "./index.js";
+import { createTerminal, type Terminal } from "./terminal.js";
 import {
   ForgeError,
   type InferenceFailure,
@@ -16,8 +18,8 @@ interface ProcessLike {
   argv: string[];
   env: Environment;
   exitCode?: number;
-  stdout: { write(value: string): void };
-  stderr: { write(value: string): void };
+  stdout: { write(value: string): void; isTTY?: boolean };
+  stderr: { write(value: string): void; isTTY?: boolean };
 }
 
 const runtime = globalThis as typeof globalThis & { process: ProcessLike };
@@ -32,7 +34,7 @@ async function main(process: ProcessLike): Promise<void> {
   // Serve --help and --version before configuration or any network activity, so
   // a published executable answers them offline and exits 0.
   if (arguments_.includes(HELP_FLAG)) {
-    process.stdout.write(helpText());
+    process.stdout.write(helpText(createTerminal(process.env, process.stdout.isTTY === true)));
     return;
   }
   if (arguments_.includes(VERSION_FLAG)) {
@@ -57,16 +59,20 @@ async function main(process: ProcessLike): Promise<void> {
     const result = await forge.ask(prompt);
 
     process.stdout.write(
-      json ? `${JSON.stringify(result)}\n` : formatHumanResult(result),
+      json
+        ? `${JSON.stringify(result)}\n`
+        : formatHumanResult(result, createTerminal(process.env, process.stdout.isTTY === true)),
     );
   } catch (error) {
     writeFailure(process, toInferenceFailure(error), json);
   }
 }
 
-function helpText(): string {
+function helpText(terminal: Terminal): string {
+  // The one identity moment: the name in bronze, the serial small at the foot. Everything
+  // between is plain, and in a pipe every byte of this is the same as before.
   return [
-    "Forge — the Local AI Kit",
+    terminal.brand(terminal.bold("Forge")) + " — the Local AI Kit",
     "",
     "Usage:",
     '  forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime',
@@ -81,7 +87,9 @@ function helpText(): string {
     "Configuration (environment variables):",
     "  OLLAMA_HOST      Base URL of the Ollama API (required)",
     "  FORGE_MODEL      Model to run (required)",
-    "  FORGE_TIMEOUT_MS Request timeout in milliseconds (optional)",
+      "  FORGE_TIMEOUT_MS Request timeout in milliseconds (optional)",
+    "",
+    terminal.dim(`${SERIAL} · a Wonder Wagon tool`),
     "",
   ].join("\n");
 }
@@ -123,22 +131,25 @@ function parsePrompt(arguments_: string[]): string {
   return prompt;
 }
 
-function formatHumanResult(result: InferenceResult): string {
+function formatHumanResult(result: InferenceResult, terminal: Terminal): string {
+  // The answer is the object; the metrics are the plate beneath it. Labels dim, values
+  // plain, so a reader's eye lands on the numbers. Colour never carries a value.
   const metrics = result.metrics;
+  const label = (text: string) => terminal.dim(text);
   const lines = [
     result.output.trimEnd(),
     "",
-    `Provider: ${result.provider}`,
-    `Model: ${result.model}`,
-    `Client latency: ${formatMilliseconds(metrics.clientLatencyMs)}`,
-    `Tokens: prompt ${formatCount(metrics.promptTokens)} | completion ${formatCount(metrics.completionTokens)} | total ${formatCount(metrics.totalTokens)}`,
-    ...formatProviderTimings(metrics),
+    `${label("Provider:")} ${result.provider}`,
+    `${label("Model:")} ${result.model}`,
+    `${label("Client latency:")} ${formatMilliseconds(metrics.clientLatencyMs)}`,
+    `${label("Tokens:")} prompt ${formatCount(metrics.promptTokens)} | completion ${formatCount(metrics.completionTokens)} | total ${formatCount(metrics.totalTokens)}`,
+    ...formatProviderTimings(metrics, terminal),
   ];
 
   return `${lines.join("\n")}\n`;
 }
 
-function formatProviderTimings(metrics: InferenceMetrics): string[] {
+function formatProviderTimings(metrics: InferenceMetrics, terminal: Terminal): string[] {
   const timings = [
     ["Total", metrics.totalDurationMs],
     ["Load", metrics.loadDurationMs],
@@ -148,13 +159,13 @@ function formatProviderTimings(metrics: InferenceMetrics): string[] {
   const available: string[] = [];
   for (const [label, value] of timings) {
     if (value !== undefined) {
-      available.push(`  ${label}: ${formatMilliseconds(value)}`);
+      available.push(`  ${terminal.dim(`${label}:`)} ${formatMilliseconds(value)}`);
     }
   }
 
   return available.length === 0
-    ? ["Ollama timings: unavailable"]
-    : ["Ollama timings:", ...available];
+    ? [`${terminal.dim("Ollama timings:")} unavailable`]
+    : [terminal.dim("Ollama timings:"), ...available];
 }
 
 function formatMilliseconds(value: number): string {
@@ -173,8 +184,11 @@ function writeFailure(
   if (json) {
     process.stdout.write(`${JSON.stringify(failure)}\n`);
   } else {
+    // Severity by meaning: the category in the terminal's own red, the message plain.
+    // The corrective text is never coloured and never cute.
+    const terminal = createTerminal(process.env, process.stderr.isTTY === true);
     process.stderr.write(
-      `Forge error [${failure.error.category}]: ${failure.error.message}\n`,
+      `Forge error ${terminal.bad(`[${failure.error.category}]`)}: ${failure.error.message}\n`,
     );
   }
   process.exitCode = 1;

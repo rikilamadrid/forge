@@ -7,6 +7,16 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ## [Unreleased]
 
+### Added
+
+- The CLI carries a first Wonder Wagon identity slice: the name in bronze on `--help`, the
+  serial `FG-047` at its foot, dimmed metric labels, and the failure category in the
+  terminal's red. Colour follows the terminal — off in a pipe or under `NO_COLOR` or
+  `TERM=dumb`, on under `FORCE_COLOR`, at the depth the terminal claims — so every existing
+  byte of piped and `--json` output is unchanged. `src/identity.ts` is generated from
+  `@wonder-wagon/themes` (a devDependency; nothing is added at run time) by
+  `npm run wonder-wagon:sync` and verified by `npm run wonder-wagon:check`.
+
 ## [0.1.2] - 2026-09-22
 
 ### Changed

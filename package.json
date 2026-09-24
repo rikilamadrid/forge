@@ -1,7 +1,7 @@
 {
   "name": "forge-local-ai-kit",
   "version": "0.1.2",
-  "description": "Forge — The Local AI Kit: call language models running on machines you control, from TypeScript or the command line.",
+  "description": "Forge \u2014 The Local AI Kit: call language models running on machines you control, from TypeScript or the command line.",
   "license": "MIT",
   "author": {
     "name": "Ricardo Lamadrid",
@@ -42,16 +42,20 @@
   ],
   "scripts": {
     "build": "tsc -p tsconfig.json",
-    "check": "tsc -p tsconfig.json --noEmit",
+    "check": "tsc -p tsconfig.json --noEmit && node scripts/wonder-wagon/sync.mjs --check",
     "dev": "npm run build --silent && node dist/src/cli.js",
     "test": "npm run build --silent && node --test test/*.test.js",
-    "prepack": "npm run build"
+    "prepack": "npm run build",
+    "wonder-wagon:sync": "node scripts/wonder-wagon/sync.mjs",
+    "wonder-wagon:check": "node scripts/wonder-wagon/sync.mjs --check"
   },
   "engines": {
     "node": ">=22"
   },
   "dependencies": {},
   "devDependencies": {
+    "@wonder-wagon/themes": "file:../wonder-wagon-ui/packages/themes",
+    "@wonder-wagon/tokens": "file:../wonder-wagon-ui/packages/tokens",
     "typescript": "^5.9.2"
   }
 }
