@@ -1,5 +1,9 @@
 /* Every value here is read from context/brand-identity.md. Nothing is invented
-   locally; a value that document does not carry is reported, not guessed. */
+   locally; a value that document does not carry is reported, not guessed.
+
+   Two environments. Night is Forge's product ground, Iron; day is Bone, the
+   product day ground Feature 06 approved beside it. The raw tokens below never
+   move -- the semantic names do, once per environment. */
 
 :root {
   /* Iron — ground and surfaces */
@@ -10,14 +14,20 @@
   /* Bronze — the one signature accent */
   --bronze: #c8973f;
   --brass: #e0b166;
+  --dark-bronze: #85601a;
 
   /* Steel — structure only */
   --steel: #8a9299;
   --ash: #818890;
+  --quench: #646c73;
 
   /* Text tones */
   --chalk: #f7f3ec;
   --bone: #f2ede6;
+
+  /* Ember — product enamel, the object only. Never text, link or UI accent. */
+  --ember-night: #c2402a;
+  --ember-day: #b03a26;
 
   --display: "Bricolage Grotesque", "Avenir Next", "Segoe UI", system-ui, sans-serif;
   --body: "Instrument Sans", system-ui, -apple-system, "Segoe UI", sans-serif;
@@ -25,6 +35,73 @@
 
   --gutter: 20px;
   --measure: 65ch;
+
+  /* Night, the default environment. */
+  color-scheme: dark;
+  --ground: var(--iron);
+  --display-ink: var(--chalk);
+  --body-ink: var(--bone);
+  --secondary-ink: var(--steel);
+  --caption-ink: var(--ash);
+  --link: var(--brass);
+  --hairline: var(--scale);
+  --card: var(--billet);
+  --card-line: var(--scale);
+  --enamel: var(--ember-night);
+  --mark-punch: var(--bronze);
+  --mark-cold: var(--steel);
+  --focus: #fff2a8;
+  /* The depth stack, objects only. On iron the light edge does the work; on a
+     light ground a white rim says nothing, so there the cast shadow carries
+     the depth alone and is lighter for it. */
+  --rim: rgba(255, 250, 240, 0.22);
+  --cast: rgba(0, 0, 0, 0.45);
+  --cast-pressed: rgba(0, 0, 0, 0.5);
+}
+
+/* Day. The light ground carries Iron text, the darker member of each mark
+   family, and nothing else — brand-identity.md gives it no secondary tier, so
+   every ink below collapses onto Iron. */
+@media (prefers-color-scheme: light) {
+  :root:not([data-environment="night"]) {
+    color-scheme: light;
+    --ground: var(--bone);
+    --display-ink: var(--iron);
+    --body-ink: var(--iron);
+    --secondary-ink: var(--iron);
+    --caption-ink: var(--iron);
+    --link: var(--ember-day);
+    --hairline: rgba(23, 19, 13, 0.16);
+    --card: transparent;
+    --card-line: rgba(23, 19, 13, 0.16);
+    --enamel: var(--ember-day);
+    --mark-punch: var(--dark-bronze);
+    --mark-cold: var(--quench);
+    --focus: var(--iron);
+    --rim: transparent;
+    --cast: rgba(0, 0, 0, 0.20);
+    --cast-pressed: rgba(0, 0, 0, 0.28);
+  }
+}
+
+:root[data-environment="day"] {
+  color-scheme: light;
+  --ground: var(--bone);
+  --display-ink: var(--iron);
+  --body-ink: var(--iron);
+  --secondary-ink: var(--iron);
+  --caption-ink: var(--iron);
+  --link: var(--ember-day);
+  --hairline: rgba(23, 19, 13, 0.16);
+  --card: transparent;
+  --card-line: rgba(23, 19, 13, 0.16);
+  --enamel: var(--ember-day);
+  --mark-punch: var(--dark-bronze);
+  --mark-cold: var(--quench);
+  --focus: var(--iron);
+  --rim: transparent;
+  --cast: rgba(0, 0, 0, 0.20);
+  --cast-pressed: rgba(0, 0, 0, 0.28);
 }
 
 *,
@@ -39,8 +116,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--iron);
-  color: var(--bone);
+  background: var(--ground);
+  color: var(--body-ink);
   font-family: var(--body);
   font-size: 15px;
   line-height: 1.6;
@@ -59,7 +136,7 @@ main {
 
 section {
   padding: 48px 0;
-  border-top: 1px solid var(--scale);
+  border-top: 1px solid var(--hairline);
 }
 
 section:first-of-type {
@@ -70,14 +147,14 @@ h1,
 h2 {
   font-family: var(--display);
   font-weight: 700;
-  color: var(--chalk); /* Chalk is recorded for display headings at 24px and above */
+  color: var(--display-ink); /* Chalk on iron at 24px and up; Iron on Bone */
   margin: 0;
 }
 
 h3 {
   font-family: var(--display);
   font-weight: 600;
-  color: var(--bone); /* below 24px, so Bone's body-text row applies, not Chalk's */
+  color: var(--body-ink); /* below 24px, so the body-text row applies, not Chalk's */
   margin: 0;
 }
 
@@ -109,18 +186,19 @@ p:last-child {
 }
 
 a {
-  color: var(--brass);
+  color: var(--link);
   text-underline-offset: 3px;
 }
 
 a:hover {
-  color: var(--brass);
+  color: var(--link);
   text-decoration-thickness: 2px;
 }
 
 a:focus-visible,
-.evidence a:focus-visible {
-  outline: 2px solid var(--brass);
+.evidence a:focus-visible,
+.lever:focus-visible {
+  outline: 3px solid var(--focus);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -135,18 +213,37 @@ pre {
   font-size: 11.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ash);
+  color: var(--caption-ink);
   margin: 0 0 12px;
 }
 
 .lede {
   font-size: 17px;
   line-height: 1.6;
-  color: var(--bone);
+  color: var(--body-ink);
 }
 
 .secondary {
-  color: var(--steel);
+  color: var(--secondary-ink);
+}
+
+/* The Maker's Mark, inlined. Each drawn element takes the member of its own
+   family the environment calls for; the knocked-out F takes the ground. */
+
+.mark-punch {
+  fill: var(--mark-punch);
+}
+
+.mark-punch-stroke {
+  stroke: var(--mark-punch);
+}
+
+.mark-cold {
+  fill: var(--mark-cold);
+}
+
+.mark-knockout {
+  fill: var(--ground);
 }
 
 /* Hero */
@@ -156,12 +253,80 @@ pre {
   padding-bottom: 48px;
 }
 
-.lockup {
+.plate {
   display: block;
   width: 100%;
-  max-width: 339.5448px; /* 226.3632 × 1.5 — the 48px lockup scaled to a 72px mark */
+  max-width: 420px;
   height: auto;
-  margin-bottom: 28px;
+  margin-bottom: 32px;
+  /* The depth stack, objects only: a pure-black low-alpha cast shadow under a
+     struck object. Every quiet surface on this page carries none of it. */
+  filter: drop-shadow(0 10px 18px var(--cast));
+}
+
+.plate .enamel {
+  fill: var(--enamel);
+}
+
+/* The environment lever — a genuinely tactile control, so it earns the depth
+   stack: a machined top rim, a cast shadow, and an inset when it is pressed. */
+
+.environment {
+  display: flex;
+  justify-content: flex-end;
+  padding-top: 24px;
+}
+
+.lever {
+  min-height: 44px;
+  min-width: 44px;
+  padding: 0 18px;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--mono);
+  font-size: 11.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--body-ink);
+  background: var(--card);
+  border: 1px solid var(--card-line);
+  clip-path: polygon(
+    8px 0, calc(100% - 8px) 0, 100% 8px, 100% calc(100% - 8px),
+    calc(100% - 8px) 100%, 8px 100%, 0 calc(100% - 8px), 0 8px
+  );
+  box-shadow:
+    inset 0 1px 0 var(--rim),
+    0 2px 4px var(--cast);
+  cursor: pointer;
+  transition: transform 120ms ease;
+}
+
+.lever:hover {
+  transform: translateY(-1px);
+}
+
+.lever:active {
+  transform: translateY(1px);
+  box-shadow: inset 0 2px 4px var(--cast-pressed);
+}
+
+.lever .dot {
+  width: 8px;
+  height: 8px;
+  background: var(--mark-punch);
+  flex: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lever {
+    transition: none;
+  }
+
+  .lever:hover,
+  .lever:active {
+    transform: none;
+  }
 }
 
 .hero h1 {
@@ -171,7 +336,7 @@ pre {
 .hero .subline {
   margin-top: 20px;
   font-size: 17px;
-  color: var(--bone);
+  color: var(--body-ink);
 }
 
 /* Architecture */
@@ -186,22 +351,37 @@ pre {
   width: 100%;
   min-width: 529.205px;
   height: auto;
-  border: 1px solid var(--scale);
+  border: 1px solid var(--hairline);
   border-radius: 8px;
 }
 
 .diagram figcaption {
   margin-top: 12px;
   font-size: 13.5px;
-  color: var(--steel);
+  color: var(--secondary-ink);
 }
 
-/* Code and command surfaces */
+/* Code and command surfaces.
+
+   These are operating plates, not cards: they carry what the machine says, so
+   they keep the iron ground in both environments and every pair inside them is
+   already a row in the shipped contrast table. Chamfers, not radii — this is
+   Forge's object edge. They stay flat; depth belongs to the plate and to
+   controls. */
 
 .surface {
   background: var(--billet);
   border: 1px solid var(--scale);
-  border-radius: 8px;
+  clip-path: polygon(
+    8px 0,
+    calc(100% - 8px) 0,
+    100% 8px,
+    100% calc(100% - 8px),
+    calc(100% - 8px) 100%,
+    8px 100%,
+    0 calc(100% - 8px),
+    0 8px
+  );
 }
 
 .command {
@@ -268,7 +448,7 @@ pre {
 }
 
 .points p {
-  color: var(--steel);
+  color: var(--secondary-ink);
   margin: 0;
 }
 
@@ -312,11 +492,11 @@ pre {
   gap: 8px 12px;
   align-items: start;
   padding: 16px 0;
-  border-top: 1px solid var(--scale);
+  border-top: 1px solid var(--hairline);
 }
 
 .figures li:last-child {
-  border-bottom: 1px solid var(--scale);
+  border-bottom: 1px solid var(--hairline);
 }
 
 .figures .mark {
@@ -329,13 +509,13 @@ pre {
 .figures .value {
   font-family: var(--mono);
   font-size: 15px;
-  color: var(--bone);
+  color: var(--body-ink);
 }
 
 .figures .what {
   display: block;
   font-size: 13.5px;
-  color: var(--steel);
+  color: var(--secondary-ink);
   margin-top: 2px;
 }
 
@@ -344,12 +524,12 @@ pre {
   font-family: var(--mono);
   font-size: 11.5px;
   letter-spacing: 0.02em;
-  color: var(--ash);
+  color: var(--caption-ink);
   margin: 0;
   overflow-wrap: anywhere;
 }
 
-/* Ecosystem */
+/* Ecosystem — quiet cards, so radii rather than chamfers, and no depth. */
 
 .roles {
   list-style: none;
@@ -360,8 +540,8 @@ pre {
 }
 
 .roles li {
-  background: var(--billet);
-  border: 1px solid var(--scale);
+  background: var(--card);
+  border: 1px solid var(--card-line);
   border-radius: 8px;
   padding: 20px;
 }
@@ -371,7 +551,7 @@ pre {
   font-weight: 600;
   font-size: 19px;
   letter-spacing: -0.015em;
-  color: var(--bone);
+  color: var(--body-ink);
   display: block;
 }
 
@@ -380,13 +560,13 @@ pre {
   font-size: 11.5px;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--ash);
+  color: var(--caption-ink);
   display: block;
   margin: 6px 0 10px;
 }
 
 .roles p {
-  color: var(--steel);
+  color: var(--secondary-ink);
   font-size: 14px;
   margin: 0;
 }
@@ -394,7 +574,7 @@ pre {
 /* Footer */
 
 .site-footer {
-  border-top: 1px solid var(--scale);
+  border-top: 1px solid var(--hairline);
   padding: 40px 0 56px;
 }
 
@@ -411,7 +591,7 @@ pre {
 
 .site-footer .colophon {
   font-size: 13.5px;
-  color: var(--steel);
+  color: var(--secondary-ink);
   margin: 0;
 }
 

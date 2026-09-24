@@ -12,6 +12,17 @@ accent discipline. Approved with three adjustments: warm the iron ground, widen
 the bronze/ember separation, and use the taglines by context. The design
 evidence is preserved under `prototypes/`; see `prototypes/README.md`.
 
+Extended, 2026-09-24, by **Feature 06 — Forge identity completion**, approved in
+six decisions: the hallmark plate as the lockup's object state, Bone as Forge's
+product day ground, a depth exception for objects only, the plate's homes, the
+README header and first-screen composition, and the quench rule in colour-capable
+human CLI output. Two earlier rulings are recorded here for the first time:
+Forge keeps Iron `#17130D` as its **product** night while Workshop Night
+`#17191C` remains the Wonder Wagon **system** night, and **Bronze is Forge's one
+visible signal** while **Ember is its product enamel** and never a general-purpose
+UI accent. Forge is the first external Wonder Wagon foundation consumer, serial
+`FG-047`.
+
 This is a craft identity. It is not a cloud-platform identity, and it does not
 drift toward one.
 
@@ -96,6 +107,64 @@ render `README.md`, so the mark they show is the README header lockup at 48px
 rather than a size of their own. The architecture graphic has no pinned size; a
 ticket that needs one reports the gap.
 
+## The hallmark plate
+
+The lockup's **object state**, at 96px and above. Below that the lockup is drawn
+bare; the plate is not a fourth size of the mark but the object the struck mark
+sits inside.
+
+A squat chamfered plate in fired Ember enamel, holding the struck mark in a
+recessed **iron well**, the wordmark in Chalk beside it, the serial in plate type
+bottom-right, and two bronze rivets as hardware. Geometry is defined in units of
+**M**, the mark's box height, so the plate scales with the mark it holds.
+
+| Measure | Value at M = 96 | In units of M |
+| --- | --- | --- |
+| Plate | 504 × 378 | `5.25 × M` wide, `3.9375 × M` tall (ratio 4:3) |
+| Plate chamfer | 24 | `0.25 × M` |
+| Well | 144 × 144 at x = 48, vertically centred | `1.5 × M` square, `0.5 × M` from the left |
+| Well chamfer | 12 | `0.125 × M` |
+| Mark in the well | 96, struck, centred | `M` |
+| Wordmark | type 86.4, cap optically centred on the mark | the lockup's own `0.90 × M` |
+| Gap, well to wordmark | 36 | the lockup's own `0.375 × M` |
+| Serial | plate type 14.4, right-aligned at x = 456, baseline y = 330 | `0.15 × M`, inset `0.5 × M` |
+| Rivet countersink | r = 9, Iron | `0.09375 × M` |
+| Rivet | r = 6, Bronze | `0.0625 × M` |
+
+**The mark never sits directly on enamel.** Bronze on Ember measures 1.96 at
+night and 2.29 by day, against the 3:1 a non-text graphical object is held to.
+The iron well is what makes the plate legal — and it is the family's "one well"
+rule, applied again at rivet scale so no bronze anywhere on the plate touches
+enamel.
+
+### Homes
+
+| Surface | Plate? |
+| --- | --- |
+| Website hero | yes |
+| Open Graph card, GitHub social preview | yes |
+| `favicon-180` | yes, the **icon state**: enamel, chamfer, well and an 88px struck mark, without the wordmark, the serial or the rivets, none of which survive at 180px |
+| README header | **no** — a quiet surface on a host page |
+| npm | **no** — the README header is what npm renders |
+| The CLI | **never** |
+
+The plate does not widen the [hallmark rule](#hallmark-rule). It appears exactly
+where the bare lockup already appears as identity, and nowhere the mark was not
+already permitted.
+
+### The plate between environments
+
+Only the enamel moves. The well is Iron in both environments, so the mark inside
+it keeps its iron-ground tokens, and the wordmark and serial are Chalk on both.
+
+| Element | Night | Day |
+| --- | --- | --- |
+| Enamel | Ember `#C2402A` | Ember day `#B03A26` |
+| Well | Iron `#17130D` | Iron `#17130D` |
+| Mark in the well | Bronze / Steel | Bronze / Steel |
+| Wordmark, serial | Chalk `#F7F3EC` | Chalk `#F7F3EC` |
+| Rivet, countersink | Bronze in Iron | Bronze in Iron |
+
 ## Wordmark lockup
 
 The wordmark is `Forge`, sentence case, set in the display face at weight 700
@@ -144,8 +213,12 @@ Nothing is placed inside the clear space: no badge, no tagline, no rule.
 
 ## Palette
 
-A warmed iron ground, one bronze signature accent, and one cool steel
-structural neutral. **No gradients and no texture overlays**, on any surface.
+A warmed iron ground, one bronze signature accent, one cool steel structural
+neutral, and one product enamel reserved for objects.
+
+**No texture overlays, on any surface, ever. No gradients behind text, ever.**
+Feature 06 retired the blanket ban on depth **for objects only**: see
+[Depth, objects only](#depth-objects-only).
 
 Ratios below are computed, not asserted; see [Contrast](#contrast).
 
@@ -182,6 +255,27 @@ phrase, and must not hold two bronze accent phrases.
 
 Brass is a separate token with its own use — links — and is not rationed.
 
+### Ember — product enamel, the object only
+
+| Token | Hex | Use |
+| --- | --- | --- |
+| Ember | `#C2402A` | the enamel of the hallmark plate, on the night ground |
+| Ember day | `#B03A26` | the same enamel on the day ground; also the day link |
+
+Ember is Forge's **product enamel**: the fired colour of an object, not a UI
+accent. It appears on the hallmark plate, and through the plate on the website
+hero, the social cards and `favicon-180`. It is never body text, never a CLI
+byte, and never a general-purpose accent competing with Bronze.
+
+Ember day `#B03A26` has one further use, and only one: it is the **link colour
+of the day environment**, where it measures 5.18 on Bone. Brass fails there
+(1.69) and Bronze fails there (2.27), so the light ground needs a link token of
+its own, and Ember day is the one that clears 4.5:1.
+
+**Bronze remains Forge's single primary visible signal** — the mark, one accent
+phrase per view, the CLI's name. Ember does not share that budget, because it is
+never emphasis: it is the surface an object is made of.
+
 ### Steel — structure only, never decoration
 
 | Token | Hex | L\* | C\* | h_ab | Use |
@@ -199,7 +293,32 @@ Brass is a separate token with its own use — links — and is not rationed.
 
 ### The light ground
 
-Bone `#F2EDE6` is also a ground. On it exactly these pairs are permitted:
+Bone `#F2EDE6` is also a ground. Feature 06 promoted it from a variant the mark
+had to survive on to **Forge's product day environment**, parallel to the Iron
+night ruling: Iron `#17130D` is Forge's product night and Workshop Night
+`#17191C` stays the Wonder Wagon system night; Bone `#F2EDE6` is Forge's product
+day and Quiet Paper `#FBF3DE` stays the system day. Both are product-specific
+differentiation carried by Forge's own theme and adapter, not token drift.
+
+| Role | Night | Day |
+| --- | --- | --- |
+| Ground | Iron `#17130D`; Hearth insets; Billet cards | Bone `#F2EDE6` |
+| Display, 24px and above | Chalk `#F7F3EC` | Iron `#17130D` |
+| Body | Bone `#F2EDE6` | Iron `#17130D` |
+| Secondary, caption, label | Steel, Ash | **Iron** — the light ground has no secondary tier |
+| Link | Brass `#E0B166` | Ember day `#B03A26` |
+| Mark | Bronze / Steel | Dark bronze / Quench |
+| Enamel | Ember `#C2402A` | Ember day `#B03A26` |
+| Hairline, decorative only | Scale `#322C24` | Iron at 16% |
+| Operating surfaces — code, commands, the machine's own output | Billet on Iron | **Billet on Iron, unchanged** |
+
+The last row is the one that surprises. A code block carries what the machine
+says, so it is an operating plate rather than a card, and it keeps the iron
+ground in **both** environments. That is why the day column needs no second
+surface tier and invents no new token: every pair inside an operating plate is
+already a row in [Contrast](#contrast).
+
+On it exactly these pairs are permitted:
 
 | Element | Colour | Ratio on Bone |
 | --- | --- | --- |
@@ -296,6 +415,41 @@ Forge and Pathfinder remain siblings — both warm metal from one village — bu
 Forge takes the cooler, yellower side of that warmth. Ember is red-hot; bronze
 is struck and cooling.
 
+## Depth, objects only
+
+The shipped rule forbade gradients and texture overlays on every surface.
+Feature 06 retires that ban **for objects and for nothing else**.
+
+| Surface | Depth |
+| --- | --- |
+| The hallmark plate | yes |
+| Genuinely tactile controls — a lever, a button a reader presses | yes |
+| Cards, panels, code surfaces, diagrams, generic containers | **no** — these stay flat |
+
+The stack, when it is permitted, is the Wonder Wagon one:
+
+| Layer | Value |
+| --- | --- |
+| Machined top rim | `inset 0 1px 0 rgba(255, 250, 240, 0.22)` |
+| Well inset | a pure-black low-alpha inset on the recess's top edge |
+| Cast shadow | pure black, low alpha, under the object |
+| Pressed state | the cast shadow replaced by an inset |
+
+On a light ground a white rim says nothing, so there the rim is dropped and the
+cast shadow carries the depth alone, at roughly half the alpha it takes on iron.
+Exact alpha values are implementation-level polish and are tuned in visual QA;
+the rule above is what does not move.
+
+**No texture overlays anywhere. No gradients behind text.** Neither is affected
+by this exception.
+
+### Chamfers, not radii
+
+Forge's object edge is an **8px chamfer**, not a corner radius — the family rule
+is that products share no corner radius, and this is Forge's answer to it. The
+hallmark plate is chamfered at `0.25 × M`; controls and operating surfaces are
+chamfered at 8px. Quiet cards keep an 8px radius, because they are not objects.
+
 ## Typography
 
 | Role | Face | Stack |
@@ -370,6 +524,38 @@ This rule binds every surface in Feature 05: the website, the README, the npm
 page, the repository presentation, the Open Graph card, and the architecture
 graphic. It is not decoration and it is not applied for balance.
 
+## The terminal
+
+The CLI is the most restrained surface Forge has, and it stays that way. One
+identity colour, generated from `@wonder-wagon/themes` into `src/identity.ts`
+and drift-checked in CI; severity in the terminal's own eight ANSI colours,
+never a brand colour; no glyph beyond `·`, `—` and the quench rule's `─`.
+
+### The quench rule
+
+The identity's one structural mark in human output: a fixed **24-column** rule
+between the answer and the metrics — **8 cells** carrying the brand colour,
+**16 cells** quenched — drawn in `─` (U+2500). Hot above the line, measured
+below it, which is the whole identity in one line.
+
+| Condition | Rule |
+| --- | --- |
+| A colour-capable terminal, 24 columns or wider | drawn |
+| Colour off — a pipe, `NO_COLOR`, `FORCE_COLOR=0`, `TERM=dumb` | **absent** |
+| Narrower than 24 columns | **absent** — dropped whole, never wrapped and never shortened |
+| `--json`, and every other machine-readable byte | **absent**; machine-readable output never passes through the terminal at all |
+
+Gating it on colour is what keeps the promise that piped and `NO_COLOR` bytes
+are identical to 0.1.2. A rule that wraps is worse than no rule, and a rule that
+shrinks to fit is a second, unmeasured mark — so the narrow case drops it
+entirely.
+
+The quenched 16 cells are the terminal's own **dim**, not a literal Steel
+`#8A9299`. `src/identity.ts` is generated and carries one brand colour; a second
+hex written by hand into `terminal.ts` would be an identity byte living outside
+the drift check. Dim is also what the metric labels beneath the rule already
+use, so the quenched run and the measured block read as one surface.
+
 ## Contrast
 
 Every text and background pair any Feature 05 surface uses, with its computed
@@ -406,6 +592,9 @@ figures in their last digits.
 | Chalk `#F7F3EC` | Iron `#17130D` | 16.72:1 | 3:1 | pass | display heading, 24px+ |
 | Chalk `#F7F3EC` | Hearth `#1B1711` | 16.13:1 | 3:1 | pass | display heading, 24px+ |
 | Chalk `#F7F3EC` | Billet `#1F1B15` | 15.49:1 | 3:1 | pass | card heading, 24px+ |
+| Chalk `#F7F3EC` | Ember `#C2402A` | 4.68:1 | 4.5:1 | pass | the plate's wordmark and serial, night |
+| Chalk `#F7F3EC` | Ember day `#B03A26` | 5.46:1 | 4.5:1 | pass | the plate's wordmark and serial, day |
+| Ember day `#B03A26` | Bone `#F2EDE6` | 5.18:1 | 4.5:1 | pass | the link, day environment |
 | Bone `#F2EDE6` | Iron `#17130D` | 15.88:1 | 4.5:1 | pass | body text |
 | Bone `#F2EDE6` | Hearth `#1B1711` | 15.32:1 | 4.5:1 | pass | body text in an inset panel |
 | Bone `#F2EDE6` | Billet `#1F1B15` | 14.71:1 | 4.5:1 | pass | body and code text on a card |
@@ -438,16 +627,26 @@ figures in their last digits.
 | Quench `#646C73` | Iron `#17130D` | 3.47:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Hearth `#1B1711` | 3.34:1 | 3:1 | pass | architecture connectors and arrows |
 | Quench `#646C73` | Billet `#1F1B15` | 3.21:1 | 3:1 | pass | architecture connectors and arrows |
+| Ember `#C2402A` | Iron `#17130D` | 3.58:1 | 3:1 | pass | the plate's boundary on the night ground |
+| Ember `#C2402A` | Hearth `#1B1711` | 3.45:1 | 3:1 | pass | the plate on an inset |
+| Ember `#C2402A` | Billet `#1F1B15` | 3.31:1 | 3:1 | pass | the plate on a card |
+| Ember day `#B03A26` | Bone `#F2EDE6` | 5.18:1 | 3:1 | pass | the plate's boundary on the day ground |
+| Ember day `#B03A26` | Quiet Paper `#FBF3DE` | 5.45:1 | 3:1 | pass | the plate on the system day ground |
+| Ember day `#B03A26` | white | 6.04:1 | 3:1 | pass | the plate on a white host page |
+| Ember `#C2402A` | GitHub dark `#0D1117` | 3.66:1 | 3:1 | pass | the plate bare on GitHub dark |
+| Iron `#17130D` | Ember `#C2402A` | 3.58:1 | 3:1 | pass | the iron well, night |
+| Iron `#17130D` | Ember day `#B03A26` | 3.06:1 | 3:1 | pass | the iron well, day — the thinnest margin on the plate |
 
 Quench on Billet computes 3.2095:1 against a 3:1 requirement — the thinnest
 margin in this document. Darkening Quench or lightening Billet by any
 appreciable amount breaks SC 1.4.11 for every connector drawn on a card. Neither
 token moves without recomputing this row.
 
-### Forbidden on the light ground
+### Forbidden on the light ground, and on enamel
 
-Bone `#F2EDE6` carries Iron text, the Dark bronze mark, and Quench as that
-mark's quenched bar in the struck state — nothing else. The pairs below are
+Bone `#F2EDE6` carries Iron text, the Dark bronze mark, Quench as that mark's
+quenched bar in the struck state, and Ember day as the link — nothing else.
+Ember enamel carries Chalk and nothing else. The pairs below are
 recorded so they are not rediscovered and proposed again.
 
 | Foreground | Background | Ratio | Threshold | Result |
@@ -459,6 +658,10 @@ recorded so they are not rediscovered and proposed again.
 | Ash `#818890` | Bone `#F2EDE6` | 3.08:1 | 4.5:1 | fail — do not use |
 | Bronze `#C8973F` | Bone `#F2EDE6` | 2.27:1 | 3:1 | fail — do not use: the punch outline is a graphical object, held to 3:1 rather than 4.5:1, and fails that too |
 | Steel `#8A9299` | Bone `#F2EDE6` | 2.71:1 | 3:1 | fail — do not use: this is why the struck mark's lower bar is Quench on Bone |
+| Bronze `#C8973F` | Ember `#C2402A` | 1.96:1 | 3:1 | fail — this is why the mark sits in an iron well and never on enamel |
+| Bronze `#C8973F` | Ember day `#B03A26` | 2.29:1 | 3:1 | fail — the same, by day |
+| Steel `#8A9299` | Ember `#C2402A` | 1.64:1 | 3:1 | fail — the quenched bar of the mark is never on enamel either |
+| Bone `#F2EDE6` | Ember `#C2402A` | 4.44:1 | 4.5:1 | fail — body text is never on enamel; the plate's type is Chalk, and display-sized |
 | Quench `#646C73` | Bone `#F2EDE6` | 4.58:1 | 4.5:1 | passes, and is still forbidden **as text** — the light ground carries no secondary-text tier. Permitted as the struck mark's lower bar, against 3:1 |
 
 ### Decorative, no threshold

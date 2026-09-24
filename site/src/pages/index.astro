@@ -4,17 +4,32 @@
 // so this page consumes the 05.2 identity and redefines none of it.
 import "../styles/forge.css";
 
-import lockup from "../../../assets/lockup-iron.svg?raw";
+import plate from "../../../assets/hallmark-plate-iron.svg?raw";
 import markSolid from "../../../assets/mark-solid-iron.svg?raw";
 import markStruck from "../../../assets/mark-struck-iron.svg?raw";
 import architecture from "../../../assets/architecture.svg?raw";
+
+// The mark is drawn once and painted by the environment. Each literal becomes
+// the class forge.css maps onto the member of that element's own family:
+// Bronze/Steel on iron, Dark bronze/Quench on Bone, exactly the substitution
+// brand-identity.md defines. Only presentation changes; no geometry is touched.
+const environmentAware = (svg: string) =>
+  svg
+    .replace(/stroke="#C8973F"/g, 'class="mark-punch-stroke"')
+    .replace(/fill="#C8973F"/g, 'class="mark-punch"')
+    .replace(/fill="#8A9299"/g, 'class="mark-cold"')
+    .replace(/fill="#17130D"/g, 'class="mark-knockout"');
+
+// The plate is not environment-aware in the same way: the mark inside it sits
+// on the iron of its well in both environments, and only the enamel moves.
+const heroPlate = plate.replace("<svg", '<svg class="plate"');
 
 // The hallmark repeats once per verified figure. As a graphic it is identical
 // every time, so each repeat is hidden from assistive technology and the row
 // carries the word "Verified" instead. Only presentation changes here; no
 // geometry and no colour from assets/ is touched.
 const decorative = (svg: string) =>
-  svg
+  environmentAware(svg)
     .replace(/\s+role="img"/, "")
     .replace(/\s+aria-label="[^"]*"/, "")
     .replace(/\s*<title>[\s\S]*?<\/title>/, "")
@@ -43,7 +58,7 @@ const description =
 // is not displayed — see the hallmark rule in context/brand-identity.md.
 const figures = [
   {
-    value: "0.1.1",
+    value: "0.1.2",
     what: "Published version on the public npm registry",
     source: "registry · dist-tags.latest",
     href: npm,
@@ -67,7 +82,7 @@ const figures = [
     href: `${blob}/scripts/verify-package.mjs`,
   },
   {
-    value: "43",
+    value: "55",
     what: "Tests, run on every matrix cell",
     source: "test/ · node:test",
     href: `${repo}/tree/main/test`,
@@ -125,8 +140,23 @@ const roles = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title}</title>
     <meta name="description" content={description} />
-    <meta name="color-scheme" content="dark" />
-    <meta name="theme-color" content="#17130D" />
+    <meta name="color-scheme" content="light dark" />
+    <meta name="theme-color" content="#F2EDE6" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#17130D" media="(prefers-color-scheme: dark)" />
+
+    <script is:inline>
+      // Resolve the environment before first paint, so a reader who has pulled
+      // the lever never sees the other ground flash. Absent a stored choice the
+      // page follows prefers-color-scheme, which is what the CSS already does.
+      try {
+        const chosen = localStorage.getItem("forge-environment");
+        if (chosen === "day" || chosen === "night") {
+          document.documentElement.dataset.environment = chosen;
+        }
+      } catch {
+        /* storage is unavailable; prefers-color-scheme still decides */
+      }
+    </script>
 
     <link rel="icon" type="image/png" sizes="32x32" href={favicon32.src} />
     <link rel="icon" type="image/png" sizes="16x16" href={favicon16.src} />
@@ -151,7 +181,19 @@ const roles = [
       <!-- Hero -->
       <section class="hero">
         <div class="shell">
-          <Fragment set:html={lockup} />
+          <div class="environment">
+            <button
+              type="button"
+              class="lever"
+              id="environment-lever"
+              aria-pressed="false"
+              aria-label="Switch between the day and night environments"
+            >
+              <span class="dot" aria-hidden="true"></span>
+              <span class="lever-text">Environment</span>
+            </button>
+          </div>
+          <Fragment set:html={heroPlate} />
           <h1>Where local intelligence is shaped into tools.</h1>
           <p class="subline">
             Forge calls language models running on machines you control, from
@@ -269,7 +311,7 @@ try {
       <section class="evidence">
         <div class="shell">
           <div class="mark-heading">
-            <Fragment set:html={markStruck} />
+            <Fragment set:html={environmentAware(markStruck)} />
             <h2>Every tool bears the mark.</h2>
           </div>
           <p class="lede">
@@ -335,5 +377,40 @@ try {
         </p>
       </div>
     </footer>
+
+    <script is:inline>
+      // The lever overrides prefers-color-scheme and remembers the choice. It
+      // is the page's only script beyond the resolver above, adds no
+      // dependency, and the page is fully readable without either.
+      (() => {
+        const root = document.documentElement;
+        const lever = document.getElementById("environment-lever");
+        if (!lever) return;
+        const text = lever.querySelector(".lever-text");
+        const night = () =>
+          root.dataset.environment
+            ? root.dataset.environment === "night"
+            : !window.matchMedia("(prefers-color-scheme: light)").matches;
+        const render = () => {
+          const isNight = night();
+          lever.setAttribute("aria-pressed", String(!isNight));
+          if (text) text.textContent = isNight ? "Night" : "Day";
+        };
+        lever.addEventListener("click", () => {
+          const next = night() ? "day" : "night";
+          root.dataset.environment = next;
+          try {
+            localStorage.setItem("forge-environment", next);
+          } catch {
+            /* the choice simply does not outlive this page */
+          }
+          render();
+        });
+        window
+          .matchMedia("(prefers-color-scheme: light)")
+          .addEventListener("change", render);
+        render();
+      })();
+    </script>
   </body>
 </html>
