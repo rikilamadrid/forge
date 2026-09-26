@@ -3,7 +3,7 @@
 import { readFileSync } from "node:fs";
 
 import { loadConfig, type Environment } from "./config.js";
-import { SERIAL } from "./identity.js";
+import { PRODUCT } from "./identity.js";
 import { createForge } from "./index.js";
 import { createTerminal, type Terminal } from "./terminal.js";
 import {
@@ -17,6 +17,7 @@ import {
 interface ProcessLike {
   argv: string[];
   env: Environment;
+  platform: string;
   exitCode?: number;
   stdout: { write(value: string): void; isTTY?: boolean; columns?: number };
   stderr: { write(value: string): void; isTTY?: boolean };
@@ -34,7 +35,16 @@ async function main(process: ProcessLike): Promise<void> {
   // Serve --help and --version before configuration or any network activity, so
   // a published executable answers them offline and exits 0.
   if (arguments_.includes(HELP_FLAG)) {
-    process.stdout.write(helpText(createTerminal(process.env, process.stdout.isTTY === true)));
+    const version = readPackageVersion();
+    process.stdout.write(helpText(
+      createTerminal(
+        process.env,
+        process.stdout.isTTY === true,
+        process.stdout.columns,
+        process.platform,
+      ),
+      version,
+    ));
     return;
   }
   if (arguments_.includes(VERSION_FLAG)) {
@@ -63,7 +73,12 @@ async function main(process: ProcessLike): Promise<void> {
         ? `${JSON.stringify(result)}\n`
         : formatHumanResult(
             result,
-            createTerminal(process.env, process.stdout.isTTY === true),
+            createTerminal(
+              process.env,
+              process.stdout.isTTY === true,
+              process.stdout.columns,
+              process.platform,
+            ),
             process.stdout.columns,
           ),
     );
@@ -72,11 +87,11 @@ async function main(process: ProcessLike): Promise<void> {
   }
 }
 
-function helpText(terminal: Terminal): string {
-  // The one identity moment: the name in bronze, the serial small at the foot. Everything
-  // between is plain, and in a pipe every byte of this is the same as before.
+function helpText(terminal: Terminal, version: string): string {
+  // Interactive help uses the shared line grammar; Forge deliberately ships no block.
+  // The maker remains at the foot, and in a pipe every byte is the same as before.
   return [
-    terminal.brand(terminal.bold("Forge")) + " — the Local AI Kit",
+    terminal.identityLine(version) || "Forge — the Local AI Kit",
     "",
     "Usage:",
     '  forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime',
@@ -93,7 +108,7 @@ function helpText(terminal: Terminal): string {
     "  FORGE_MODEL      Model to run (required)",
       "  FORGE_TIMEOUT_MS Request timeout in milliseconds (optional)",
     "",
-    terminal.dim(`${SERIAL} · a Wonder Wagon tool`),
+    terminal.dim(`${PRODUCT.serial} · a Wonder Wagon tool`),
     "",
   ].join("\n");
 }
@@ -200,7 +215,12 @@ function writeFailure(
   } else {
     // Severity by meaning: the category in the terminal's own red, the message plain.
     // The corrective text is never coloured and never cute.
-    const terminal = createTerminal(process.env, process.stderr.isTTY === true);
+    const terminal = createTerminal(
+      process.env,
+      process.stderr.isTTY === true,
+      undefined,
+      process.platform,
+    );
     process.stderr.write(
       `Forge error ${terminal.bad(`[${failure.error.category}]`)}: ${failure.error.message}\n`,
     );

@@ -8,10 +8,8 @@ import {
   QUENCH_RULE_COLUMNS,
   QUENCH_RULE_HOT_COLUMNS,
   createTerminal,
-  detectColor,
-  detectColorDepth,
 } from "../dist/src/terminal.js";
-import { BRAND, SERIAL, SEVERITY, VALUES_HASH } from "../dist/src/identity.js";
+import { PAINTS, PRODUCT, VALUES_HASH, detectTerminal } from "../dist/src/identity.js";
 
 const cliPath = fileURLToPath(new URL("../dist/src/cli.js", import.meta.url));
 
@@ -34,45 +32,94 @@ function runCli(arguments_, environment = {}) {
 
 const ESC = "\u001B";
 
-test("the generated identity is Forge's, from the Wonder Wagon theme, and never a severity", () => {
-  assert.equal(SERIAL, "FG-047");
-  assert.equal(BRAND.hex, "#C8973F");
-  assert.equal(BRAND.truecolor, `${ESC}[38;2;200;151;63m`);
-  assert.match(BRAND.ansi256, /^\u001B\[38;5;\d+m$/);
-  assert.equal(BRAND.ansi16, `${ESC}[33m`);
-  assert.deepEqual(SEVERITY, { ok: "green", info: "cyan", warn: "yellow", bad: "red" });
+test("the generated identity carries Forge's approved product-owned punch", () => {
+  assert.equal(PRODUCT.name, "Forge");
+  assert.equal(PRODUCT.serial, "FG-047");
+  assert.equal(PRODUCT.mark.rows.length, 4);
+  assert.equal(PAINTS.accent.hex, "#C8973F");
+  assert.equal(PAINTS.secondary.hex, "#8A9299");
+  assert.equal(PAINTS.accent.truecolor, `${ESC}[38;2;200;151;63m`);
+  assert.match(PAINTS.accent.ansi256, /^\u001B\[38;5;\d+m$/);
+  assert.equal(PAINTS.accent.ansi16, `${ESC}[33m`);
   assert.match(VALUES_HASH, /^[0-9a-f]{8}$/);
 });
 
 test("colour is a sequence of refusals ending in the TTY", () => {
-  assert.equal(detectColor({}, false), false);
-  assert.equal(detectColor({}, true), true);
-  assert.equal(detectColor({ NO_COLOR: "" }, true), false);
-  assert.equal(detectColor({ FORCE_COLOR: "0" }, true), false);
-  assert.equal(detectColor({ TERM: "dumb" }, true), false);
-  assert.equal(detectColor({ FORCE_COLOR: "1" }, false), true);
-  assert.equal(detectColor({ NO_COLOR: "1", FORCE_COLOR: "3" }, true), false);
+  const at = (env, isTTY = true) => detectTerminal({ env, isTTY });
+  assert.equal(at({}, false).tier, "contract");
+  assert.equal(at({}).depth, 4);
+  assert.equal(at({ NO_COLOR: "" }).depth, 0);
+  assert.equal(at({ FORCE_COLOR: "0" }).depth, 0);
+  assert.equal(at({ TERM: "dumb" }).depth, 0);
+  assert.equal(at({ FORCE_COLOR: "1" }, false).depth, 4);
+  assert.equal(at({ NO_COLOR: "1", FORCE_COLOR: "3" }).depth, 0);
 });
 
 test("depth comes from what the terminal claims, and is 0 when colour is off", () => {
-  assert.equal(detectColorDepth({}, false), 0);
-  assert.equal(detectColorDepth({}, true), 4);
-  assert.equal(detectColorDepth({ TERM: "xterm-256color" }, true), 8);
-  assert.equal(detectColorDepth({ COLORTERM: "truecolor" }, true), 24);
-  assert.equal(detectColorDepth({ FORCE_COLOR: "2" }, true), 8);
-  assert.equal(detectColorDepth({ FORCE_COLOR: "3", TERM: "xterm-256color" }, true), 24);
+  const at = (env) => detectTerminal({ env, isTTY: true }).depth;
+  assert.equal(at({}), 4);
+  assert.equal(at({ NO_COLOR: "1" }), 0);
+  assert.equal(at({ TERM: "xterm-256color" }), 8);
+  assert.equal(at({ COLORTERM: "truecolor" }), 24);
+  assert.equal(at({ FORCE_COLOR: "2" }), 8);
+  assert.equal(at({ FORCE_COLOR: "3", TERM: "xterm-256color" }), 24);
 });
 
 test("paints are total: plain text when colour is off, the brand at the claimed depth when on", () => {
   const plain = createTerminal({}, false);
   assert.equal(plain.brand("Forge"), "Forge");
   assert.equal(plain.bad("[usage]"), "[usage]");
-  const four = createTerminal({ FORCE_COLOR: "1" }, false);
-  assert.equal(four.brand("Forge"), `${BRAND.ansi16}Forge${ESC}[0m`);
+  const four = createTerminal({ FORCE_COLOR: "1", LANG: "en_US.UTF-8" }, true);
+  assert.equal(four.brand("Forge"), `${PAINTS.accent.ansi16}Forge${ESC}[0m`);
   assert.equal(four.bad("x"), `${ESC}[31mx${ESC}[0m`);
   assert.equal(four.ok("x"), `${ESC}[32mx${ESC}[0m`);
   const truecolor = createTerminal({ COLORTERM: "truecolor" }, true);
-  assert.equal(truecolor.brand("Forge"), `${BRAND.truecolor}Forge${ESC}[0m`);
+  assert.equal(truecolor.brand("Forge"), `${PAINTS.accent.truecolor}Forge${ESC}[0m`);
+});
+
+test("Forge ships the shared grammar as line-only output", () => {
+  const truecolor = createTerminal(
+    { LANG: "en_US.UTF-8", COLORTERM: "truecolor" },
+    true,
+    100,
+  ).identityLine("0.1.2");
+  assert.equal(
+    truecolor,
+    `${PAINTS.accent.truecolor}F O R G E${ESC}[0m  ${ESC}[2mv0.1.2 · FG-047${ESC}[0m`,
+  );
+  assert.doesNotMatch(truecolor, /[▗▐▝]/);
+
+  const noColor = createTerminal(
+    { LANG: "en_US.UTF-8", NO_COLOR: "1" },
+    true,
+  ).identityLine("0.1.2");
+  assert.equal(noColor, "F O R G E  v0.1.2 · FG-047");
+  assert.doesNotMatch(noColor, /\u001B\[/);
+
+  const ascii = createTerminal(
+    { LANG: "en_US.UTF-8", COLORTERM: "truecolor", WW_ASCII: "1" },
+    true,
+  ).identityLine("0.1.2");
+  assert.match(ascii, /v0\.1\.2 - FG-047/);
+  assert.match(ascii, /\u001B\[/);
+
+  assert.ok(
+    createTerminal({ LANG: "en_US.UTF-8", TERM: "xterm-256color" }, true)
+      .identityLine("0.1.2")
+      .includes(PAINTS.accent.ansi256),
+  );
+  assert.ok(
+    createTerminal({ LANG: "en_US.UTF-8", TERM: "xterm" }, true)
+      .identityLine("0.1.2")
+      .includes(PAINTS.accent.ansi16),
+  );
+
+  const narrow = createTerminal(
+    { LANG: "en_US.UTF-8", COLORTERM: "truecolor" },
+    true,
+    8,
+  ).identityLine("0.1.2");
+  assert.equal(narrow, truecolor);
 });
 
 test("in a pipe the CLI emits no escape byte and the serial is present", async () => {
@@ -80,21 +127,23 @@ test("in a pipe the CLI emits no escape byte and the serial is present", async (
   assert.equal(result.code, 0);
   assert.doesNotMatch(result.stdout, /\u001B\[/);
   assert.match(result.stdout, /^Forge — the Local AI Kit\n/);
-  assert.match(result.stdout, /FG-047 · a Wonder Wagon tool\n$/);
+  assert.match(result.stdout, new RegExp(`${PRODUCT.serial} · a Wonder Wagon tool\\n$`));
 });
 
-test("FORCE_COLOR paints the name in bronze and NO_COLOR outranks it", async () => {
+test("a pipe suppresses identity even when colour is forced", async () => {
+  const baseline = await runCli(["--help"]);
   const coloured = await runCli(["--help"], { FORCE_COLOR: "3" });
   assert.equal(coloured.code, 0);
-  assert.ok(coloured.stdout.startsWith(`${BRAND.truecolor}${ESC}[1mForge${ESC}[0m${ESC}[0m — the Local AI Kit`));
+  assert.equal(coloured.stdout, baseline.stdout);
+  assert.doesNotMatch(coloured.stdout, /\u001B\[/);
   const quiet = await runCli(["--help"], { FORCE_COLOR: "3", NO_COLOR: "1" });
-  assert.doesNotMatch(quiet.stdout, /\u001B\[/);
+  assert.equal(quiet.stdout, baseline.stdout);
 });
 
 test("severity paints the category in the terminal's red, and --json never passes through the terminal", async () => {
   const human = await runCli([], { FORCE_COLOR: "1" });
   assert.equal(human.code, 1);
-  assert.equal(human.stderr, `Forge error ${ESC}[31m[usage]${ESC}[0m: Usage: forge ask "<prompt>" [--json]\n`);
+  assert.equal(human.stderr, 'Forge error [usage]: Usage: forge ask "<prompt>" [--json]\n');
   const json = await runCli(["--json"], { FORCE_COLOR: "3" });
   assert.equal(json.stderr, "");
   assert.doesNotMatch(json.stdout, /\u001B\[/);
@@ -119,7 +168,7 @@ test("the quench rule is twenty-four cells, eight of them hot", () => {
   assert.equal(cells.length, QUENCH_RULE_COLUMNS);
   assert.equal(
     rule,
-    `${BRAND.truecolor}${CELL.repeat(8)}${ESC}[0m${ESC}[2m${CELL.repeat(16)}${ESC}[0m`,
+    `${PAINTS.accent.truecolor}${CELL.repeat(8)}${ESC}[0m${ESC}[2m${CELL.repeat(16)}${ESC}[0m`,
   );
   // The quenched run is the terminal's own dim, not a second identity colour: the one
   // brand colour a CLI byte may carry is the generated one in identity.js.
@@ -142,8 +191,8 @@ test("the quench rule is empty wherever colour is", () => {
   assert.equal(createTerminal({ NO_COLOR: "1" }, true).quenchRule(80), "");
   assert.equal(createTerminal({ TERM: "dumb" }, true).quenchRule(80), "");
   assert.equal(createTerminal({ FORCE_COLOR: "0" }, true).quenchRule(80), "");
-  // At the sixteen-colour floor it is still drawn, in the alphabet that terminal speaks.
-  assert.equal(createTerminal({ FORCE_COLOR: "1" }, false).quenchRule(80).includes(CELL), true);
+  // At the sixteen-colour floor it is still drawn for an interactive terminal.
+  assert.equal(createTerminal({ FORCE_COLOR: "1" }, true).quenchRule(80).includes(CELL), true);
 });
 
 async function withStubServer(context) {
@@ -169,7 +218,7 @@ async function withStubServer(context) {
   };
 }
 
-test("a human result separates the answer from the metrics only when colour is on", async (context) => {
+test("piped human output keeps its pre-identity bytes when colour is forced", async (context) => {
   const environment = await withStubServer(context);
 
   const coloured = await runCli(["ask", "Review this function"], {
@@ -177,13 +226,10 @@ test("a human result separates the answer from the metrics only when colour is o
     FORCE_COLOR: "3",
   });
   assert.equal(coloured.code, 0);
-  assert.match(
-    coloured.stdout,
-    new RegExp(`^The function can return undefined\\.\\n\\n.*${CELL}{8}.*${CELL}{16}.*\\n\\n`),
-  );
-  assert.equal([...coloured.stdout].filter((character) => character === CELL).length, 24);
+  assert.doesNotMatch(coloured.stdout, /\u001B\[/);
+  assert.equal(coloured.stdout.includes(CELL), false);
 
-  // A pipe, NO_COLOR and TERM=dumb each see the 0.1.2 bytes: no rule, no escape byte.
+  // Every contract form sees the 0.1.2 bytes: no rule, no escape byte.
   for (const extra of [{}, { NO_COLOR: "1" }, { TERM: "dumb" }, { FORCE_COLOR: "0" }]) {
     const plain = await runCli(["ask", "Review this function"], { ...environment, ...extra });
     assert.equal(plain.code, 0);
