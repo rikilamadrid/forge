@@ -54,8 +54,7 @@
   },
   "dependencies": {},
   "devDependencies": {
-    "@wonder-wagon/themes": "file:../wonder-wagon-ui/packages/themes",
-    "@wonder-wagon/tokens": "file:../wonder-wagon-ui/packages/tokens",
-    "typescript": "^5.9.2"
+    "typescript": "^5.9.2",
+    "wonder-wagon-ui": "file:../wonder-wagon-ui/packages/foundation"
   }
 }
