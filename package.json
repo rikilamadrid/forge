@@ -55,6 +55,6 @@
   "dependencies": {},
   "devDependencies": {
     "typescript": "^5.9.2",
-    "wonder-wagon-ui": "file:../wonder-wagon-ui/packages/foundation"
+    "wonder-wagon-ui": "0.1.0"
   }
 }
