@@ -29,23 +29,6 @@ jobs:
         with:
           node-version: ${{ matrix.node }}
           cache: npm
-      # The Wonder Wagon CLI foundation is a `file:` devDependency on a sibling checkout until
-      # it publishes, so CI recreates that sibling at the exact commit which generated Forge's
-      # committed runtime. Bump the ref together with `npm run wonder-wagon:sync`.
-      - name: Check out the Wonder Wagon foundations beside this repository
-        env:
-          WONDER_WAGON_UI_REF: 2381be9fdfe2e2e84132134cf8335485d9b95967
-        run: |
-          git clone --quiet --no-checkout https://github.com/rikilamadrid/wonder-wagon-ui.git ../wonder-wagon-ui
-          git -C ../wonder-wagon-ui checkout --quiet "$WONDER_WAGON_UI_REF"
-      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2.2.0
-        with:
-          bun-version-file: ../wonder-wagon-ui/package.json
-      - name: Build wonder-wagon-ui/cli
-        working-directory: ../wonder-wagon-ui
-        run: |
-          bun install --frozen-lockfile
-          bun run --filter wonder-wagon-ui build
       - run: npm ci
       - run: npm run check
       - run: npm test
