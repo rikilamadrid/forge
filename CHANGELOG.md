@@ -7,6 +7,8 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ## [Unreleased]
 
+## [0.2.0] - 2026-09-27
+
 ### Added
 
 - The CLI carries a first Wonder Wagon identity slice: the name in bronze on `--help`, the
@@ -34,7 +36,10 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 - Interactive `forge --help` and no-argument invocation now show the approved struck F
   punch with the Wonder Wagon name/version/serial grammar. Narrow terminals stack the
   identity; `NO_COLOR` retains its geometry and `WW_ASCII=1` selects the ASCII punch.
-  Human no-argument invocation exits 0 after help; piped no-argument usage still exits 1.
+  Interactive help adds one plain line: "Forge calls language models running on machines
+  you control." **CLI contract change:** no-argument invocation in a terminal now prints
+  help and exits 0 instead of a usage error with exit 1. Piped no-argument usage still
+  exits 1 with its previous bytes.
 
 - The README header is a 1200×200 panel carrying the lockup, "The Local AI Kit",
   one local-first line and the serial on its own iron ground, so GitHub light,
@@ -52,9 +57,9 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
   Forge's product day environment, the objects-only depth exception, the chamfer
   rule, the quench rule's gating, and twenty-two newly measured colour pairs.
 
-**Every byte of piped and `--json` output is unchanged.** No public API, CLI
-contract, error category, machine exit code or Node.js range moved, and the package still
-has zero production dependencies.
+**Every byte of piped and `--json` output is unchanged.** Apart from interactive
+no-argument invocation above, no public API, CLI contract, error category, machine exit
+code or Node.js range moved, and the package still has zero production dependencies.
 
 ## [0.1.2] - 2026-09-22
 
