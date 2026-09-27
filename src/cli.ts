@@ -88,10 +88,13 @@ async function main(process: ProcessLike): Promise<void> {
 }
 
 function helpText(terminal: Terminal, version: string): string {
-  // Only a human terminal sees the punch. Piped help keeps its existing bytes.
-  const identity = terminal.identityBlock(version);
+  // Only a human terminal sees the punch and its one line of voice (the README's
+  // approved description). Piped help keeps its existing bytes.
+  const identity = terminal.identityBlock(version).replace(/\n$/, "");
   return [
-    identity || "Forge — the Local AI Kit",
+    ...(identity
+      ? [identity, "", "Forge calls language models running on machines you control."]
+      : ["Forge — the Local AI Kit"]),
     "",
     "Usage:",
     '  forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime',

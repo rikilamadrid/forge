@@ -533,6 +533,9 @@ never a brand colour. Intentional human entry surfaces (`forge --help` and no-ar
 TTY invocation) now carry the compact struck F punch, product name, version,
 `FG-047`, and “the Local AI Kit”. This family upgrade supersedes the former
 line-only entry treatment; result and error formatting retain their contracts.
+One blank line follows the identity, then the package's own description as help's
+single line of voice: “Forge calls language models running on machines you
+control.” It is plain description, not a tagline, and a pipe never sees it.
 
 The punch is the approved product-owned geometry from the Wonder Wagon generator:
 bronze around a struck F, its lower bar quenched to steel. The shared responsive

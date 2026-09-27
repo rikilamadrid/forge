@@ -8,6 +8,7 @@
   v0.1.2 · FG-047
   the Local AI Kit
 
+Forge calls language models running on machines you control.
 
 Usage:
   forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime

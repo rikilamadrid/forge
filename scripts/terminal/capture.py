@@ -90,18 +90,24 @@ for name, arguments, width, extra in specimens:
     manifest['specimens'].append({'name': name, 'command': ['forge', *arguments], 'columns': width, 'env': {key: value for key, value in extra.items() if key != 'OLLAMA_HOST'}, 'sha256': hashlib.sha256(raw).hexdigest()})
 
 if args.baseline:
-    cases = [[], ['--help'], ['--version'], ['invalid'], ['--json'], ['ask', 'fixture'], ['ask', 'fixture', '--json']]
+    # (command, uses the local fixture). Unconfigured ask proves configuration failures.
+    cases = [([], False), (['--help'], False), (['--help', '--json'], False), (['--version'], False),
+             (['invalid'], False), (['invalid', '--json'], False), (['--json'], False), (['ask'], False),
+             (['ask', 'fixture'], False), (['ask', 'fixture', '--json'], False),
+             (['ask', 'fixture'], True), (['ask', 'fixture', '--json'], True)]
     envs = [{}, {'FORCE_COLOR': '3'}, {'NO_COLOR': ''}, {'WW_ASCII': '1'}, {'TERM': 'dumb'}]
     proof = []
-    for command in cases:
-        for environment in envs:
-            fixture = RUNTIME if command[:1] == ['ask'] else {}
-            environment = {**ENV, **fixture, **environment}
+    for command, configured in cases:
+        for extra in envs:
+            fixture = RUNTIME if configured else {}
+            environment = {**ENV, **fixture, **extra}
             before = subprocess.run([NODE, *CLOCK, str(args.baseline), *command], env=environment, capture_output=True)
             after = subprocess.run([NODE, *CLOCK, str(CLI), *command], env=environment, capture_output=True)
             assert (before.returncode, before.stdout, before.stderr) == (after.returncode, after.stdout, after.stderr), command
-            proof.append({'command': command, 'exit': after.returncode, 'stdoutSha256': hashlib.sha256(after.stdout).hexdigest(), 'stderrSha256': hashlib.sha256(after.stderr).hexdigest()})
-    manifest['byteEquivalence'] = {'baselineRevision': args.baseline_revision, 'cases': len(proof), 'scope': 'stdout, stderr, exit status; successful results use identical local fixture and frozen measurement clock', 'results': proof}
+            proof.append({'command': ['forge', *command], 'configured': configured, 'env': extra, 'exit': after.returncode, 'stdoutBytes': len(after.stdout), 'stderrBytes': len(after.stderr), 'stdoutSha256': hashlib.sha256(after.stdout).hexdigest(), 'stderrSha256': hashlib.sha256(after.stderr).hexdigest()})
+    contract = {'product': 'Forge', 'baselineRevision': args.baseline_revision, 'transport': 'pipes (non-TTY stdout and stderr)', 'comparisons': len(proof), 'scope': 'Exact stdout bytes, stderr bytes, and exit status match the baseline build. Configured runs share the local fixture and frozen measurement clock.', 'results': proof}
+    (OUT / 'contract-proof.json').write_text(json.dumps(contract, indent=2) + '\n')
+    manifest['contractProof'] = {'file': 'contract-proof.json', 'comparisons': len(proof)}
 server.shutdown()
 (OUT / 'manifest.json').write_text(json.dumps(manifest, indent=2) + '\n')
-print(f'{len(specimens)} real PTY specimens; {len(manifest.get("byteEquivalence", {}).get("results", []))} byte-equivalence cases')
+print(f'{len(specimens)} real PTY specimens; {manifest.get("contractProof", {}).get("comparisons", 0)} byte-equivalence comparisons')

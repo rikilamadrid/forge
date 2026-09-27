@@ -174,6 +174,11 @@ test("human entry surfaces promote the punch once, without configuration or netw
   assert.match(help.stdout, /F O R G E/);
   assert.match(help.stdout, /v0\.1\.2 · FG-047/);
   assert.match(help.stdout, /the Local AI Kit/);
+  // Family rhythm: one blank line after the identity, then Forge's voice, then usage.
+  const plain = help.stdout.replace(/\u001B\[[0-9;]*m/g, "");
+  assert.match(plain, /▝▀▀▀▀▘\n\nForge calls language models running on machines you control\.\n\nUsage:/);
+  const piped = await runCli(["--help"], environment);
+  assert.doesNotMatch(piped.stdout, /machines you control/);
 });
 
 test("human help respects colourless Unicode and the ASCII mark", async () => {

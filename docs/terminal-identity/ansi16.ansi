@@ -4,6 +4,7 @@
   [33m ▐ [0m[1m[30m█▀▀[0m[33m  ▌[0m    [2mthe Local AI Kit[0m
   [33m  ▝▀▀▀▀▘[0m
 
+Forge calls language models running on machines you control.
 
 Usage:
   forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime

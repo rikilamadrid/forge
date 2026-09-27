@@ -2,6 +2,9 @@
 
 The four-row punch is Forge's existing approved struck F geometry, now visible on
 `forge --help` and interactive no-argument invocation (`npx forge-local-ai-kit`).
+One blank line follows the identity, then Forge's one line of voice, taken from the
+approved README description: “Forge calls language models running on machines you
+control.” Piped help has neither.
 The bronze punch and steel lower bar are product-owned; Wonder Wagon owns layout,
 capability detection, name/version/serial placement, and narrow stacking.
 
@@ -20,11 +23,13 @@ python3 scripts/terminal/capture.py --baseline /path/to/main/dist/src/cli.js \
 ```
 
 The baseline must retain its package manifest two directories above `cli.js`.
-The harness compares stdout, stderr, and exit status byte for byte for 35 cases:
-help, version, non-TTY no-argument usage, invalid command, JSON usage, successful
-human result, and successful JSON result, under normal, forced color, NO_COLOR,
-ASCII, and dumb-terminal environments. Both runs share the fixture and fixed
-measurement clock; no output bytes are normalized for these comparisons.
+`contract-proof.json` records 60 pipe comparisons of exact stdout bytes, stderr
+bytes, and exit status against that baseline: no-argument usage, help, help with
+`--json`, version, invalid command (plain and JSON), bare `--json`, missing prompt,
+unconfigured `ask` (the configuration failure, plain and JSON), and a successful
+human and JSON result, each under normal, `FORCE_COLOR=3`, `NO_COLOR`,
+`WW_ASCII=1`, and `TERM=dumb`. Configured runs share the local fixture and fixed
+measurement clock; no output bytes are normalized.
 
 Full tests cover configuration failures, JSON failures, public API boundaries,
 capability behavior, tiny widths, and clean consumer tarball installation. There

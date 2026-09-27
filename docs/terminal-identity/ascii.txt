@@ -4,6 +4,7 @@
    \ F==  /    the Local AI Kit
     '----'
 
+Forge calls language models running on machines you control.
 
 Usage:
   forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime
