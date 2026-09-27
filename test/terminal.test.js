@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { spawn } from "node:child_process";
+import { readFileSync } from "node:fs";
 import { createServer } from "node:http";
 import test from "node:test";
 import { fileURLToPath } from "node:url";
@@ -12,6 +13,11 @@ import {
 import { PAINTS, PRODUCT, VALUES_HASH, detectTerminal } from "../dist/src/identity.js";
 
 const cliPath = fileURLToPath(new URL("../dist/src/cli.js", import.meta.url));
+// Entry-surface assertions follow the manifest, so a release bump never breaks them.
+const { version: VERSION } = JSON.parse(
+  readFileSync(new URL("../package.json", import.meta.url), "utf8"),
+);
+const escapedVersion = VERSION.replaceAll(".", "\\.");
 
 // A minimal environment: no PATH inheritance of COLORTERM/TERM from the developer's shell,
 // so every assertion below is about the variables it names and nothing else.
@@ -172,7 +178,7 @@ test("human entry surfaces promote the punch once, without configuration or netw
   assert.match(help.stdout, /▗▄▄▄▄▖/);
   assert.equal(help.stdout.split("▗▄▄▄▄▖").length - 1, 1);
   assert.match(help.stdout, /F O R G E/);
-  assert.match(help.stdout, /v0\.1\.2 · FG-047/);
+  assert.match(help.stdout, new RegExp(`v${escapedVersion} · FG-047`));
   assert.match(help.stdout, /the Local AI Kit/);
   // Family rhythm: one blank line after the identity, then Forge's voice, then usage.
   const plain = help.stdout.replace(/\u001B\[[0-9;]*m/g, "");
@@ -189,14 +195,14 @@ test("human help respects colourless Unicode and the ASCII mark", async () => {
   const ascii = await runCli(["--help"], { LANG: "en_US.UTF-8", WW_ASCII: "1", NO_COLOR: "" }, 100);
   assert.match(ascii.stdout, /F===/);
   assert.doesNotMatch(ascii.stdout, /[▗▐▝]/);
-  assert.match(ascii.stdout, /v0\.1\.2 - FG-047/);
+  assert.match(ascii.stdout, new RegExp(`v${escapedVersion} - FG-047`));
   assert.doesNotMatch(ascii.stdout, /[^\x00-\x7f]/);
 });
 
 test("human version, machine usage and actual errors never receive the punch", async () => {
   const environment = { LANG: "en_US.UTF-8", COLORTERM: "truecolor" };
   const version = await runCli(["--version"], environment, 100);
-  assert.deepEqual(version, { code: 0, stdout: "0.1.2\n", stderr: "" });
+  assert.deepEqual(version, { code: 0, stdout: `${VERSION}\n`, stderr: "" });
   const machine = await runCli(["--json"], environment, 100);
   assert.equal(machine.code, 1);
   assert.equal(machine.stderr, "");
