@@ -1,18 +1,28 @@
-# ![Forge](https://raw.githubusercontent.com/rikilamadrid/forge/main/assets/readme-header.svg)
+<div align="center">
 
-**The Local AI Kit.** Forge calls language models running on machines you
-control, from TypeScript or the command line.
+<img src="https://raw.githubusercontent.com/rikilamadrid/forge/main/assets/readme-header.svg" width="840"
+     alt="Forge: the F struck in a hexagonal punch beside the wordmark Forge, and The Local AI Kit. Prompts go to the host you configure and nowhere else. FG-047, a Wonder Wagon tool.">
 
-Shaped locally. Marked, measured, yours.
+**The Local AI Kit.** Forge calls language models running on machines you control,<br>
+from TypeScript or the command line.
 
+[![npm](https://img.shields.io/npm/v/forge-local-ai-kit?color=85601A&label=forge-local-ai-kit)](https://www.npmjs.com/package/forge-local-ai-kit)
 [![CI](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml/badge.svg?branch=main)](https://github.com/rikilamadrid/forge/actions/workflows/ci.yml)
-`FG-047` · a [Wonder Wagon](https://github.com/rikilamadrid/wonder-wagon-ui) tool. Forge shares
-the family's design foundations without a browser or React in its dependency graph: its
-terminal identity is generated from `@wonder-wagon/themes` into `src/identity.ts` and checked for
-drift in CI.
+[![License: MIT](https://img.shields.io/badge/license-MIT-85601A)](https://github.com/rikilamadrid/forge/blob/main/LICENSE)
+
 [Website](https://forge-kit-nu.vercel.app) ·
 [npm](https://www.npmjs.com/package/forge-local-ai-kit) ·
-[GitHub](https://github.com/rikilamadrid/forge)
+[Changelog](https://github.com/rikilamadrid/forge/blob/main/CHANGELOG.md) ·
+[Releases](https://github.com/rikilamadrid/forge/releases) ·
+[Releasing](https://github.com/rikilamadrid/forge/blob/main/RELEASING.md)
+
+<sub>by Lamadrid Labs</sub>
+
+<sub>Maker's mark <code>FG-047</code> · the F struck in a hexagonal punch · a <a href="https://github.com/rikilamadrid/wonder-wagon-ui">Wonder Wagon</a> tool</sub>
+
+</div>
+
+> Shaped locally. Marked, measured, yours.
 
 ## Install
 
@@ -28,7 +38,7 @@ OLLAMA_HOST="http://localhost:11434" FORGE_MODEL="qwen3:8b" \
 ```
 
 Every pull request packs the artifact and runs eleven named checks against the
-packed tarball. The published package is 17 files with zero production
+packed tarball. The published package is 21 files with zero production
 dependencies. Each figure is cited below, under "Every tool bears the mark."
 
 ## Requirements
@@ -402,6 +412,24 @@ are provider-neutral so consumers are not coupled to Ollama's wire format; that
 is a design choice, not a claim that other providers, routing, or a plugin
 system exist.
 
+## Part of the Wonder Wagon family
+
+<p align="center">
+  <img src="https://raw.githubusercontent.com/rikilamadrid/forge/main/docs/readme/terminal-identity.svg" width="401"
+       alt="The opening of forge --help from forge-local-ai-kit 0.2.0: the struck F in its hexagonal punch in bronze and steel, beside F O R G E v0.2.0 · FG-047 and the tagline the Local AI Kit.">
+</p>
+
+Forge is `FG-047` in the [Wonder Wagon](https://github.com/rikilamadrid/wonder-wagon-ui)
+family, beside Pathfinder and Lorekeeper. What it shares is its terminal identity and nothing
+else. `src/identity.ts` is generated at build time by `wonder-wagon-ui/cli`, a pinned
+devDependency, and `npm run check` fails in CI if the committed file drifts. The published
+package gains no dependency from it, and the website keeps its own design, its Iron night
+ground and its own fonts.
+
+The mark above is drawn from the bytes `forge --help` wrote to a 100-column truecolor
+terminal from the published 0.2.0 package, captured for the
+[Wonder Wagon Catalog](https://rikilamadrid.github.io/wonder-wagon-ui/).
+
 ## Every tool bears the mark.
 
 Each figure here is traceable to a file in this repository or to a run of the
@@ -409,7 +437,7 @@ Each figure here is traceable to a file in this repository or to a run of the
 
 | Measured | Value | Source |
 | --- | --- | --- |
-| Files in the published tarball | 17 | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `files`, enforced by the `file-allowlist` check |
+| Files in the published tarball | 21 | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `files`, enforced by the `file-allowlist` check |
 | Production dependencies | 0 | [`package.json`](https://github.com/rikilamadrid/forge/blob/main/package.json) `dependencies`, enforced by the `manifest-dependencies` check |
 | Named checks run on the packed tarball | 11 | [`scripts/verify-package.mjs`](https://github.com/rikilamadrid/forge/blob/main/scripts/verify-package.mjs) |
 | Platforms the package is built and tested on | Ubuntu Node.js 22 and 24, macOS Node.js 22 | [`.github/workflows/ci.yml`](https://github.com/rikilamadrid/forge/blob/main/.github/workflows/ci.yml) |
@@ -424,7 +452,9 @@ installed executable's `--version`. No source, test, or project-context file
 ships in the package.
 
 Published to the public npm registry as
-[`forge-local-ai-kit`](https://www.npmjs.com/package/forge-local-ai-kit).
+[`forge-local-ai-kit`](https://www.npmjs.com/package/forge-local-ai-kit), by hand, following
+[`RELEASING.md`](https://github.com/rikilamadrid/forge/blob/main/RELEASING.md). It carries no
+npm provenance attestation.
 
 ## License
 
