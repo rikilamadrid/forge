@@ -36,7 +36,9 @@ test("the packed artifact works for a clean external consumer", async (context) 
 
   const packed = await execute(
     "npm",
-    ["pack", "--json", "--pack-destination", packDirectory],
+    // `npm test` has just built dist/. Letting prepack rebuild it here would
+    // rewrite files that parallel test files are importing and spawning.
+    ["pack", "--ignore-scripts", "--json", "--pack-destination", packDirectory],
     { cwd: packageRoot, env: npmEnvironment },
   );
   const [artifact] = JSON.parse(packed.stdout);
