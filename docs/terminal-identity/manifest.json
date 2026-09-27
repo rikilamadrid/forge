@@ -1,0 +1,404 @@
+{
+  "product": "Forge",
+  "serial": "FG-047",
+  "version": "0.1.2",
+  "capture": "Real PTY stdout; actual CLI subprocess; stderr separately asserted empty.",
+  "success": "A local HTTP Ollama fixture, not real inference. Clock fixed to zero elapsed time.",
+  "specimens": [
+    {
+      "name": "wide-truecolor",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {},
+      "sha256": "1e6c8d40a318484f0b0ee9103fb20736cc2792c7dd5dafaff711c1f62438a836"
+    },
+    {
+      "name": "narrow",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 32,
+      "env": {},
+      "sha256": "029b98e882a7efbaf5603804e99468c94e0410456f2d10b2003c35ec2159eebf"
+    },
+    {
+      "name": "no-color",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "sha256": "b6673dd8c55389c280cc846e426ff0e50ec68e7e3b532765aff168cae06896d1"
+    },
+    {
+      "name": "ascii",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "sha256": "ae99726a59c4361e167de149560d6b75c11226a56eb44ff170f9d3a08bb9abd8"
+    },
+    {
+      "name": "ansi256",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "COLORTERM": ""
+      },
+      "sha256": "0b5e84a2facd1cefab90bd0f6ed27b1f62433d1ffb5e1f9730f8947bc846e659"
+    },
+    {
+      "name": "ansi16",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "COLORTERM": "",
+        "TERM": "xterm"
+      },
+      "sha256": "280b2ad63f5d020e4fb2f67591ba7ec186f2581916edaf74b8c63b00c5dafc60"
+    },
+    {
+      "name": "dumb",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "TERM": "dumb"
+      },
+      "sha256": "b6673dd8c55389c280cc846e426ff0e50ec68e7e3b532765aff168cae06896d1"
+    },
+    {
+      "name": "no-arg",
+      "command": [
+        "forge"
+      ],
+      "columns": 100,
+      "env": {},
+      "sha256": "1e6c8d40a318484f0b0ee9103fb20736cc2792c7dd5dafaff711c1f62438a836"
+    },
+    {
+      "name": "successful-flow",
+      "command": [
+        "forge",
+        "ask",
+        "Show the local tool flow"
+      ],
+      "columns": 100,
+      "env": {
+        "FORGE_MODEL": "specimen-fixture"
+      },
+      "sha256": "c861e88fc99c0d092660faa4677b2a1b2e7418747336700c9000ca2693b71aa1"
+    }
+  ],
+  "byteEquivalence": {
+    "cases": 35,
+    "scope": "stdout, stderr, exit status; successful results use identical local fixture and frozen measurement clock",
+    "results": [
+      {
+        "command": [],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "--help"
+        ],
+        "exit": 0,
+        "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--help"
+        ],
+        "exit": 0,
+        "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--help"
+        ],
+        "exit": 0,
+        "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--help"
+        ],
+        "exit": 0,
+        "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--help"
+        ],
+        "exit": 0,
+        "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--version"
+        ],
+        "exit": 0,
+        "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--version"
+        ],
+        "exit": 0,
+        "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--version"
+        ],
+        "exit": 0,
+        "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--version"
+        ],
+        "exit": 0,
+        "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--version"
+        ],
+        "exit": 0,
+        "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "invalid"
+        ],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "invalid"
+        ],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "invalid"
+        ],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "invalid"
+        ],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "invalid"
+        ],
+        "exit": 1,
+        "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+        "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+      },
+      {
+        "command": [
+          "--json"
+        ],
+        "exit": 1,
+        "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--json"
+        ],
+        "exit": 1,
+        "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--json"
+        ],
+        "exit": 1,
+        "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--json"
+        ],
+        "exit": 1,
+        "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "--json"
+        ],
+        "exit": 1,
+        "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture"
+        ],
+        "exit": 0,
+        "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture"
+        ],
+        "exit": 0,
+        "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture"
+        ],
+        "exit": 0,
+        "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture"
+        ],
+        "exit": 0,
+        "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture"
+        ],
+        "exit": 0,
+        "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture",
+          "--json"
+        ],
+        "exit": 0,
+        "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture",
+          "--json"
+        ],
+        "exit": 0,
+        "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture",
+          "--json"
+        ],
+        "exit": 0,
+        "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture",
+          "--json"
+        ],
+        "exit": 0,
+        "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      },
+      {
+        "command": [
+          "ask",
+          "fixture",
+          "--json"
+        ],
+        "exit": 0,
+        "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+        "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+      }
+    ],
+    "baselineRevision": "14a4fcf79a0f70c4e2a7c825c6b2446e1ad0d798"
+  }
+}

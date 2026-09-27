@@ -6,7 +6,7 @@
  */
 import { readFileSync, writeFileSync } from "node:fs";
 import { fileURLToPath } from "node:url";
-import { renderCliIdentityModule } from "wonder-wagon-ui/cli";
+import { renderCliIdentityModule } from "./vendor/cli.mjs";
 
 const product = {
   name: "Forge",
@@ -48,7 +48,7 @@ const product = {
 };
 
 const target = fileURLToPath(new URL("../../src/identity.ts", import.meta.url));
-const next = renderCliIdentityModule(product, { language: "ts" });
+const next = renderCliIdentityModule(product, { language: "ts", layout: "responsive" });
 
 if (process.argv.includes("--check")) {
   let current = "";

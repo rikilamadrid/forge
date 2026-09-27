@@ -15,9 +15,10 @@ const cliPath = fileURLToPath(new URL("../dist/src/cli.js", import.meta.url));
 
 // A minimal environment: no PATH inheritance of COLORTERM/TERM from the developer's shell,
 // so every assertion below is about the variables it names and nothing else.
-function runCli(arguments_, environment = {}) {
+function runCli(arguments_, environment = {}, columns) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [cliPath, ...arguments_], {
+    const setup = columns === undefined ? [] : ["--import", `data:text/javascript,Object.defineProperties(process.stdout,{isTTY:{value:true},columns:{value:${columns}}});`];
+    const child = spawn(process.execPath, [...setup, cliPath, ...arguments_], {
       env: { PATH: process.env.PATH, ...environment },
       stdio: ["ignore", "pipe", "pipe"],
     });
@@ -77,7 +78,7 @@ test("paints are total: plain text when colour is off, the brand at the claimed 
   assert.equal(truecolor.brand("Forge"), `${PAINTS.accent.truecolor}Forge${ESC}[0m`);
 });
 
-test("Forge ships the shared grammar as line-only output", () => {
+test("Forge retains compact line output with responsive narrow wrapping", () => {
   const truecolor = createTerminal(
     { LANG: "en_US.UTF-8", COLORTERM: "truecolor" },
     true,
@@ -119,7 +120,18 @@ test("Forge ships the shared grammar as line-only output", () => {
     true,
     8,
   ).identityLine("0.1.2");
-  assert.equal(narrow, truecolor);
+  assert.ok(narrow.split("\n").every((line) => [...line.replace(/\u001B\[[0-9;]*m/g, "")].length <= 8));
+});
+
+test("the punch stacks at narrow widths with version, serial and tagline intact", () => {
+  for (const columns of [8, 16, 24, 32, 48]) {
+    const block = createTerminal({ LANG: "en_US.UTF-8", NO_COLOR: "" }, true, columns).identityBlock("0.1.2");
+    assert.ok(block.split("\n").every((line) => [...line].length <= columns), `width ${columns}`);
+    if (columns >= 16) {
+      assert.match(block.replace(/\s+/g, " "), /v0\.1\.2 · FG-047/);
+      assert.match(block.replace(/\s+/g, " "), /the Local AI Kit/);
+    }
+  }
 });
 
 test("in a pipe the CLI emits no escape byte and the serial is present", async () => {
@@ -148,6 +160,49 @@ test("severity paints the category in the terminal's red, and --json never passe
   assert.equal(json.stderr, "");
   assert.doesNotMatch(json.stdout, /\u001B\[/);
   assert.deepEqual(JSON.parse(json.stdout).error.category, "usage");
+});
+
+test("human entry surfaces promote the punch once, without configuration or network", async () => {
+  const environment = { LANG: "en_US.UTF-8", COLORTERM: "truecolor" };
+  const help = await runCli(["--help"], environment, 100);
+  const noarg = await runCli([], environment, 100);
+  assert.deepEqual(noarg, help);
+  assert.equal(help.code, 0);
+  assert.equal(help.stderr, "");
+  assert.match(help.stdout, /▗▄▄▄▄▖/);
+  assert.equal(help.stdout.split("▗▄▄▄▄▖").length - 1, 1);
+  assert.match(help.stdout, /F O R G E/);
+  assert.match(help.stdout, /v0\.1\.2 · FG-047/);
+  assert.match(help.stdout, /the Local AI Kit/);
+});
+
+test("human help respects colourless Unicode and the ASCII mark", async () => {
+  const noColor = await runCli(["--help"], { LANG: "en_US.UTF-8", NO_COLOR: "" }, 100);
+  assert.equal(noColor.code, 0);
+  assert.match(noColor.stdout, /▗▄▄▄▄▖/);
+  assert.doesNotMatch(noColor.stdout, /\u001B\[/);
+  const ascii = await runCli(["--help"], { LANG: "en_US.UTF-8", WW_ASCII: "1", NO_COLOR: "" }, 100);
+  assert.match(ascii.stdout, /F===/);
+  assert.doesNotMatch(ascii.stdout, /[▗▐▝]/);
+  assert.match(ascii.stdout, /v0\.1\.2 - FG-047/);
+  assert.doesNotMatch(ascii.stdout, /[^\x00-\x7f]/);
+});
+
+test("human version, machine usage and actual errors never receive the punch", async () => {
+  const environment = { LANG: "en_US.UTF-8", COLORTERM: "truecolor" };
+  const version = await runCli(["--version"], environment, 100);
+  assert.deepEqual(version, { code: 0, stdout: "0.1.2\n", stderr: "" });
+  const machine = await runCli(["--json"], environment, 100);
+  assert.equal(machine.code, 1);
+  assert.equal(machine.stderr, "");
+  assert.equal(JSON.parse(machine.stdout).error.category, "usage");
+  assert.doesNotMatch(machine.stdout, /[▗▐▝]|\u001B/);
+  const machineHelp = await runCli(["--help", "--json"], environment, 100);
+  const plainHelp = await runCli(["--help", "--json"], environment);
+  assert.deepEqual(machineHelp, plainHelp);
+  const bad = await runCli(["invalid"], environment, 100);
+  const piped = await runCli(["invalid"], environment);
+  assert.deepEqual(bad, piped);
 });
 
 // --- the quench rule ---------------------------------------------------------------

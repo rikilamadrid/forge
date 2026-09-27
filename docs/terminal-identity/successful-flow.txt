@@ -1,0 +1,9 @@
+Local fixture response. Your tools, on your machine.
+
+────────────────────────
+
+Provider: ollama
+Model: specimen-fixture
+Client latency: 0.0 ms
+Tokens: prompt 8 | completion 11 | total 19
+Ollama timings: unavailable
