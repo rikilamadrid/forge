@@ -1,0 +1,9 @@
+Local fixture response. Your tools, on your machine.
+
+[38;2;200;151;63m────────[0m[2m────────────────[0m
+
+[2mProvider:[0m ollama
+[2mModel:[0m specimen-fixture
+[2mClient latency:[0m 0.0 ms
+[2mTokens:[0m prompt 8 | completion 11 | total 19
+[2mOllama timings:[0m unavailable

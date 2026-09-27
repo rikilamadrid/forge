@@ -1,0 +1,116 @@
+{
+  "product": "Forge",
+  "serial": "FG-047",
+  "version": "0.1.2",
+  "capture": "Real PTY stdout; actual CLI subprocess; stderr separately asserted empty.",
+  "success": "A local HTTP Ollama fixture, not real inference. Clock fixed to zero elapsed time.",
+  "specimens": [
+    {
+      "name": "wide-truecolor",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {},
+      "sha256": "930f4106525d929ae711c13a6b3889fc3d9c42dd067b009cd9d13a094c6f0c4c"
+    },
+    {
+      "name": "narrow",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 32,
+      "env": {},
+      "sha256": "fa025379ea735405b54ddab7a71c6761095b47bbc37cbe0dfcd1f3388858fe7f"
+    },
+    {
+      "name": "no-color",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "sha256": "9b5e076df022e115906b55ad8775a4a7d88cd3055f0dba4eeee1d24d695ba32c"
+    },
+    {
+      "name": "ascii",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "sha256": "d154187aa29361cf04d3ade720ef19fb01b70a60b12de0f13ccb537564aca714"
+    },
+    {
+      "name": "ansi256",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "COLORTERM": ""
+      },
+      "sha256": "ed2ca13fbabc04bd7531b280202d1e2bca7e5a86008d2e6d4c2992d51d659e77"
+    },
+    {
+      "name": "ansi16",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "COLORTERM": "",
+        "TERM": "xterm"
+      },
+      "sha256": "e8e3a3d62c8af5b05e6fa46ca7a54e9127fab0aabdc12b6fd40ccdc36b823ee4"
+    },
+    {
+      "name": "dumb",
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "columns": 100,
+      "env": {
+        "TERM": "dumb"
+      },
+      "sha256": "9b5e076df022e115906b55ad8775a4a7d88cd3055f0dba4eeee1d24d695ba32c"
+    },
+    {
+      "name": "no-arg",
+      "command": [
+        "forge"
+      ],
+      "columns": 100,
+      "env": {},
+      "sha256": "930f4106525d929ae711c13a6b3889fc3d9c42dd067b009cd9d13a094c6f0c4c"
+    },
+    {
+      "name": "successful-flow",
+      "command": [
+        "forge",
+        "ask",
+        "Show the local tool flow"
+      ],
+      "columns": 100,
+      "env": {
+        "FORGE_MODEL": "specimen-fixture"
+      },
+      "sha256": "c861e88fc99c0d092660faa4677b2a1b2e7418747336700c9000ca2693b71aa1"
+    }
+  ],
+  "contractProof": {
+    "file": "contract-proof.json",
+    "comparisons": 60
+  }
+}

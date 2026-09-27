@@ -39,8 +39,10 @@ export interface Terminal {
   /** Severity, by meaning. Never a brand colour. */
   bad(text: string): string;
   ok(text: string): string;
-  /** The approved shared grammar. Forge ships line form only for now. */
+  /** The compact line remains available to callers that need it. */
   identityLine(version: string): string;
+  /** The struck punch on intentional human entry surfaces. */
+  identityBlock(version: string): string;
   /**
    * The quench rule, or "" when this run must not show one: colour off, or a terminal
    * too narrow to hold twenty-four columns. Returning "" rather than a shorter rule is
@@ -79,6 +81,8 @@ export function createTerminal(
     ok: severity(SEVERITY.ok),
     identityLine: (version: string) =>
       renderCliIdentity({ version, caps, form: "line" }),
+    identityBlock: (version: string) =>
+      renderCliIdentity({ version, caps }),
     quenchRule: (columns?: number) => {
       // Gated on colour, so piped, NO_COLOR and TERM=dumb output keeps every byte it
       // had in 0.1.2. An unknown width is not a narrow terminal: colour was forced

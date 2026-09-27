@@ -31,6 +31,11 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
 
 ### Changed
 
+- Interactive `forge --help` and no-argument invocation now show the approved struck F
+  punch with the Wonder Wagon name/version/serial grammar. Narrow terminals stack the
+  identity; `NO_COLOR` retains its geometry and `WW_ASCII=1` selects the ASCII punch.
+  Human no-argument invocation exits 0 after help; piped no-argument usage still exits 1.
+
 - The README header is a 1200×200 panel carrying the lockup, "The Local AI Kit",
   one local-first line and the serial on its own iron ground, so GitHub light,
   GitHub dark and npm render it identically. `npm install` and one command that
@@ -48,7 +53,7 @@ All notable changes to `forge-local-ai-kit` are recorded here. The format follow
   rule, the quench rule's gating, and twenty-two newly measured colour pairs.
 
 **Every byte of piped and `--json` output is unchanged.** No public API, CLI
-contract, error category, exit code or Node.js range moved, and the package still
+contract, error category, machine exit code or Node.js range moved, and the package still
 has zero production dependencies.
 
 ## [0.1.2] - 2026-09-22

@@ -121,7 +121,7 @@ export function detectTerminal(input: { env: Readonly<Record<string, string | un
   return Object.freeze({ tier, depth, unicode, columns });
 }
 
-export function renderCliIdentity(options: { version: string; caps: { tier: "contract" | "plain" | "expressive"; depth: 0 | 4 | 8 | 24; unicode: boolean; columns: number }; form?: "block" | "line"; machine?: boolean }) {
+function renderLegacyIdentity(options: { version: string; caps: { tier: "contract" | "plain" | "expressive"; depth: 0 | 4 | 8 | 24; unicode: boolean; columns: number }; form?: "block" | "line"; machine?: boolean }) {
   const caps = options.caps;
   if (options.machine === true || caps.tier === "contract") return "";
   const name = spacedName();
@@ -145,4 +145,58 @@ export function renderCliIdentity(options: { version: string; caps: { tier: "con
     return "  " + mark;
   });
   return "\n" + lines.join("\n") + "\n";
+}
+
+function wrapIdentity(text: string, width: number) {
+  if ([...text].length <= width) return [text];
+  const lines: string[] = [];
+  let line = "";
+  for (const word of text.split(/ +/)) {
+    if (line && [...line + " " + word].length <= width) { line += " " + word; continue; }
+    if (line) { lines.push(line); line = ""; }
+    const chars = [...word];
+    while (chars.length > width) lines.push(chars.splice(0, width).join(""));
+    line = chars.join("");
+  }
+  if (line) lines.push(line);
+  return lines;
+}
+
+export function renderCliIdentity(options: { version: string; caps: { tier: "contract" | "plain" | "expressive"; depth: 0 | 4 | 8 | 24; unicode: boolean; columns: number }; form?: "block" | "line"; machine?: boolean }) {
+  const caps = options.caps;
+  if (options.machine === true || caps.tier === "contract") return "";
+  const name = spacedName();
+  const metadata = "v" + options.version + " " + (caps.unicode ? "·" : "-") + " " + PRODUCT.serial;
+  const textWidth = Math.max(cells(name) + 2 + cells(metadata), cells(PRODUCT.tagline));
+  if (options.form !== "line" && caps.columns >= 2 + PRODUCT.mark.width + 4 + textWidth) {
+    return renderLegacyIdentity(options);
+  }
+  if (options.form === "line" && cells(name) + 2 + cells(metadata) <= caps.columns) {
+    return renderLegacyIdentity(options);
+  }
+  const indent = caps.columns >= PRODUCT.mark.width + 2 ? "  " : "";
+  const width = Math.max(1, caps.columns - indent.length);
+  const lines: string[] = [];
+  if (options.form !== "line") {
+    for (const row of PRODUCT.mark.rows) {
+      const raw = caps.unicode ? row.expressive.map((segment) => segment.text).join("") : row.plain;
+      if (cells(raw) > width) {
+        lines.push(...wrapIdentity(raw.trim(), width).map((line) => indent + paint(line, "accent", caps)));
+      } else {
+        const mark = caps.unicode ? row.expressive.map((segment) => {
+          const role: "accent" | "secondary" | "dim" = segment.role;
+          return String(role) === "dim" ? dim(segment.text, caps)
+            : paint(segment.text, role === "secondary" && PAINTS.secondary ? "secondary" : "accent", caps);
+        }).join("") : paint(row.plain, "accent", caps);
+        lines.push(indent + mark);
+      }
+    }
+    lines.push("");
+  }
+  lines.push(...wrapIdentity(name, width).map((line) => indent + paint(line, "accent", caps)));
+  lines.push(...wrapIdentity(metadata, width).map((line) => indent + dim(line, caps)));
+  if (options.form !== "line") {
+    lines.push(...wrapIdentity(PRODUCT.tagline, width).map((line) => indent + dim(line, caps)));
+  }
+  return options.form === "line" ? lines.join("\n") : "\n" + lines.join("\n") + "\n";
 }

@@ -34,12 +34,12 @@ async function main(process: ProcessLike): Promise<void> {
 
   // Serve --help and --version before configuration or any network activity, so
   // a published executable answers them offline and exits 0.
-  if (arguments_.includes(HELP_FLAG)) {
+  if (arguments_.includes(HELP_FLAG) || (arguments_.length === 0 && process.stdout.isTTY === true)) {
     const version = readPackageVersion();
     process.stdout.write(helpText(
       createTerminal(
         process.env,
-        process.stdout.isTTY === true,
+        process.stdout.isTTY === true && !arguments_.includes(JSON_FLAG),
         process.stdout.columns,
         process.platform,
       ),
@@ -88,10 +88,13 @@ async function main(process: ProcessLike): Promise<void> {
 }
 
 function helpText(terminal: Terminal, version: string): string {
-  // Interactive help uses the shared line grammar; Forge deliberately ships no block.
-  // The maker remains at the foot, and in a pipe every byte is the same as before.
+  // Only a human terminal sees the punch and its one line of voice (the README's
+  // approved description). Piped help keeps its existing bytes.
+  const identity = terminal.identityBlock(version).replace(/\n$/, "");
   return [
-    terminal.identityLine(version) || "Forge — the Local AI Kit",
+    ...(identity
+      ? [identity, "", "Forge calls language models running on machines you control."]
+      : ["Forge — the Local AI Kit"]),
     "",
     "Usage:",
     '  forge ask "<prompt>" [--json]   Delegate a prompt to the local runtime',
@@ -108,7 +111,7 @@ function helpText(terminal: Terminal, version: string): string {
     "  FORGE_MODEL      Model to run (required)",
       "  FORGE_TIMEOUT_MS Request timeout in milliseconds (optional)",
     "",
-    terminal.dim(`${PRODUCT.serial} · a Wonder Wagon tool`),
+    terminal.dim(identity ? "a Wonder Wagon tool" : `${PRODUCT.serial} · a Wonder Wagon tool`),
     "",
   ].join("\n");
 }

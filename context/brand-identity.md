@@ -529,7 +529,22 @@ graphic. It is not decoration and it is not applied for balance.
 The CLI is the most restrained surface Forge has, and it stays that way. One
 identity colour, generated from `@wonder-wagon/themes` into `src/identity.ts`
 and drift-checked in CI; severity in the terminal's own eight ANSI colours,
-never a brand colour; no glyph beyond `·`, `—` and the quench rule's `─`.
+never a brand colour. Intentional human entry surfaces (`forge --help` and no-argument
+TTY invocation) now carry the compact struck F punch, product name, version,
+`FG-047`, and “the Local AI Kit”. This family upgrade supersedes the former
+line-only entry treatment; result and error formatting retain their contracts.
+One blank line follows the identity, then the package's own description as help's
+single line of voice: “Forge calls language models running on machines you
+control.” It is plain description, not a tagline, and a pipe never sees it.
+
+The punch is the approved product-owned geometry from the Wonder Wagon generator:
+bronze around a struck F, its lower bar quenched to steel. The shared responsive
+grammar owns spacing and stacking. Narrow terminals stack the mark above the name,
+metadata, and wrapped tagline; `NO_COLOR` preserves geometry without escape codes;
+`WW_ASCII=1` uses the ASCII punch. A pipe sees the exact previous help bytes.
+No-argument human invocation opens help with exit 0; non-TTY invocation still emits
+the existing usage error and exits 1. Real command errors and `--json` bypass the
+entry mark. There is no postinstall banner.
 
 ### The quench rule
 

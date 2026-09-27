@@ -1,0 +1,920 @@
+{
+  "product": "Forge",
+  "baselineRevision": "14a4fcf79a0f70c4e2a7c825c6b2446e1ad0d798",
+  "transport": "pipes (non-TTY stdout and stderr)",
+  "comparisons": 60,
+  "scope": "Exact stdout bytes, stderr bytes, and exit status match the baseline build. Configured runs share the local fixture and frozen measurement clock.",
+  "results": [
+    {
+      "command": [
+        "forge"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help",
+        "--json"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--help",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 0,
+      "stdoutBytes": 612,
+      "stderrBytes": 0,
+      "stdoutSha256": "25f4b4cc315ad902fff448b6265e802d35f4b7861d2ed602e4a9617df19d9f0b",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--version"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--version"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--version"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--version"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--version"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 0,
+      "stdoutBytes": 6,
+      "stderrBytes": 0,
+      "stdoutSha256": "297b50f08386d3521f8fdaf2f78eb8d9d0acdf452d2e61596905fba37208c792",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid",
+        "--json"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "invalid",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--json"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 112,
+      "stderrBytes": 0,
+      "stdoutSha256": "914a0e6da3eaa877eda46ecae45e058c20974d4b8b7b301663a2e50f39764100",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "ask"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "ask"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "ask"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "ask"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 58,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "44c29138d798a42efc0139046596fe6c8e288a2c59c97b905947ef0ccfcdfc37"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 89,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "dd00992b66d6adf5bd060b18397c621965f5a70376336eb2757e0aacf00706d4"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 89,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "dd00992b66d6adf5bd060b18397c621965f5a70376336eb2757e0aacf00706d4"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 89,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "dd00992b66d6adf5bd060b18397c621965f5a70376336eb2757e0aacf00706d4"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 89,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "dd00992b66d6adf5bd060b18397c621965f5a70376336eb2757e0aacf00706d4"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 0,
+      "stderrBytes": 89,
+      "stdoutSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+      "stderrSha256": "dd00992b66d6adf5bd060b18397c621965f5a70376336eb2757e0aacf00706d4"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": false,
+      "env": {},
+      "exit": 1,
+      "stdoutBytes": 141,
+      "stderrBytes": 0,
+      "stdoutSha256": "de3489d8a9c61bcf531c2a3394f26c993305f48754fa1f31ac967b8ddd33c950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 1,
+      "stdoutBytes": 141,
+      "stderrBytes": 0,
+      "stdoutSha256": "de3489d8a9c61bcf531c2a3394f26c993305f48754fa1f31ac967b8ddd33c950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 1,
+      "stdoutBytes": 141,
+      "stderrBytes": 0,
+      "stdoutSha256": "de3489d8a9c61bcf531c2a3394f26c993305f48754fa1f31ac967b8ddd33c950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 1,
+      "stdoutBytes": 141,
+      "stderrBytes": 0,
+      "stdoutSha256": "de3489d8a9c61bcf531c2a3394f26c993305f48754fa1f31ac967b8ddd33c950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": false,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 1,
+      "stdoutBytes": 141,
+      "stderrBytes": 0,
+      "stdoutSha256": "de3489d8a9c61bcf531c2a3394f26c993305f48754fa1f31ac967b8ddd33c950",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": true,
+      "env": {},
+      "exit": 0,
+      "stdoutBytes": 190,
+      "stderrBytes": 0,
+      "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": true,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 0,
+      "stdoutBytes": 190,
+      "stderrBytes": 0,
+      "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": true,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 0,
+      "stdoutBytes": 190,
+      "stderrBytes": 0,
+      "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": true,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 0,
+      "stdoutBytes": 190,
+      "stderrBytes": 0,
+      "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture"
+      ],
+      "configured": true,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 0,
+      "stdoutBytes": 190,
+      "stderrBytes": 0,
+      "stdoutSha256": "880ff9a3ea9f1f330abca9457f4b1ac9573dcd290a670621f725f0a5ce104b17",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": true,
+      "env": {},
+      "exit": 0,
+      "stdoutBytes": 216,
+      "stderrBytes": 0,
+      "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": true,
+      "env": {
+        "FORCE_COLOR": "3"
+      },
+      "exit": 0,
+      "stdoutBytes": 216,
+      "stderrBytes": 0,
+      "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": true,
+      "env": {
+        "NO_COLOR": ""
+      },
+      "exit": 0,
+      "stdoutBytes": 216,
+      "stderrBytes": 0,
+      "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": true,
+      "env": {
+        "WW_ASCII": "1"
+      },
+      "exit": 0,
+      "stdoutBytes": 216,
+      "stderrBytes": 0,
+      "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "command": [
+        "forge",
+        "ask",
+        "fixture",
+        "--json"
+      ],
+      "configured": true,
+      "env": {
+        "TERM": "dumb"
+      },
+      "exit": 0,
+      "stdoutBytes": 216,
+      "stderrBytes": 0,
+      "stdoutSha256": "7cea42ab3c96f720c8131a1c42e2c95b967e9591a1328e28dde9ef0f3ad5ca72",
+      "stderrSha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ]
+}
